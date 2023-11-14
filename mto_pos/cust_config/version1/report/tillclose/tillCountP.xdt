@@ -1,0 +1,97 @@
+<dataTemplate name="TillCount" xmlns="http://micros.com/xstore/config/report">
+  <labels>
+    <!-- Common Text -->
+    <!-- Template-specific Text -->
+  </labels>
+  
+  <parameters>
+    <!-- System Parameters -->
+    <parameter name="systemDate" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+    <parameter name="reportTitle" class="java.lang.String" isForPrompting="false" include_in_output="true"/>
+    <parameter name="organizationId" class="java.lang.Long" isForPrompting="false" include_in_output="false"/>
+    <parameter name="retailLocationId" class="java.lang.Long" isForPrompting="false" include_in_output="true"/>
+    <parameter name="storeName" class="java.lang.String" isForPrompting="false" include_in_output="true"/>
+	  <parameter name="systemTime" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+	<!-- User Parameters -->
+	<parameter name="dtvStartDate" class="dtv.pos.iframework.type.IDtvDate" isForPrompting="true" include_in_output="true">
+	<parameterDescription><![CDATA[_rptRetailPeriod;Date]]></parameterDescription>
+	<defaultValueExpression><![CDATA[dtv.pos.framework.reporting.fill.RelativeDtvDate.TODAY]]></defaultValueExpression>
+    </parameter>
+    <parameter name="sessionId" class="java.lang.String">
+	<parameterDescription><![CDATA[_rptSessionId;Text;Numeric;maximumIntegerDigits=20]]></parameterDescription>
+	<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+  </parameters>
+  
+  <dataSource>	
+  	<queryReference name="Q_TILL_COUNT_HEADER" key="TILL_COUNT_HEADER">
+		<Parameters>			
+			<Parameter>organizationId</Parameter>
+			<Parameter>retailLocationId</Parameter>     			
+			<Parameter>sessionId</Parameter>     			
+		</Parameters>
+		<ResultFields>
+			<ResultField>Store</ResultField>
+			<ResultField>Register</ResultField>
+			<ResultField>TILL_ID</ResultField>
+			<ResultField>BDate</ResultField>
+			<ResultField>Employee</ResultField>
+			<ResultField>Amount</ResultField>
+		</ResultFields>
+    </queryReference>
+    <queryReference name="Q_TILL_COUNT_CASH" key="TILL_COUNT_CASH_DENOMINATION">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>     
+        <Parameter>sessionId</Parameter>     
+      </Parameters>
+      <ResultFields>
+        <ResultField>Denomination</ResultField>
+		<ResultField>Value</ResultField>
+        <ResultField>CashCount</ResultField>
+		<ResultField>CashAmount</ResultField>
+      </ResultFields>
+    </queryReference> 
+
+	<queryReference name="Q_TILL_COUNT" key="TILL_COUNT">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>     
+        <Parameter>sessionId</Parameter>     
+      </Parameters>
+      <ResultFields>
+		<ResultField>Tender</ResultField>
+        <ResultField>Amount</ResultField>
+		<ResultField>TenderCount</ResultField>
+      </ResultFields>
+    </queryReference> 
+  </dataSource>
+  <dataStructure>
+	<group name="G_TILL_COUNT_HEADERS" source="Q_TILL_COUNT_HEADER">
+		<element name="STORE"             value="Store"/>
+		<element name="REGISTER"          value="Register"/>
+		<element name="TILL_ID"           value="TILL_ID"/>
+		<element name="BDATE"             value="BDate"   formatter="DateShort"     />
+		<element name="EMPLOYEE"          value="Employee"        />
+	</group>
+    <group name="G_TILL_COUNT_CASH_DENOMINATION_COUNTS" source="Q_TILL_COUNT_CASH">
+        <element name="CASH_DENOMINATION"             value="Denomination"/>
+        <element name="CASH_DENOMINATION_COUNT"       value="CashCount"/>
+        <element name="CASH_DENOMINATION_AMOUNT"      value="CashAmount"		/>
+    </group>
+	<group name="G_TILL_COUNT_CASH_TOTALS" source="Q_TILL_COUNT_CASH">
+		<element name="CASH_DENOMINATION_COUNT"       value="CashCount" function="SUM"/>
+        <element name="CASH_DENOMINATION_AMOUNT"      value="CashAmount"		function="SUM"		/>
+    </group>
+    
+	<group name="G_TILL_COUNT" source="Q_TILL_COUNT">
+		<element name="TENDER"       value="Tender"/>
+        <element name="COUNT"       value="TenderCount"/>
+        <element name="AMOUNT"      value="Amount"	/>
+    </group>
+	
+	<group name="G_TILL_COUNT_TOTALS" source="Q_TILL_COUNT_HEADER">
+        <element name="GRAND_AMOUNT"      value="Amount"        />
+    </group>	
+  </dataStructure>
+</dataTemplate>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://micros.com/xstore/config/action" xsi:noNamespaceSchemaLocation="ActionConfig.xsd">
+<Action name="ADMIN::OPEN_STORE" category="Back Office" keywords="back_office_only" 
+	text="_systemCycleSystemOpen" chainKey="RETAIL_LOCATION_OPEN">
+<IconGroup icon="_imageMenuTillManagement" />
+<VisibilityRule class="dtv.pos.systemcycle.access.RetailLocationStateAccessCheck">
+<Parameter name="state" value="CLOSED" />
+</VisibilityRule>
+<VisibilityRule class="dtv.pos.systemcycle.access.RollingCloseOrNotClosingVisibilityRule"/>
+<VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+<Parameter name="privilege" value="STORE_OPEN_CLOSE" />
+</VisibilityRule>
+</Action>
+
+  <Action name="ADMIN::CLOSE_STORE" category="Back Office" keywords="back_office_only" text="_menutext119" 
+  		chainKey="RETAIL_LOCATION_CLOSE">
+    <IconGroup icon="_imageMenuTillManagement" />
+    <VisibilityRule class="dtv.pos.systemcycle.access.RetailLocationStateAccessCheck">
+      <Parameter name="state" value="OPEN" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.systemcycle.access.ClosingVisibilityRule" />
+    <VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+	<Parameter name="privilege" value="STORE_OPEN_CLOSE" />
+	</VisibilityRule>
+  </Action>
+  
+  <!-- Quick Close Start -->
+  <Action name="ADMIN::QUICK_CLOSE_STORE" category="Back Office" keywords="back_office_only" text="_menutextQuick" 
+  		chainKey="RETAIL_LOCATION_QUICK_CLOSE">
+    <IconGroup icon="_imageMenuTillManagement" />
+    <VisibilityRule class="dtv.pos.systemcycle.access.RetailLocationStateAccessCheck">
+      <Parameter name="state" value="OPEN" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.systemcycle.access.ClosingVisibilityRule" />
+  </Action>
+  <!-- Quick Close End -->
+
+  <!-- US#89135 Tender Type (Prepaid) Start-->
+   <Action name="SALE::TENDER_PREPAID_PAYMENT" category="Register" keywords="sale_tender" text="_menuTenderPrepaidPayment" chainKey="MTO_ADD_PREPAID_TENDER">
+    <IconGroup icon="_imageTenderCredit" rollIcon="_imageTenderCreditRoll" pressIcon="_imageTenderCreditPress" disabledIcon="_imageTenderCreditDisabled" />
+   <VisibilityRule class="mto.pos.shared.visibilityrules.MtoPrepaidPaymentCheck" />
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.TenderEnabledCheck" >
+      <Parameter name="tender" value="MISCELLANEOUS" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.EffectiveTenderAccCheck" >
+      <Parameter name="tender" value="MISCELLANEOUS" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.AvailableLayawayTenderAccCheck" >
+      <Parameter name="tender" value="MISCELLANEOUS" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.register.sale.AmountDueVisibilityRule" />
+  </Action>
+   <!-- END 89135 Tender Type (Prepaid) -->
+   
+    <Action name="ADMIN::HARDWARE_MANAGEMENT" text="_menuSystemAdmin" category="Admin" keywords="exclude">
+	 <IconGroup icon="_imageMenuTools" />
+	<VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+	  <Parameter name="privilege" value="SYSTEM_ADMIN" /> 
+	</VisibilityRule>
+  </Action>
+  <Action name="ADMIN::REPORTS" text="_menuTextReportsMain" category="Reports" keywords="exclude">
+	 <IconGroup icon="_imageMenuReportSubMenu" />
+	  <VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+		<Parameter name="privilege" value="REPORTS" />
+	  </VisibilityRule>
+  </Action>
+ <Action name="TILL::STORE_SAFE_MAINTENANCE" keywords="exclude">
+    <IconGroup icon="_imageMenuTillManagement" />
+	<VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+		<Parameter name="privilege" value="BANK_DEPOSIT" />
+	  </VisibilityRule> 
+  </Action>
+   <!--US#89134 User Certified Fund Start -->
+  <Action name="SALE::TENDER_CERTIFIED_FUNDS" category="Register" keywords="sale_tender" text="_mtoCertifiedFund" chainKey="MTO_ADD_CERTIFIED_FUND_TENDER">
+    <IconGroup icon="_imageTenderCoupon" rollIcon="_imageTenderCouponRoll" pressIcon="_imageTenderCouponPress" disabledIcon="_imageTenderCouponDisabled" />
+    <Parameter name="VoucherType" value="CERTIFIED_FUND" />
+    <Parameter name="TenderStatus" value="Tender" />
+    <Parameter name="VoucherActivityCodeType" value="REDEEMED" />
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.TenderEnabledCheck" >
+      <Parameter name="tender" value="CERTIFIED_FUND" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.EffectiveTenderAccCheck" >
+      <Parameter name="tender" value="CERTIFIED_FUND" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.AvailableLayawayTenderAccCheck" >
+      <Parameter name="tender" value="CERTIFIED_FUND" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.register.sale.AmountDueVisibilityRule" />
+  </Action>
+  <!--US#89134 User Certified Fund End -->
+  
+   <!-- START US# 89999 NNP Orders -->
+   <Action name="SALE::TENDER_CHECK" category="Register" keywords="sale_tender" text="_menutext32" chainKey="TENDER_CHECK">
+    <IconGroup icon="_imageTenderCheck" rollIcon="_imageTenderCheckRoll" pressIcon="_imageTenderCheckPress" disabledIcon="_imageTenderCheckDisabled" />
+    <VisibilityRule class="mto.pos.shared.visibilityrules.MtoDisableCheckForNNP" />
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.TenderEnabledCheck" >
+      <Parameter name="tender" value="CHECK" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.EffectiveTenderAccCheck" >
+      <Parameter name="tender" value="CHECK" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.shared.visibilityrules.AvailableLayawayTenderAccCheck" >
+      <Parameter name="tender" value="CHECK" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.register.sale.AmountDueVisibilityRule" />
+  </Action>
+   <!-- END US# 89999 NNP Orders -->
+   <!--  START User story 92929 Reconcile Till -->
+   <!--  BUG#100042 Enable/disable Till Status Based on Store Open Status-->
+	<Action name="TILL::RECONCILE_TILL" category="Anywhere" keywords="back_office" 
+	  text="_reconcileTillMenuText" chainKey="RECONCILE_TILL" privilege="RECONCILE_TILL">
+		<IconGroup icon="_imageMenuTillManagement" />
+		<VisibilityRule class="dtv.pos.systemcycle.access.RetailLocationStateAccessCheck">
+		<Parameter name="state" value="OPEN" />
+		</VisibilityRule>
+	</Action>
+  <!--  END User story 92929 Reconcile Till -->
+  <!-- Financial Reports start --> 
+ <Action name="REPORT::FINANCIAL_REPORTS" text="_rptFinancialReportsMenu" category="Reports" keywords="report">
+    <IconGroup icon="_imageMenuReportSubMenu" />
+  </Action> 
+  <!-- US# 92814 Bank Deposit report  -->   
+  <Action name="TILL::REPORT.BANK_DEPOSIT_REPORT" category="Reports" keywords="report" text="_rptBankDepositReportTitle" chainKey="BANK_DEPOSIT_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action> 
+  <!-- US# 92813 Store Summary report  -->   
+  <Action name="TILL::REPORT.STORE_SUMMARY_REPORT" category="Reports" keywords="report" text="_rptStoreSummaryReportTitle" chainKey="STORE_SUMMARY_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action>  
+  <!-- US# 95643 Till Count Report  --> 
+  <Action name="TILL::REPORT.TILL_COUNT_REPORT" category="Reports" keywords="report" text="_rptTillCountReportTitle" chainKey="TILL_COUNT_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action>
+  <!-- US# 92815 Till Summary Report  -->   
+  <Action name="TILL::REPORT.TILL_SUMMARY_REPORT" category="Reports" keywords="report" text="_rptTillSummaryReportTitle" chainKey="TILL_SUMMARY_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action>
+  <!-- US# 92816 Reconcile Till count Report  --> 
+  <Action name="TILL::REPORT.RECONCILE_TILL_COUNT_REPORT" category="Reports" keywords="report" text="_rptReconcileTillCountReportTitle" chainKey="RECONCILE_TILL_COUNT_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action> 
+  <!-- US# 94731 Reconcile Till summary report  --> 	
+  <Action name="TILL::REPORT.RECONCILE_TILL_SUMMARY_REPORT" category="Reports" keywords="report" text="_rptReconcileTillSummaryReportTitle" chainKey="RECONCILE_TILL_SUMMARY_REPORT_P">
+    <IconGroup icon="_imageMenuReport" />
+  </Action> 
+<!--  Financial Reports end -->
+  <!-- Start:Userstory #89136 User StoredCredit -->
+  <Action name="SALE::TENDER_STORE_CREDIT_VALIDATION"  chainKey="TENDER_STORED_CREDIT_MISC">  
+  </Action>
+<!-- US# 92815 Till Summary Report  --> 
+  <Action name="TILL::REPORT.PRINT_TILL_SUMMARY" category="Reports" keywords="report_till" text="_systemCyclePrintTillSummary" chainKey="TILL_SUMMARY_REPORT_P">
+    <IconGroup icon="_imageMenuTillManagement" />
+    <VisibilityRule class="dtv.pos.systemcycle.access.WorkstationStateAccessCheck">
+      <Parameter name="state" value="OPEN" />
+    </VisibilityRule>
+  </Action>
+  <!-- Bug#101806 Store Open from Status Bar Start -->
+    <Action name="TOUCH::OPEN_STORE" keywords="exclude,isForStoreOpen_Special" chainKey="MTO_RETAIL_LOCATION_OPEN_FROM_APP" visible="false" >
+    <VisibilityRule class="dtv.pos.systemcycle.access.RetailLocationStateAccessCheck">
+      <Parameter name="state" value="CLOSED" />
+    </VisibilityRule>
+    <VisibilityRule class="dtv.pos.systemcycle.access.ClosingVisibilityRule" />
+  </Action>
+  <!-- Bug#101806 Store Open from Status Bar End -->
+</ActionSet>

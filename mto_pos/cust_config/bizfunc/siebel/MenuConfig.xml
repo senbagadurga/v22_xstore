@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MenuConfig.xsd"
+  xmlns="http://micros.com/xstore/config/menu">
+
+  <MenuItem name="LOGIN::BACK_OFFICE" text="_menuLoginRegister" displayType="BUTTON" category="Login" keywords="exclude">
+    <MenuOption ref="LOGIN::MOBILE_START_SALE" />
+    <MenuOption ref="EMPLOYEE::CHANGE_PASSWORD" />
+    <!--<SubMenu ref="BALANCE_INQUIRY::REGISTER_OPTIONS" />
+    <MenuOption ref="EMPLOYEE::CLOCK_IN_OUT" />
+   
+    <MenuOption ref="LOGIN::CUSTOMER_CENTRIC_SALE" />
+    <MenuOption ref="MENU::ENGAGEMENT_ACTIVITY" /> 
+    <MenuOption ref="LOGIN::REPORT.FLASH_SALES" />
+    <MenuOption ref="ADMIN::SEARCH_FOR_ITEM" />
+    <MenuOption ref="ADMIN::PRICE_INQUIRY" />
+    <MenuOption ref="LOGIN::ENGAGEMENT_ACTIVITY" />
+    <SubMenu ref="ADMIN::REPRINT_OPTIONS"/>
+    <MenuOption>
+      <Action ref="ADMIN::TRAINING_MODE_ENTER" />
+      <Action ref="ADMIN::TRAINING_MODE_EXIT" />
+    </MenuOption>-->
+    <MenuOption ref="TOUCH::OPEN_STORE" />
+    <MenuOption ref="TOUCH::OPEN_REGISTER" />
+    <!--<MenuOption ref="TOUCH::CLOCK_IN_OUT" />-->
+    <MenuOption ref="XSTOREM::ABOUT" />  
+  </MenuItem>  
+ 
+</MenuSet>

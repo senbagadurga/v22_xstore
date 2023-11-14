@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PromptSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PromptConfig.xsd" xmlns="http://micros.com/xstore/config/prompt">
+   <!--START US# 92543 Siebel Sale Order Processing -->
+  <Prompt name="COMPLETE_SALE_PROMPT" type="Notify" title="_completeOrderTitle" message="_completeOrderMsg" />
+ 
+   <Prompt name="MTO_NETWORK_OFFLINE" type="Notify" title="_mtoSiebelOrderNetworkOfflineTitle" message="_mtoSiebelOrderNetworkOfflineMessage">
+  <Action ref="CANCEL_BACK" />
+  </Prompt>
+  
+   <Prompt name="MTO_NO_RECORD_FOUND" type="Notify" title="_mtoSiebelOrderNoRecordsFoundTitle" message="_mtoSiebelOrderNoRecordsFoundMessage">
+  <Action ref="CANCEL_BACK" />
+  </Prompt>
+  
+   <Prompt name="MTO_MAX_RECORDS_EXCEEDED" type="Notify" title="_mtoSiebelOrderMoreRecordsFoundTitle" message="_mtoSiebelOrderMoreRecordsFoundMessage">
+  <Action ref="CANCEL_BACK" />
+  </Prompt>
+  
+  <Prompt name="MTO_ITEM_NOT_ON_FILE_NOTIFY" type="NotifyYesNo" title="_itemnotonfile" message="_promptmsg146">
+   <Action ref="CANCEL_BACK" text="No"/> 
+   <Action ref="YES" chainKey="MTO_ORDER_ADD_ITEM"/>
+  </Prompt>
+
+  <Prompt name="MTO_ERROR" type="Notify" title="_mtoSiebelOrderErrorTitle" message="_mtoSiebelOrderErrorMessage">
+  <Action ref="CANCEL_BACK" />
+  </Prompt>
+  <!--END US# 92543 Siebel Sale Order Processing  -->
+  
+  <!-- Start US#92635 Integration- Siebel - Xstore void order processing  -->
+  <Prompt name="COMPLETE_VOID_PROMPT" type="Notify" title="_completeOrderTitle" message="_completeOrderMsg" />
+  <!-- End US#92635 Integration- Siebel - Xstore void order processing  -->
+</PromptSet>

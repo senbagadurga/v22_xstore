@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans profile="xstore" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+  default-init-method="init">
+  <!-- US#89133 Tender Type Cheque Start -->
+   <bean id="mtoMinimumCheckNumberRule" class="mto.pos.tender.validation.MtoMinimumCheckNumberRule" scope="prototype" />
+  <!--START:Task 100057 Revisit flow for reconciling another till from current till-->
+   <bean id="mtocloseWorkstationRule" class="mto.pos.systemcycle.workstation.MtoValidateCloseWorkstationRule" scope="prototype" />
+   <!--End:Task 100057 Revisit flow for reconciling another till from current till-->
+   <bean id="nonNullCheckNumberRule" parent="nonNullValueRule">
+    <property name="valueKey">
+      <util:constant static-field="dtv.pos.common.ValueKeys.CHECK_MANUAL_ENTRY_DATA" />
+    </property>
+  </bean>
+  
+   <bean id="mtoCheckNumberRules" parent="validationRuleList">
+    <property name="rules">
+      <list>
+        <ref bean="nonNullCheckNumberRule" />
+        <ref bean="mtoMinimumCheckNumberRule" />
+      </list>
+    </property>
+ 	</bean>
+  <!-- US#89133 Tender Type Cheque End -->
+ <!--US#89134 User Certified Fund Start-->
+	<bean id="mtoCertifiedFundNumberRules" parent="validationRuleList">
+	<property name="rules">
+	<list>
+	<ref bean="nonNullCertifiedFundNumberRule" />
+	</list>
+	</property>
+	</bean>
+	
+	<bean id="nonNullCertifiedFundNumberRule" parent="nonNullValueRule">
+	<property name="valueKey">
+	<util:constant static-field="mto.pos.common.MtoValueKeys.MTO_ENTERED_SERIAL_NUMBER" />
+	</property>
+	</bean>
+<!--US#89134 User Certified Fund End -->
+<!-- US# Split Tender Validation Rule Start -->
+ 	<bean id="mtoMaximumSplitTenderRule" class="mto.pos.tender.validation.MtoMaximumSplitTenderCheckRule" scope="prototype" />
+   
+ 	<bean id="tenderAmountRules" parent="validationRuleList">
+    <property name="rules">
+      <list>
+        <ref bean="basicTenderAmountRule" />
+        <ref bean="basicRefundAmountRule" />
+        <ref bean="tenderDenominationAmountRule" />
+        <ref bean="overTenderRefundAmountRule" />
+        <ref bean="beyondOverTenderLimitRule" />
+        <ref bean="minimumTenderAmountRule" />
+        <ref bean="maxmimumTenderAmountRule" />
+        <ref bean="maxmimumRefundAmountRule" />
+        <ref bean="houseAccountTenderAmountRule" />
+        <ref bean="roundedCashAmountRule" />     
+        <ref bean="mtoMaximumSplitTenderRule" />    
+      </list>
+    </property>
+  </bean>
+  <!-- US# Split Tender Validation Rule End -->
+  
+  <!--START:Task 100057 Revisit flow for reconciling another till from current till-->
+  <bean id="mtocloseWorkstationRules" parent="validationRuleList">
+    <property name="rules">
+      <list>
+        <ref bean="mtocloseWorkstationRule"/>
+      </list>
+    </property>
+  </bean>
+  <!--END:Task 100057 Revisit flow for reconciling another till from current till-->
+  <!--START:Task Restricting cashier from opening another till-->
+  <bean id="openWorkstationRule" class="mto.pos.systemcycle.workstation.MtoValidateOpenWorkstationRule" scope="prototype" />
+   <bean id="openWorkstationRules" parent="validationRuleList">
+    <property name="rules">
+      <list>
+        <ref bean="openWorkstationRule"/>
+      </list>
+    </property>
+  </bean>
+   <!--END:Task Restricting cashier from opening another till-->
+ </beans>

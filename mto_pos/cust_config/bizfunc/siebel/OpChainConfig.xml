@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpChainSet xmlns="http://micros.com/xstore/config/opchain"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://com.micros-retail/common OpChainConfig.xsd">
+
+	<!-- US# 92543 Siebel Sale Order Processing -->
+ <!-- Start Bug #100181 From prompt for item not in file -No button has incorrect flow  -->
+	<OpChain name="PRE_SALE_TRANSACTION" contextKey="PRE_SALE" rollbackLevel="40">
+	  <!-- End Bug#100181 From prompt for item not in file -No button has incorrect flow-->
+		<OpChainRoute chainKey="PRE_SALE_TRANS_WITHOUT_CUSTOMER" />
+		<Op class="mto.pos.siebelorder.webservice.MtoOrderLookupOp" longRunning="true" />
+		<Op class="mto.pos.order.MtoDisplaySiebelOrderListOp" />
+		<Op class="dtv.pos.common.TransactionPropertyCreateTransactionOp" />
+		<Op class="dtv.pos.register.RouteSalesChainFromConfigOp"
+			contextKey="SALE" />
+	</OpChain>
+
+	<OpChain name="MTO_ORDER_PROCESS_FLOW"
+		signal="TransactionModified">
+		<!-- <Op class="mto.pos.order.MtoCreateSiebelOrderTransactionOp" /> -->
+	<OpChainRoute chainKey="MTO_VOID_ORDER_FLOW" condition="mto.pos.order.voidorder.MtoVoidOrderCheckRunCondition"/>
+		<OpChainRoute chainKey="MTO_ORDER_ITEM_FLOW" />
+		<OpChainRoute chainKey="SALE_ITEM_AFTER_LOOKUP" />
+		<Op class="mto.pos.siebelorder.webservice.MtoOrderUpdateOp" longRunning="true" />
+		<OpChainRoute chainKey="PRE_TENDERING" chainType="START" />
+	</OpChain>
+
+	<!-- this flow is for the item retrieved from the database -->
+	<OpChain name="MTO_ORDER_ITEM_FLOW" signal="TransactionModified">
+	<!--Start Task #100597 Item Not on File prompt appearing for 
+	transaction type available in DB -->
+		<Op class="mto.pos.order.addItem.MtoSiebelOrderItemLookupOp" />
+	<!--End Task #100597 Item Not on File prompt appearing for 
+	transaction type available in DB -->
+		<Op class="mto.pos.order.addItem.MtoOrderItemLookupOp" />
+		<Op class="mto.pos.order.MtoCreateSiebelOrderTransactionOp" />
+	</OpChain>
+
+	<!-- this flow is for the item added from the item entry form -->
+	<OpChain name="MTO_ORDER_ADD_ITEM" signal="TransactionModified">
+		<Op class="mto.pos.order.addItem.MtoOrderAddItemOp" />
+		<Op class="mto.pos.order.MtoCreateTransItemNotFoundOp" />
+		<OpChainRoute chainKey="SALE_ITEM_AFTER_LOOKUP" />
+		<Op class="mto.pos.siebelorder.webservice.MtoOrderUpdateOp"
+			longRunning="true" />
+		<OpChainRoute chainKey="PRE_TENDERING" chainType="START" />
+	</OpChain>
+
+	<OpChain name="MTO_ORDER_VOID" signal="TransactionModified">
+		<Op class="mto.pos.siebelorder.webservice.MtoOrderVoidOp"
+			longRunning="true" />
+	</OpChain>
+	
+	<OpChain name="ROLLBACK_TENDER_START" signal="TransactionModified">
+	<!-- Start Task#102263 Remove the Ready to Tender Request sent to Siebel 
+	from Xstore when Back is clicked from Tender screen -->
+		<!-- <OpChainRoute chainKey="MTO_ORDER_VOID" /> -->
+		<!--Start Bug#100170 Re-Initiation of the Order List doesn't happen as 
+			cancel/back button doesn't provide the appropriate prompt -->
+		<OpChainRoute chainKey="ROLLBACK_TRANS_START" />
+		<!--End Bug#100170 Re-Initiation of the Order List doesn't happen as cancel/back 
+			button doesn't provide the appropriate prompt -->
+	</OpChain>
+
+	<OpChain name="INITIALIZE_BACKGROUND_PROCESSES">
+		<Op class="mto.pos.register.MtoProcessOfflineSiebelRequestsOp" />
+	</OpChain>
+	<OpChain name="CHECK_SALE_COMPLETE"
+		contextKey="TEXT_PROMPT_ONLY">
+		<Op class="mto.pos.register.MtoCheckSaleCompleteOp" />
+	</OpChain>
+	<!--END US# 92543 Siebel Sale Order Processing -->
+	<!--US#90370 Void Orders START-->	   	   
+	<OpChain name="MTO_VOID_ORDER_FLOW" signal="TransactionModified">
+		   <OpChainRoute chainKey="MTO_INVALID_VOID_ORDER_FLOW" condition="mto.pos.order.voidorder.MtoVoidOrderValidationRunCondition" />   
+		   <Op class="mto.pos.order.voidorder.MtoVoidOrderItemOp" />
+		   <PromptOp class="mto.pos.order.voidorder.MtoPromptVoidOrderTenderListOp"/>
+		   <Op class="mto.pos.order.voidorder.MtocreateVoidTransOp" />
+		   	<!--US#92635 Integration- Siebel - Xstore  void order processing  -->
+		   <OpChainRoute chainKey="MTO_ORDER_POSTVOID" chainType="START" />		   
+	</OpChain>
+		
+	<OpChain name="MTO_INVALID_VOID_ORDER_FLOW" signal="TransactionModified">
+			<PromptOp class="mto.pos.order.voidorder.MtoPromptInvalidVoidOrderOp"/> <!-- ok ->  reload button of Order list screen -->   
+	</OpChain>
+		
+	<OpChain name="MTO_ORDER_POSTVOID" signal="TransactionComplete" >
+			<OpChainRoute chainKey="PRE_POST_VOID_TENDER_AUTH" condition="dtv.pos.ejournal.postvoid.condition.HasReverseTenderAuth" />
+			<OpChainRoute chainKey="POST_VOID_BASE" />
+			<OpChainRoute chainKey="POST_VOID_SOLD_VOUCHER" condition="dtv.pos.ejournal.postvoid.condition.HasSoldVouchers" />
+			<OpChainRoute chainKey="POST_VOID_ISSUED_VOUCHER" condition="dtv.pos.ejournal.postvoid.condition.HasIssuedVouchers" />
+			<OpChainRoute chainKey="POST_VOID_BOUNCE_BACK_COUPON" condition="dtv.pos.ejournal.postvoid.condition.HasIssuedBounceBackCoupons" />
+			<WorkerOp workersBean="postVoidInventoryWorkers" />
+			<OpChainRoute chainKey="POST_VOID_WARRANTY_ACTIVITY" condition="dtv.pos.ejournal.postvoid.condition.HasWarrantyActivities" />
+			<OpChainRoute chainKey="PRE_POST_VOID_STORED_VALUE" condition="dtv.pos.ejournal.postvoid.condition.HasStoredValueAuthorizations" />
+			<WorkerOp workersBean="ejBuildReturnedItemJournalWorkers" />	    
+			<Op class="dtv.pos.coupon.VoidAuthorizeCouponsFromPostVoidTransactionOp" />
+			<OpChainRoute chainKey="POST_VOID_ENTITLEMENT_COUPONS" />
+			<Op class="dtv.pos.houseaccount.op.PostVoidChargeAcctHistoryOp" />
+			<OpChainRoute chainKey="POST_VOID_MAIN.3.local" />
+			<OpChainRoute chainKey="POST_VOID.ERECEIPT" />	    
+			<Op class="dtv.pos.hardware.op.OpenCashDrawerForPostVoidsOp" />	   
+			<WorkerOp workersBean="updateCashDrawerIdWorkers" />
+			<WorkerOp workersBean="persistPostVoidWorkers" />
+			<Op class="dtv.pos.framework.op.PersistObjectsOp" />
+			<Op class="dtv.pos.tender.voucher.PersistVoucherPostVoidHistoryOp" />
+			<Op class="dtv.pos.hardware.op.BuildTenderFrankingsOnSelectedTransactionOp" />
+			<OpChainRoute chainKey="POST_VOID_MAIN.AFTER_SAVE.local" />
+			<Op class="dtv.pos.hardware.op.FrankTendersOp" />	   
+			<PromptOp class="dtv.pos.hardware.op.WaitForCashDrawerCloseOp" validationsBean="cashDrawerCloseRules" />	    
+			<OpChainRoute chainKey="POST_VOID_POPULATE_FLASH_SALES" />
+			<!--Start US#92635 Integration- Siebel - Xstore  void order processing  -->
+			<OpChainRoute chainKey="MTO_VOID_ORDER_WS_FLOW" />
+			<OpChainRoute chainKey="SALE_COMPLETE_FINISH.3" />
+			<!--End US#92635 Integration- Siebel - Xstore  void order processing  -->
+			<WorkerOp workersBean="updateSAFQueueForPostVoidsWorkers" />
+			<OpChainRoute chainKey="POST_VOID_MAIN_FINISH.local" />
+			<WorkerOp workersBean="clearActiveCashDrawerWorkers" />	
+			<!-- Bug#105122 Display void is successful message if void is successful start-->
+			<PromptOp class="mto.pos.register.MtoPromptVoidCompleteOp"/>
+			<!-- Bug#105122 Display void is successful message if void is successful end-->	        
+	</OpChain>
+	<!--US#90370 Void Orders END-->
+	
+	<!--Start US#92635 Integration- Siebel - Xstore  void order processing  -->
+	<OpChain name="MTO_VOID_ORDER_WS_FLOW" signal="TransactionModified">
+		<Op class="mto.pos.order.voidorder.webservice.MtoPostVoidSelectedOrderOp"
+			longRunning="true" />
+	</OpChain>
+	<!--End US#92635 Integration- Siebel - Xstore  void order processing  -->
+   <!--Start US#95645 Integration - Xstore - BPM-LCS starts  -->
+	<OpChain name="SALE_COMPLETE_FINISH.3" >
+		<Op class="mto.pos.bpm.MtoSendCreditDebitDetailsBpmOp2" longRunning="true" />
+	</OpChain>
+	<!--End US#95645 Integration - Xstore - BPM-LCS starts -->
+</OpChainSet>

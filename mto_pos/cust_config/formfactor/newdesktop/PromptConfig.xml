@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PromptSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PromptConfig.xsd" xmlns="http://micros.com/xstore/config/prompt">
+
+  <!-- US#89123 Login Start -->
+  <Prompt name="RESTRICT_LOGIN_UNASSIGNED_CASHIER" type="NotifyCancel" title="_tillAccountability" message="_noTillAssignedToCashier" />
+  <!-- US#89123 Login End -->
+  <!-- US#89114 Store Open Start -->
+  <!-- Bug#102275 Defaulting next business Date to Valid date -->
+  <Prompt name="VALIDATE_BDATE_NOT_SYSTEM_DATE_PAST" type="NotifyCancel" title="_systemCycleBDateValidateTitle" message="_systemBDateIsPast" >
+  </Prompt>
+	<Prompt name="VALIDATE_BDATE_NOT_SYSTEM_DATE_FUTURE" type="NotifyCancel" title="_systemCycleBDateValidateTitle" message="_systemBDateIsFuture" >
+	</Prompt>
+  <!-- Bug#102275 Defaulting next business Date to Valid date -->
+ <Prompt name="ALREADY_CLOSED_FOR_DATE_RETRY" type="Notify" title="_systemCycleBDateValidateTitle" message="_systemCycleBDateAlreadyClosedRetry">
+    <Action chainKey="CHANGE_BUSINESS_DATE_OPEN" chainType="STACK" text="_cancel" keyStroke="Cancel" />
+  </Prompt>
+  <Prompt name="UNSCHEDULED_OPEN_DATE_RETRY" type="Notify" title="_systemCycleBDateValidateTitle" message="_systemCycleBDateUnscheduledOpenRetry">
+  <Action chainKey="CHANGE_BUSINESS_DATE_OPEN" chainType="STACK" text="_cancel" keyStroke="Cancel" />
+    <!--<Action ref="CANCEL_OK" />-->
+  </Prompt>
+  <!-- Reconcile No till prompt Bug--> 
+  <Prompt name="NO_TILLS_TO_RECONCILE" type="Notify" title="_reconcileTillTitle" message="_reconcileTillNoTillsToReconcile" >
+	<Action ref="CANCEL_BACK" text="_ok" />
+ </Prompt>
+
+
+  <!-- US#89114 Store Open End -->
+  <!-- US#89133 Tender Type Cheque Start  -->
+    <Prompt name="ENTER_CHECK_NUMBER" type="Text" title="_checktender" message="_promptmsg41">
+    <DataField ref="Numeric">
+      <Parameter name="maximumIntegerDigits">
+        <param_value dtype="Integer">20</param_value>
+      </Parameter>
+    </DataField>
+    <IconGroup icon="_imagePromptSerial" />
+  </Prompt>
+  <!-- US#89133 Tender Type Cheque End  -->
+  <!-- Bug#97763 Prompt is Incorrect when sale is completed START -->
+   <Prompt name="SALE_COMPLETE_CHECK" type="Notify" title="_salecompletetitle" message="_promptmsg40" />
+   <!-- Bug#97763 Prompt is Incorrect when sale is completed End -->
+   <!-- US#89134 Certified Fund Start-->
+   <Prompt name="MTO_ENTER_CERTIFIED_FUND_NUMBER" type="Text" title="_mtoCertifiedFund" message="_mtoCertifiedFundMsg">
+	   <DataField ref="Numeric">
+	    <Parameter name="maximumIntegerDigits">
+	    <param_value dtype="Integer">20</param_value>
+	    </Parameter>
+	    </DataField>
+	    <IconGroup icon="_imagePromptSaleItem" />
+	</Prompt>
+	<Prompt name="ENTER_VOUCHER_AMOUNT" type="Text" title="_mtoCFAmountTile" message="_mtoCertifiedFundMsg_amt">
+	    <DataField ref="Money" />
+	    <IconGroup icon="_imagePromptCurrency" />
+	</Prompt>
+<!-- US#89134 Certified Fund End-->
+<!-- US#89136 User StoredCredit Start-->
+  <Prompt name="MTO_STORED_CREDIT" type="NotifyYesNo" title="_mtoStoredcredit" message="_promptmsgforstoredcredit">
+	<ActionDisplayType dtype="String">POPUP</ActionDisplayType>
+    <Action ref="NO_ESCAPE" />
+    <Action ref="YES_ENTER" />
+  </Prompt> 
+<!--US#89136 User StoredCredit End -->
+ <!-- START US#89135 Tender Type Prepaid -->
+ <Prompt name="ENTER_PREPAID_TENDER_AMOUNT" type="Text" title="_tender" message="_mtoPrepaidPromptMsg" >
+    <DataField ref="Money" />
+    <IconGroup icon="_imagePromptTender" />
+    <Action dataKey="CANCEL" text="_back" keyStroke="Escape" />
+    <Action ref="ACCEPT_ENTRY" />
+  </Prompt>
+   <!-- END US#89135 Tender Type Prepaid -->
+  <!--  START User story 92929 Reconcile Till -->
+ <Prompt name="RECONCILE_TILL_REGISTER_STATUS" type="List" title="_reconcileTillTitle" message="_reconcileTillList">
+ <ListViewHeaderType dtype="String">REGISTER_MODE_TILL_TO_RECONCILE_STATUS</ListViewHeaderType>
+ <ListViewRuleSet dtype="String">REGISTER_MODE_TILL_TO_RECONCILE_DETAIL_STATUS</ListViewRuleSet> 
+ </Prompt>
+ <!--  END User story 92929 Reconcile Till -->
+ <!-- US# 92814 Bank Deposit report  --> 
+ <!--start report prompt title  --> 
+  <Prompt name="BANK_DEPOSIT_PROMPT" type="NotifyYesNo" title="_rptBankDepositReportTitle" message="_promptBankDepositReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+  <!-- US# 92813 Store Summary report  --> 
+  <Prompt name="STORE_SUMMARY_PROMPT" type="Notify" title="_rptStoreSummaryReportTitle" message="_promptStoreSummaryReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+  <!-- Store close prompt --> 
+  <Prompt name="DISPLAY_STORE_CLOSE_COMPLETE_MESSAGE" type="Notify" title="_systemCycleMenuOption" message="_systemCycleNotifyCloseCompleteMsg" />
+<!-- US# 95643 Till Count Report  -->
+  <Prompt name="TILL_COUNT_PROMPT" type="NotifyYesNo" title="_rptTillCountReportTitle" message="_promptTillCountReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+ <!-- US# 92815 Till Summary Report  -->  
+  <Prompt name="TILL_SUMMARY_PROMPT" type="Notify" title="_rptTillSummaryReportTitle" message="_promptTillSummaryReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+ <!-- US# 94731 Reconile Till Count Report  -->
+  <Prompt name="RECONCILE_TILL_COUNT_PROMPT" type="NotifyYesNo" title="_rptReconcileTillCountReportTitle" message="_promptReconcileTillCountReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+ <!-- US# 92816 Reconile Till Summary Report  -->  
+  <Prompt name="RECONCILE_TILL_SUMMARY_PROMPT" type="Notify" title="_rptReconcileTillSummaryReportTitle" message="_promptReconcileTillSummaryReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+
+  <!--end report prompt title  --> 
+  <Prompt name="MTO_TSR_INVALID_DATE_PROMPT" type="Notify" title="_tsrReportError" message="_rptTsInvalidBusinessDatePromptMessage" >
+	<Action ref="CANCEL_BACK" />
+  </Prompt> 
+  <Prompt name="MTO_TSR_INVALID_SESSIONID_PROMPT" type="Notify" title="_tsrReportError" message="_rptTsInvalidSessionIdPromptMessage" >
+	<Action ref="CANCEL_BACK" />
+  </Prompt> 
+  <!-- Bug# Over Tender Start -->
+  <Prompt name="VALIDATE_OVER_TENDER" type="NotifyOkCancel" title="_promptTitleOverTendering" message="_promptMessageOverTendering">
+		<ActionDisplayType dtype="String">POPUP</ActionDisplayType>
+		<Action ref="CANCEL_BACK" />
+		<Action ref="ACCEPT_ENTRY" primary="true" />
+		<IconGroup icon="_imagePromptSerial" />
+  </Prompt>
+  <!-- Bug# Over Tender End -->
+  <!-- US#89121 Force Close Start-->
+  <Prompt name="WORKSTATIONS_STATUS_LIST_NOACTION" type="NotifyYesNo" title="_storeclosetitle" message="_storeclosemessagewhentillisopen">
+    <Action ref="YES" />	
+    <Action ref="NO" />
+  </Prompt>
+  <!-- US#89121 Force Close End-->
+  <!-- Bug# Change Due Start -->
+	<Prompt name="CHANGE_DUE_NON_CASH_TENDER" type="Notify" title="_promptOverTenderTitle" message="_promptOverTenderStoredCreditMessage" />
+  <!-- Bug# Change Due End -->
+
+ <!-- US#95644 Integration - Xstore - CDServ Start-->
+  <Prompt name="CDSERV_DISPLAY" type="Notify" title="_cdServTitle" message="_cdServDescription"/>
+  <Prompt name="CDSERV_ERROR_DISPLAY" type="Notify" title="_cdServTitle" message="_cdServErrorDescription"/>
+  <Prompt name="CDSERV_TIMEOUT_ERROR_DISPLAY" type="Notify" title="_cdServTitle" message="_cdServTimeoutErrorDescription"/>
+  <Prompt name="CDSERV_DECLINED" type="Notify" title="_cdServTitle" message="_cdServCardDeclined"/>
+  <Prompt name="CDSERV_OFFLINE" type="Notify" title="_cdServTitle" message="_cdServOffline"/>
+  <Prompt name="CANCEL_CUSTOMER_PRESENT" type="NotifyYesNo" title="_cdServTitle" message="_customerPresentPromptMsg" />
+  <Prompt name="CDSERV_NNP_ORDERS_WARNING" type="Notify" title="_cdServNNPTitle" message="_cdServNNPrdersMsg" />
+  <Prompt name="CDSERV_NNP_ORDER_CREDIT" type="Notify" title="_cdServNNPVoidTitle" message="_cdServNNPOrdersVoidMsg" />
+  <Prompt name="CDSERV_TXN_NOT_COMPLETE" type="Notify" title="_cdServTitle" message="_cdServTxnNotComplete"/>
+  <Prompt name="CDSERV_TXN_NOT_COMPLETE_OTH" type="Notify" title="_cdServTitle" message="_cdServTxnNotCompleteOth"/>
+  <Prompt name="CDSERV_REQ_INPUT" type="Notify" title="_cdServTitle" message="_cdServReqAdditionalInput"/>
+  <Prompt name="CDSERV_REQ_INPUT_INVALID" type="Notify" title="_cdServTitle" message="_cdServReqAdditionalInputInvlalid"/>
+  <Prompt name="CDSERV_FORMAT_ERROR" type="Notify" title="_cdServTitle" message="_cdServFormatError"/>
+  <Prompt name="CDSERV_MISSING_DATA" type="Notify" title="_cdServTitle" message="_cdServMissingData"/>
+  <Prompt name="CDSERV_UNSUPPOTED_TYPE" type="Notify" title="_cdServTitle" message="_cdServUnsupportedType"/>
+  <Prompt name="CDSERV_UNSUPPOTED_VERSION" type="Notify" title="_cdServTitle" message="_cdServUnsupportedVersion"/>
+  <Prompt name="CDSERV_TERMINAL_BUSY" type="Notify" title="_cdServTitle" message="_cdServTerminalBusy"/>
+  <Prompt name="CDSERV_INVALID_DATA" type="Notify" title="_cdServTitle" message="_cdServInvalidData"/>
+  <Prompt name="CDSERV_TXN_NOT_ACCEPTED" type="Notify" title="_cdServTitle" message="_cdServTxnNotAccepted"/>
+  <Prompt name="CDSERV_TXN_REVERSED" type="Notify" title="_cdServTitle" message="_cdServTxnReversed"/>
+  <Prompt name="CDSERV_TXN_REVERSED_MAC" type="Notify" title="_cdServTitle" message="_cdServTxnReversedMac"/>
+  <Prompt name="CDSERV_REQ_REJECTED" type="Notify" title="_cdServTitle" message="_cdServRequestRejected"/>
+  <Prompt name="CDSERV_INVALID_OTH" type="Notify" title="_cdServTitle" message="_cdServInvalidDataOth"/>
+  <!-- US#95644 Integration - Xstore - CDServ End-->
+  
+   <!-- US#95644 Integration - Xstore - CDServ End-->
+	<!--Start:Bug# During Bank deposit with discrepancy -->
+	<!-- Bug#103661 Lead / non Lead not generating reports after Store Close -->
+	<Prompt name="OUT_OF_BALANCE_STORE" type="Notify" title="_deposit" message="_promptmsg996">
+	</Prompt>
+<!--End:Bug# During Bank deposit with discrepancy -->
+<!-- Bug 101487 Bank Deposit BalanceScenario Start-->
+<Prompt name="BALANCED_STORE_COUNT" type="Notify" title="_BankCount" message="_promptmsg2390" />
+<!-- Bug 101487 Bank Deposit BalanceScenario End-->
+
+<!--90370 US Void Order START-->
+	<Prompt name="MTO_INVALID_VOIDORDER_PROMPT" type="Notify" title="_voidOrderError" message="_voidOrderInvalidOrderErrorMessage" />
+	  	<Prompt name="MTO_VOIDORDER_TENDER_PROMPT" type="Notify" title="_voidOrderTenderList" message="_voidOrderTenderListMessage" >
+		<Action ref="ACCEPT" text="_enter"/>
+	</Prompt>
+<!--90370 US Void Order END-->	
+<!-- Bug# 100042 Reconciled till notify prompt start -->
+<Prompt name="RECONCILE_RECOUNT_ERROR_PROMPT" type="Notify" title="_reconcileTillTitle" message="_reconcilerecounterrormessage" >
+<Action ref="ACCEPT" text="_ok" chainKey="RECONCILE_TILL" chainType="START" />
+</Prompt>
+<!-- Bug# 100042 Reconciled prompt end -->
+<!-- Bug#105122 Display void is successful message if void is successful start-->
+<Prompt name="MTO_PAYMENT_SUCCESSFULL_PROMPT" type="Notify" title="_mtopayment" message="_promptmsg2988" >
+<Action ref="ACCEPT" text="_ok"  />
+</Prompt>
+<!-- Bug#105122 Display void is successful message if void is successful end-->
+<!--START:Task Displaying session Id while till open-->
+<Prompt name="SHOW_TILLID" type="Notify" title="_showTillId" message="_messageShowTillId" >
+<Action ref="ACCEPT" text="_ok"  />
+</Prompt>
+<!--END:Task Displaying session Id while till open-->
+ <!-- Bug#106547 Unable to print TSR due to session Id unknown -->
+<Prompt name="REPORT_BUSINESS_DATE" type="Text" title="_TillSummaryReportDateTitle" message="_TillSummaryReportDateMessage"  >
+    <DataField ref="Date" />
+    <IconGroup icon="_imagePromptDate" />
+  </Prompt>
+  <Prompt name="REPORT_USER_PROMPT" type="List" title="_TillSummaryReportUserTitle" message="_TillSummaryReportUserMessage">
+   <ListViewType dtype="String">TILL_SUMMARY_REPORT_USER_LIST</ListViewType>
+ </Prompt>
+ <Prompt name="MTO_REPORT_INVALID_DATE_PROMPT" type="Notify" title="_tsrReportError" message="_rptTsInvalidBusinessDatePromptMessage" >
+	<Action ref="CANCEL_BACK" />
+  </Prompt>
+ <!-- Bug#106547 Unable to print TSR due to session Id unknown --> 
+  <!-- Bug#107352 Till Suspend/Resume not showing correct prompt msg -->
+  <Prompt name="UNLOCK_LOGIN_FAILED" type="Notify" title="_login" message="_promptmsgUnlockUsr" />
+ </PromptSet>

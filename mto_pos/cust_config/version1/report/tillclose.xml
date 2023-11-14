@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ReportDefinitions xmlns="http://micros.com/xstore/config/report"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../../../../../config-objects/schema/ReportDefinitions.xsd">
+  
+  <!-- US# 95643 Till Count Report  --> 
+  <ReportDefinition name="TILL_COUNT_REPORT"
+    title="_rptTillCountReportTitle"
+    dataTemplate="version1/report/tillclose/tillCount.xdt"
+    layoutTemplate="version1/report/tillclose/tillCount.rtf"
+  />
+  <ReportDefinition name="TILL_COUNT_REPORT_P"
+    title="_rptTillCountReportTitle"
+    dataTemplate="version1/report/tillclose/tillCountP.xdt"
+    layoutTemplate="version1/report/tillclose/tillCount.rtf"
+  />
+  
+  <!-- US# 92815 Till Summary Report  -->  
+  <ReportDefinition name="TILL_SUMMARY_REPORT"
+    title="_rptTillSummaryReportTitle"
+    dataTemplate="version1/report/tillclose/tillSummary.xdt"
+    layoutTemplate="version1/report/tillclose/tillSummary.rtf"
+  />
+   <ReportDefinition name="TILL_SUMMARY_REPORT_P"
+    title="_rptTillSummaryReportTitle"
+    dataTemplate="version1/report/tillclose/tillSummaryP.xdt"
+    layoutTemplate="version1/report/tillclose/tillSummary.rtf"
+  />
+
+</ReportDefinitions>

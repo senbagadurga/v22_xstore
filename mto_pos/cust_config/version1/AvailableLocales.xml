@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root dtype="List" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="AvailableLocales.xsd" xmlns="http://micros.com/xstore/config/availablelocales">
+  <Entry dtype="String">de_AT</Entry>
+  <Entry dtype="String">de_CH</Entry>
+  <Entry dtype="String">de_DE</Entry>
+  <Entry dtype="String">en</Entry>
+  <Entry dtype="String">en_AU</Entry>
+  <Entry dtype="String">en_CA</Entry>
+  <Entry dtype="String">en_GB</Entry>
+  <Entry dtype="String">en_NZ</Entry>
+  <Entry dtype="String">en_IN</Entry>
+  <Entry dtype="String">en_SG</Entry>
+  <Entry dtype="String">en_US</Entry>
+  <Entry dtype="String">en_ZA</Entry>
+  <Entry dtype="String">es_CL</Entry>
+  <Entry dtype="String">es_ES</Entry>
+  <Entry dtype="String">es_MX</Entry>
+  <Entry dtype="String">fr_CA</Entry>
+  <Entry dtype="String">fr_FR</Entry>
+  <Entry dtype="String">it_IT</Entry>
+  <Entry dtype="String">ja_JP</Entry>
+  <Entry dtype="String">nl_NL</Entry>
+  <Entry dtype="String">nl_BE</Entry>
+  <Entry dtype="String">ru_RU</Entry>
+  <Entry dtype="String">pl_PL</Entry>
+  <Entry dtype="String">pt_BR</Entry>
+  <Entry dtype="String">pt_PT</Entry>
+  <Entry dtype="String">sv_SE</Entry>
+  <Entry dtype="String">zh_CN</Entry>
+</Root>

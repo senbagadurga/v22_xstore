@@ -1,0 +1,294 @@
+**LOG BEGUN     2023-07-11 12:13:04,838
+loading D:xstoreconfiglog4j2.xml
+INFO  2023-07-11 12:13:04,831 HARDWARE SERVICE CLIENT STARTING ...
+
+************************************************************
+SYSTEM PROPERTIES
+************************************************************
+
+Loaded system.properties from: file:/D:/system.properties
+
+CONTENTS:
+awt.toolkit = sun.awt.windows.WToolkit
+db.name.extra = 
+db.name.version = _18
+dtv.data2.OverrideTypes = Customer,Country
+dtv.data2.replication.enabled = OFF
+dtv.hardware.StartupDialogManager.disable = true
+dtv.hardware.rcptbuilding.RcptElementFactory.trace = false
+dtv.locate.order.downloadInterval = 15
+dtv.locate.order.statusRequestInterval = 30
+dtv.pos.appmanagement.preflight.check.SequencePreFlightCheck.forceRepair = true
+dtv.pos.ui.useFrame = true
+dtv.register.openClose.useSystemDate = false
+dtv.register.startup.synchronize.primaryOnly = true
+dtv.relate.customerCode = 
+dtv.system.properties.location = file:/D:/system.properties
+dtv.system.properties.location.type = FILESYSTEM
+dtv.system.properties.locations = file:/D:/xyz_pos/root/system.properties
+     file:/D:/system.properties
+dtv.version.logging.environment = OFF
+dtv.version.logging.pos = OFF
+dtv.xunit.service.AbstractTestServicePort.messageDir = res/test
+file.encoding = Cp1252
+file.separator = \
+inventory.location.DefaultInventoryLocationId = DEFAULT
+inventory.location.OnHandInventoryBucketId = ON_HAND
+java.awt.graphicsenv = sun.awt.Win32GraphicsEnvironment
+java.awt.printerjob = sun.awt.windows.WPrinterJob
+java.class.path = wrapper/lib/wrapper.jar
+     ../xstoredata/xstore/cust_config
+     config
+     reports
+     lib/xst-config.jar
+     lib/xst-pos.jar
+     lib/config.jar
+     lib/pos.jar
+     lib/dtv-xst-crm-relate.jar
+     lib/config-objects.jar
+     lib/dtv-barcode.jar
+     lib/dtv-bitmap.jar
+     lib/dtv-cheetah.jar
+     lib/dtv-data2.jar
+     lib/dtv-dtx.jar
+     lib/dtv-event.jar
+     lib/dtv-hardware.jar
+     lib/dtv-i18n.jar
+     lib/dtv-ipc.jar
+     lib/dtv-jmxutil.jar
+     lib/dtv-password.jar
+     lib/dtv-pricing2.jar
+     lib/dtv-scope.jar
+     lib/dtv-service.jar
+     lib/dtv-util-measurement.jar
+     lib/dtv-util-net.jar
+     lib/dtv-util-sequence.jar
+     lib/dtv-util.jar
+     lib/dtv-version.jar
+     lib/dtv-xstoregwt-util.jar
+     lib/jaxws-wlswss-client-14.1.1.0.jar
+     lib/xst-config.jar
+     lib/xst-pos.jar
+     lib/ext/APGJposService-1.7.1.jar
+     lib/ext/asm-9.2.jar
+     lib/ext/bixolon-common-1.9.4.jar
+     lib/ext/bixolon-portmng-1.9.3.3.jar
+     lib/ext/bixolon-portwin-1.7.jar
+     lib/ext/bixolon-service-2.4.0.jar
+     lib/ext/coherence-14.1.1-0-11.jar
+     lib/ext/collection-setter-injector-1.0.jar
+     lib/ext/commons-beanutils-1.9.4.jar
+     lib/ext/commons-codec-1.15.jar
+     lib/ext/commons-collections4-4.4-83acfd3.jar
+     lib/ext/commons-configuration2-2.8.0.jar
+     lib/ext/commons-csv-1.9.0.jar
+     lib/ext/commons-io-2.11.0.jar
+     lib/ext/commons-lang3-3.12.0.jar
+     lib/ext/commons-logging-1.2-1b97e70.jar
+     lib/ext/commons-text-1.10.0.jar
+     lib/ext/dpjavapos-2.3.1.jar
+     lib/ext/dpuareu-2.3.1.jar
+     lib/ext/failureaccess-1.0.1.jar
+     lib/ext/gmbal-4.0.1.jar
+     lib/ext/guava-31.1-jre.jar
+     lib/ext/ha-api-3.1.12.jar
+     lib/ext/hardware-service.jar
+     lib/ext/hk2-api-2.5.0-b61.jar
+     lib/ext/hk2-locator-2.5.0-b61.jar
+     lib/ext/icu4j-70.1.jar
+     lib/ext/icu4j-charset-70.1.jar
+     lib/ext/jackson-annotations-2.14.0.jar
+     lib/ext/jackson-core-2.14.0.jar
+     lib/ext/jackson-databind-2.14.0.jar
+     lib/ext/jackson-jaxrs-base-2.14.0.jar
+     lib/ext/jackson-jaxrs-json-provider-2.14.0.jar
+     lib/ext/jackson-module-jaxb-annotations-2.14.0.jar
+     lib/ext/jakarta.activation-1.2.2.jar
+     lib/ext/jakarta.activation-api-1.2.2.jar
+     lib/ext/jakarta.annotation-api-1.3.5.jar
+     lib/ext/jakarta.jws-api-2.1.0.jar
+     lib/ext/jakarta.mail-1.6.7.jar
+     lib/ext/jakarta.xml.bind-api-2.3.3.jar
+     lib/ext/jakarta.xml.soap-api-1.4.2.jar
+     lib/ext/jakarta.xml.ws-api-2.3.3.jar
+     lib/ext/javapos-1.14.3.jar
+     lib/ext/javax-websocket-client-impl-9.4.48.v20220622.jar
+     lib/ext/javax-websocket-server-impl-9.4.48.v20220622.jar
+     lib/ext/javax.annotation-api-1.2.jar
+     lib/ext/javax.inject-1.jar
+     lib/ext/javax.security.auth.message-1.0.0.v201108011116.jar
+     lib/ext/javax.servlet-api-3.1.0.jar
+     lib/ext/javax.websocket-api-1.0.jar
+     lib/ext/javax.ws.rs-api-2.1.1.jar
+     lib/ext/jaxb-impl-2.3.3.jar
+     lib/ext/jaxws-rt-2.3.3.jar
+     lib/ext/jbars-02-09-2006.jar
+     lib/ext/jersey-client-2.35.jar
+     lib/ext/jersey-common-2.35.jar
+     lib/ext/jersey-entity-filtering-2.35.jar
+     lib/ext/jersey-media-jaxb-2.35.jar
+     lib/ext/jersey-media-json-jackson-2.35.jar
+     lib/ext/jersey-server-2.35.jar
+     lib/ext/jetty-annotations-9.4.48.v20220622.jar
+     lib/ext/jetty-client-9.4.48.v20220622.jar
+     lib/ext/jetty-continuation-9.4.48.v20220622.jar
+     lib/ext/jetty-deploy-9.4.48.v20220622.jar
+     lib/ext/jetty-http-9.4.48.v20220622.jar
+     lib/ext/jetty-io-9.4.48.v20220622.jar
+     lib/ext/jetty-jaas-9.4.48.v20220622.jar
+     lib/ext/jetty-jmx-9.4.48.v20220622.jar
+     lib/ext/jetty-jndi-9.4.48.v20220622.jar
+     lib/ext/jetty-plus-9.4.48.v20220622.jar
+     lib/ext/jetty-proxy-9.4.48.v20220622.jar
+     lib/ext/jetty-rewrite-9.4.48.v20220622.jar
+     lib/ext/jetty-schemas-3.1.M0.jar
+     lib/ext/jetty-security-9.4.48.v20220622.jar
+     lib/ext/jetty-server-9.4.48.v20220622.jar
+     lib/ext/jetty-servlet-9.4.48.v20220622.jar
+     lib/ext/jetty-servlets-9.4.48.v20220622.jar
+     lib/ext/jetty-start-9.4.48.v20220622.jar
+     lib/ext/jetty-util-9.4.48.v20220622.jar
+     lib/ext/jetty-webapp-9.4.48.v20220622.jar
+     lib/ext/jetty-xml-9.4.48.v20220622.jar
+     lib/ext/jna-5.10.0.jar
+     lib/ext/jna-platform-5.10.0.jar
+     lib/ext/log4j-1.2-api-2.17.2.jar
+     lib/ext/log4j-api-2.17.2.jar
+     lib/ext/log4j-core-2.17.2.jar
+     lib/ext/log4j-jcl-2.17.2.jar
+     lib/ext/log4j-jul-2.17.2.jar
+     lib/ext/log4j-slf4j-impl-2.17.2.jar
+     lib/ext/management-api-3.2.2.jar
+     lib/ext/mimepull-1.9.13.jar
+     lib/ext/nimbus-jose-jwt-9.20.jar
+     lib/ext/ojdbc8-19.15.0.0.jar
+     lib/ext/policy-2.7.10.jar
+     lib/ext/rxtxcomm-2.1-7r2.jar
+     lib/ext/saaj-impl-1.5.2.jar
+     lib/ext/scannerjpos-1.13.jar
+     lib/ext/servlet-2.3.3.jar
+     lib/ext/slf4j-api-1.7.36.jar
+     lib/ext/spring-aop-5.3.23.jar
+     lib/ext/spring-beans-5.3.23.jar
+     lib/ext/spring-context-5.3.23.jar
+     lib/ext/spring-context-support-5.3.23.jar
+     lib/ext/spring-core-5.3.23.jar
+     lib/ext/spring-expression-5.3.23.jar
+     lib/ext/spring-web-5.3.23.jar
+     lib/ext/stax-ex-1.8.3.jar
+     lib/ext/streambuffer-1.5.9.jar
+     lib/ext/swagger-annotations-2.1.10.jar
+     lib/ext/ucp-19.15.0.0.jar
+     lib/ext/utils-2.5.0-b61.jar
+     lib/ext/websocket-api-9.4.48.v20220622.jar
+     lib/ext/websocket-client-9.4.48.v20220622.jar
+     lib/ext/websocket-common-9.4.48.v20220622.jar
+     lib/ext/websocket-server-9.4.48.v20220622.jar
+     lib/ext/websocket-servlet-9.4.48.v20220622.jar
+     lib/ext/wrapper-3.5.48.jar
+     lib/ext/xdocore-12.2.1.4.jar
+     lib/ext/xdoparser11g-11.1.0.7.0.jar
+     lib/ext/zxing-3.4.1.jar
+     lib/ext/epsonjpos/epsonjpos-1.14.6.jar
+     lib/windows_64/JposLogger-3.06.0022.jar
+     lib/windows_64/JposServiceJniScanner-3.06.0022.jar
+     lib/windows_64/JposServiceOnScanner-3.06.0022.jar
+     lib/windows_64/JposServiceScanner-3.06.0022.jar
+     c:/pos/ibmjpos/Config
+java.class.version = 55.0
+java.home = D:\jre
+java.io.tmpdir = C:\Users\kishorekumar.burri\AppData\Local\Temp\
+java.library.path = windows_64/lib
+     c:/windows/system32
+     c:/pos/ibmjpos/lib
+java.protocol.handler.pkgs = |dtv.pos.protocol|dtv.util.protocol
+java.runtime.name = Java(TM) SE Runtime Environment
+java.runtime.version = 11.0.17+10-LTS-269
+java.specification.name = Java Platform API Specification
+java.specification.vendor = Oracle Corporation
+java.specification.version = 11
+java.util.logging.manager = org.apache.logging.log4j.jul.LogManager
+java.vendor = Oracle Corporation
+java.vendor.url = https://openjdk.java.net/
+java.vendor.url.bug = https://bugreport.java.com/bugreport/
+java.vendor.version = 18.9
+java.version = 11.0.17
+java.version.date = 2022-10-18
+java.vm.compressedOopsMode = 32-bit
+java.vm.info = mixed mode
+java.vm.name = Java HotSpot(TM) 64-Bit Server VM
+java.vm.specification.name = Java Virtual Machine Specification
+java.vm.specification.vendor = Oracle Corporation
+java.vm.specification.version = 11
+java.vm.vendor = Oracle Corporation
+java.vm.version = 11.0.17+10-LTS-269
+jdk.debug = release
+line.separator = 
+
+log.dir.name = ../xstoredata/xstore/log/hardware-service
+log4j.configurationFile = log4j2.xml,log4j2-container.xml,../xstoredata/xstore/cust_config/log4j2-custom.xml
+mail.mime.encodefilename = true
+nativeswing.interface.outProcess.communication = processio
+os.arch = amd64
+os.name = Windows 10
+os.version = 10.0
+path.separator = ;
+ssl.certificate.check.enabled = false
+sun.arch.data.model = 64
+sun.boot.library.path = D:\jre\bin
+sun.cpu.endian = little
+sun.cpu.isalist = amd64
+sun.desktop = windows
+sun.io.unicode.encoding = UnicodeLittle
+sun.java.command = org.tanukisoftware.wrapper.WrapperSimpleApp oracle.retail.xstore.hardware.service.HardwareService
+sun.java.launcher = SUN_STANDARD
+sun.jnu.encoding = Cp1252
+sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+sun.os.patch.level = 
+sun.stderr.encoding = Cp1252
+sun.stdout.encoding = Cp1252
+user.country = US
+user.dir = D:\xstore
+user.home = C:\Users\kishorekumar.burri
+user.language = en
+user.name = kishorekumar.burri
+user.script = 
+user.timezone = Asia/Calcutta
+user.variant = 
+wrapper.arch = x86
+wrapper.cpu.timeout = 5
+wrapper.java.pid = 20660
+wrapper.jvm.port.max = 31999
+wrapper.jvm.port.min = 31000
+wrapper.jvmid = 1
+wrapper.key = pM2CyaTMcCxcGIdHBJ3KM269dJxpC3lQ
+wrapper.lang.domain = wrapper
+wrapper.lang.folder = ../lang
+wrapper.native_library = wrapper
+wrapper.pid = 21736
+wrapper.port = 32001
+wrapper.use_sun_encoding = true
+wrapper.version = 3.5.48-pro
+************************************************************
+ :: oracle.retail.xstore.hardware.service.HardwareServiceClient [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:04,862 Loading Properties - jar:file:/D:/xstore/lib/ext/hardware-service.jar!/dtv/res/config/HwsDevices.properties :: dtv.util.ResourceUtils [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:04,897 Loading JPOS - jar:file:/D:/xstore/lib/ext/hardware-service.jar!/dtv/res/config/jpos.xml :: dtv.hardware.service.DtvXmlRegPopulator [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,085 Loading JPOS - jar:file:/D:/xstore/lib/xst-config.jar!/version1/jpos.xml :: dtv.hardware.service.DtvXmlRegPopulator [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,104 Loading Properties - jar:file:/D:/xstore/lib/ext/hardware-service.jar!/dtv/res/config/HwsFamilyTypes.properties :: dtv.util.ResourceUtils [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,144 Logging initialized @2345ms to org.eclipse.jetty.util.log.Slf4jLog :: org.eclipse.jetty.util.log [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,283 jetty-9.4.48.v20220622; built: 2022-07-14T13:51:00.088Z; git: unknown; jvm 11.0.17+10-LTS-269 :: org.eclipse.jetty.server.Server [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,334 DefaultSessionIdManager workerName=node0 :: org.eclipse.jetty.server.session [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,335 No SessionScavenger set, using defaults :: org.eclipse.jetty.server.session [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,339 node0 Scavenging every 660000ms :: org.eclipse.jetty.server.session [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:05,525 Started o.e.j.s.ServletContextHandler@4be62a79{/,null,AVAILABLE} :: org.eclipse.jetty.server.handler.ContextHandler [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:06,068 Started ServerConnector@46332f69{HTTP/1.1, (http/1.1)}{localhost:8086} :: org.eclipse.jetty.server.AbstractConnector [WrapperSimpleAppMain]
+INFO  2023-07-11 12:13:06,069 Started @3272ms :: org.eclipse.jetty.server.Server [WrapperSimpleAppMain]
+INFO  2023-07-11 12:32:56,619 websocket connected, WebSocketSession[websocket=JsrAnnotatedEventDriver[websocket=oracle.retail.xstore.hardware.service.connection.HwdSvcClientWebsocketServer@2a28e8fd],behavior=SERVER,connection=WebSocketServerConnection@49c49c87::SocketChannelEndPoint@1d94e591{l=/127.0.0.1:8086,r=/127.0.0.1:49851,OPEN,fill=-,flush=-,to=7/300000}{io=0/0,kio=0,kro=1}->WebSocketServerConnection@49c49c87[s=ConnectionState@7188048a[OPENING],f=Flusher@6c2a63c8[IDLE][queueSize=0,aggregateSize=-1,terminated=null],g=Generator[SERVER,validating,+rsv1],p=Parser@22b46cfb[ExtensionStack,s=START,c=0,len=0,f=null]],remote=WebSocketRemoteEndpoint@12d82f17[batching=true],incoming=JsrAnnotatedEventDriver[websocket=oracle.retail.xstore.hardware.service.connection.HwdSvcClientWebsocketServer@2a28e8fd],outgoing=ExtensionStack[queueSize=0,extensions=[permessage-deflate],incoming=org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension,outgoing=org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension]] :: oracle.retail.xstore.hardware.service.connection.HwdSvcClientWebsocketServer [qtp917925037-26]
+INFO  2023-07-11 12:32:56,624 sending message ['CONTROL' 'HSClientStartup'] ...  :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-26]
+INFO  2023-07-11 12:32:58,414 received message ['CONTROL ListRegistry'] :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-29]
+INFO  2023-07-11 12:32:58,422 sending message ['CONTROL' 'ListRegistry'] ...  :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-29]
+INFO  2023-07-11 12:32:58,448 received message ['CONTROL Close'] :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-24]
+INFO  2023-07-11 12:32:58,453 sending message ['CONTROL' 'Close'] ...  :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-24]
+INFO  2023-07-11 12:32:58,457 received message ['CONTROL ListAvailable'] :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-24]
+INFO  2023-07-11 12:32:58,459 sending message ['CONTROL' 'ListAvailable'] ...  :: oracle.retail.xstore.hardware.service.connection.WSServerConnection [qtp917925037-24]
+INFO  2023-07-11 12:56:06,204 websocket closed, code=1001  :: oracle.retail.xstore.hardware.service.connection.HwdSvcClientWebsocketServer [qtp917925037-26]

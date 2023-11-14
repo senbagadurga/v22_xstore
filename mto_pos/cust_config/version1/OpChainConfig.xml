@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpChainSet xmlns="http://micros.com/xstore/config/opchain">
+
+  <!-- US#89123 Login -->
+  <OpChain name="PRE_TRANS_TILL_VALIDATION" signal="TransactionInitiated">
+    <!-- This is a little heavy-handed, but refreshing the session info from the DB helps ensure that stale
+        data in memory doesn't cause the till count screen to appear at inappropriate times. -->
+    <Op class="dtv.pos.till.ReinitializeSessionManagerOp" />
+    <Op class="dtv.pos.systemcycle.access.WorkstationOpenAccessCheckOp" />
+    <PromptOp class="dtv.pos.till.ValidateRegisterBeginCountedOp" />
+    <!-- US#89123 Login Start-->
+    <Op class="mto.pos.till.MtoValidateEmployeeTillAttachedOp" /> 
+    <!-- <Op class="dtv.pos.till.ValidateEmployeeTillAttachedOp" /> -->
+    <!-- US#89123 Login End-->
+    <ValidationOp class="dtv.pos.till.ValidateUseOtherTillOp" validationsBean="useOtherTillRules" />
+    <PromptOp class="dtv.pos.till.PromptSelectOtherTillOp">
+      <Parameter name="ShowListIfOne" value="true" />
+    </PromptOp>
+    <Op class="dtv.pos.till.CheckCurrentSessionStatusOp">
+      <Parameter name="AcceptedStatus" value="BEGINCOUNT" />
+    </Op>
+    <PromptOp class="dtv.pos.hardware.op.WaitForCashDrawerCloseOp" validationsBean="cashDrawerCloseRules" />
+  </OpChain>
+  
+  <!-- US#89120 Closing a Till Start-->
+   <OpChain name="TILL_COUNT_DISCREPANCY_REASON">
+   <!--  <PromptOp class="dtv.pos.till.count.PromptTillCountDiscrepancyReasonOp">
+      <Parameter name="ReasonTypeCode" value="TILL_COUNT_DISCREPANCY" />
+    </PromptOp>  -->
+     <PromptOp class="mto.pos.till.count.MtoPromptTillCountDiscrepancyCommentOp" />
+  </OpChain>
+  <!-- US#89120 Closing a Till End-->
+   <!-- US# 89120 Closing a Till Start-->
+  <OpChain name="WORKSTATION_CLOSE_IMPL" contextKey="WORKSTATION_CLOSE" rollbackChainKey="ROLLBACK_WORKSTATION_CLOSE_TRANS">
+	<!-- Start Null check for Session via Reconcile Till -->
+	<Op class="dtv.pos.till.ReinitializeSessionManagerOp" />
+	<Op class="dtv.pos.register.itemmessages.DefaultIdleMsgOp" />
+	<!--<OpChainRoute chainKey="DETACH_TILL_FROM_WKSTN_ROLLING_CLOSE_TILL_ACCOUNTABILITY" condition="dtv.pos.till.rollingclose.DetachTillFromWkstnInTillAccountabilityRunCondition" /> -->
+	<ValidationOp validationsBean="closeWorkstationRules" />
+	 <Op class="mto.pos.till.MtoValidateEmployeeTillAttachedOp" /> 
+	<PromptOp class="dtv.pos.systemcycle.close.PromptToCloseOp" key="CLOSE_WORKSTATION" />
+	<OpChainRoute chainKey="EXT_WORKSTATION_CLOSE_CHECK" />
+	<OpChainRoute chainKey="WORKSTATION_CLOSE.local" />
+	<OpChainRoute chainKey="REGISTER_CLOSING_WITH_COUNT" condition="dtv.pos.till.rollingclose.NonRollingCloseRunCondition"  />
+	<!-- US# 95643 Till Count Report  -->
+	<!-- Bug# 102482 Removing Till Count Report at Till Close -->
+	<!-- <PromptOp class="mto.pos.report.tillclose.MtoTillCountPrintPromptOp" breakpoint="true"/>  -->
+	<PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+	<Parameter name="QuestionType" value="WORKSTATION_CLOSE" />
+	</PromptOp>
+	<OpChainRoute chainKey="WORKSTATION_CLOSE.local.post" />
+	<OpChainRoute chainKey="WORKSTATION_CLOSE_CREATE_TRANS" />
+	<OpChainRoute chainKey="PRINT_RECEIPTS" />
+	<OpChainRoute chainKey="NOTIFY_CLOSE_WORKSTATION" />
+	<WorkerOp workersBean="registerCloserWorkers" />
+	 <!-- US# 92815 Till Summary Report  -->   
+	<PromptOp class="mto.pos.report.tillclose.MtoTillSummaryPrintPromptOp" breakpoint="true"/>
+	<PromptOp class="dtv.pos.systemcycle.workstation.PromptToReopenRegisterOp">
+	<Parameter name="ChainKey" value="WORKSTATION_OPEN_IMPL"/>
+	</PromptOp>
+	</OpChain>    
+	<OpChain name="REGISTER_CLOSING_WITH_COUNT">
+	<OpChainRoute chainKey="CLOSING_COUNT_AT_REGISTER_CLOSE"  /> <!--condition="dtv.pos.register.condition.ClosingCountAtRegisterRunCondition"-->
+	</OpChain>
+   <!-- US# 89120 Closing a Till End-->
+   <!-- US#89114 Store Open -->
+  <!-- Bug#102275 Defaulting next business Date to Valid date -->
+    <OpChain name="CHANGE_BUSINESS_DATE_OPEN">
+    <Op class="mto.pos.systemcycle.businessdate.MtoGetCurrentBusinessDateOp" />
+    <Op class="dtv.pos.register.ShowStartupScreenViewOp" />
+    <PromptOp class="dtv.pos.systemcycle.businessdate.PromptChangeBusinessDateOp" validationsBean="changeBusinessDateRules" />
+    <Op class="dtv.pos.systemcycle.businessdate.CheckSameDayStoreReopenOp" />
+    <Op class="dtv.pos.systemcycle.businessdate.CheckUnscheduledStoreOpenOp" />
+    <OpChainRoute chainKey="CHANGE_BUSINESS_DATE_CHECK.local" />
+    <!-- US#89114 Store Open Start-->
+   	<!-- <PromptOp class="dtv.pos.systemcycle.businessdate.PromptVerifyBusinessDateOp" />  -->
+     <PromptOp class="mto.pos.systemcycle.businessdate.MtoPromptVerifyBusinessDateOp" />
+    <!-- US#89114 Store Open End-->
+    <Op class="dtv.pos.systemcycle.businessdate.UpdateBusinessDateOp" />
+  </OpChain>
+  
+  <!-- US#89121 Closing a Store -->
+  
+    <OpChain name="RETAIL_LOCATION_CLOSE" contextKey="RETAIL_LOCATION_CLOSE" signal="TransactionComplete">
+    <Op class="dtv.pos.register.itemmessages.DefaultIdleMsgOp" />
+    <ValidationOp validationsBean="closeRetailLocationRules" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.order.1" />
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateNotClockOutEmployeesOp" />
+    <PromptOp class="dtv.pos.systemcycle.close.PromptToCloseStoreOp" />
+    <PromptOp class="dtv.pos.payroll.op.PromptPayrollNotYetPostYesNoMsgOp" />
+    <Op class="mto.pos.systemcycle.close.MtoValidateWorkstationsClosedOp" />
+    <Op class="dtv.pos.systemcycle.close.ValidateCashdrawersClosedOp" />
+    <Op class="dtv.pos.systemcycle.close.ValidateFiscalPrintersClosedOp" />    
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateRollingCloseTillsReconciledOp" key="ROLLING_CLOSE_STORE_CLOSE_UNRECONCILED_TILLS" />
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateRollingCloseAllDaysEndedOp" key="ROLLING_CLOSE_STORE_CLOSE_DAYS_NOT_ENDED" />
+    <PromptOp class="dtv.pos.offlinepos.PromptOfflineTransListAtCloseOp" />
+    <PromptOp class="dtv.pos.register.suspendresume.PromptCancelSuspendTransOp" />
+   <!-- <PromptOp class="dtv.pos.systemcycle.close.PromptCloseMessageOp" /> -->
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.1" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.pre" />
+    <!-- US#89121 Closing a Store Start-->
+    <!-- <PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+      <Parameter name="QuestionType" value="SYSTEM_CLOSE" />
+    </PromptOp> -->
+    <!-- US#89121 Closing a Store End -->
+    <OpChainRoute chainKey="STOREBANK_CLOSING_COUNT_STORE_CLOSING" condition="dtv.pos.systemcycle.close.CountStoreSafeAtClosingCondition" />
+    <!-- US# 92814 Bank Deposit report  -->
+	<PromptOp class="mto.pos.report.storeclose.MtoBankDepositPrintPromptOp" breakpoint="true"/>
+    <PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+      <Parameter name="QuestionType" value="SYSTEM_CLOSE_DEPOSIT_COMPLETE" />
+    </PromptOp>
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.2" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.ERECEIPT.2" />
+    <Op class="mto.pos.systemcycle.close.MtoDisplayFinalSystemCloseMsgOp" />    
+    <Op class="dtv.pos.common.op.StartPermanentBusyStateOp"/>
+    <Op class="dtv.pos.tender.paybylink.ProcessAdyenResultsOp" />
+    <Op class="dtv.pos.register.suspendresume.CancelAllSuspendTransOp" />
+    <Op class="dtv.pos.systemcycle.retaillocation.AutoCloseWorkstationOp" />
+    <Op class="dtv.pos.systemcycle.close.AutoClockOutOp" />
+    <Op class="dtv.pos.common.op.EndPermanentBusyStateOp"/>
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.order.2" />
+    <Op class="dtv.pos.payroll.op.WritePayrollLogOp" longRunning="true" />
+    <Op class="dtv.pos.systemcycle.close.ProcessPayrollOp" longRunning="true" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE_CREATE_TRANS" />
+	<!-- US# 92813 Store Summary report  --> 	
+    <PromptOp class="mto.pos.report.storeclose.MtoStoreSummaryPrintPromptOp" breakpoint="true"/>
+    <Op class="dtv.pos.framework.appmanagement.SendIpcMessageNotRollingCloseOp">
+      <Parameter name="METHOD" value="BUSINESS_DATE_CHANGED" />
+    </Op>
+    <OpChainRoute chainKey="REPORT_RUN_CLOSE_GROUP" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.2" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.invoice" />
+    <Op class="dtv.pos.systemcycle.close.ExitAppOnSystemCloseOp" />
+    <OpChainRoute chainKey="RETURN_TO_LOGIN" chainType="START" />
+  </OpChain>
+   <!-- US#89133 Tender Type Cheque Start -->
+    <OpChain name="TENDER_CHECK" signal="TransactionModified" contextKey="SALE_TENDER_EMPTY_MENU_OPTION">
+    <Op class="dtv.pos.tender.CreateTenderLineItemOp">
+      <Parameter name="TenderStatus" value="Tender" />
+      <Parameter name="TenderId" value="CHECK" />
+    </Op>
+    <PromptOp class="dtv.pos.tender.PromptCustAsscRequiredForTenderOp" />
+   <!-- <Op class="dtv.pos.hardware.op.ReadMicrOp" /> -->
+   <PromptOp class="mto.pos.tender.check.MtoPromptCheckNumberOp" />
+    <ValidationOp validationsBean="mtoCheckNumberRules" />
+   <!-- <Op class="dtv.pos.tender.check.PromptIdentityVerificationOp" />  
+    <PromptOp class="dtv.pos.tender.check.PromptBirthdayOp" breakpoint="true" validationsBean="birthDateRules" />
+    <PromptOp class="dtv.pos.tender.check.PromptVerifyBirthDateOp" />  --> 
+    <PromptOp class="dtv.pos.tender.PromptTenderAmtOp" breakpoint="true" validationsBean="tenderAmountRules"  />
+    <PromptOp class="mto.pos.tender.overtender.MtoPromptOverTenderOp" />
+    <Op class="dtv.pos.tender.AddTenderToSaleTranOp" />
+    <Op class="dtv.pos.tender.rounding.UpdateTransactionRoundedAmountOp" />
+    <!-- <OpChainRoute chainKey="EFTLINK_AUTHORIZE" /> -->
+    <Op class="dtv.pos.framework.op.PersistTranInProcessOp" />
+    <Op class="dtv.pos.tender.NotifyTrainingTenderAuthOp" />
+    <OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" />
+  </OpChain>
+  <!-- US#89133 Tender Type Cheque End -->
+  <!-- Bug#97763 Prompt is Incorrect when sale is completed START-->
+   <OpChain name="CHECK_SALE_COMPLETE" contextKey="TEXT_PROMPT_ONLY">
+    <Op class="mto.pos.register.MtoCheckSaleCompleteOp" />
+  </OpChain>
+  <OpChain name="SALE_COMPLETE_FINISH" signal="TransactionComplete">
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.pre" />
+    <PromptOp class="dtv.pos.coupon.PromptReturnUnusedCouponsToCustomerOp" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.pre.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.local" />
+    <!-- Inventory must be processed before the transaction is persisted!! -->
+    <WorkerOp workersBean="saleCompleteInventoryWorkers" />
+    <WorkerOp workersBean="completeSaleTransWorkers" />
+    <Op class="dtv.pos.tender.creditcard.PrepareImprintCreditCardOp" />
+    <Op class="dtv.pos.customer.account.op.AddCustomerAccountRcptSourcesOp" />
+    <Op class="dtv.pos.register.giftreceipt.GroupGiftReceiptsOp" />
+    <Op class="dtv.pos.register.giftreceipt.AddMultipleGiftReceiptsOp" />
+    <Op class="dtv.pos.register.giftreceipt.AddGiftRcptSourcesOp" />
+    <PromptOp class="dtv.pos.register.giftreceipt.PromptForShowPriceInClearOp" key="PROMPT_FOR_SHOW_PRICE_ON_GIFT_RECEIPTS" />
+    <WorkerOp workersBean="calculateTlogSequenceWorkers" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.local.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.order.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.registry.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.digitalCart.1" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.entitlement.1" />
+    <Op class="dtv.pos.customer.wishlist.op.SellWishListItemsOp" />
+    <WorkerOp workersBean="saleCompleteCustomerAccountWorkers" />
+   <!-- <Op class="dtv.pos.hardware.op.BuildSaleRcptsOp" />  -->
+    <OpChainRoute chainKey="LUXURY_RECEIPTS_PREPARE" />
+    <OpChainRoute chainKey="ENHANCED_EMAIL_RECEIPTS_PREPARE" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.2" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.order.2" />
+    <WorkerOp workersBean="crossChannelReturnWorkers" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.3" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.ERECEIPT" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.invoice" />
+    <WorkerOp workersBean="calculateCreditTenderPropertiesWorkers" />
+    <WorkerOp workersBean="buildReturnedItemJournalWorkers" />
+    <OpChainRoute chainKey="CREATE_WARRANTY_ACTIVITY" />
+    <WorkerOp workersBean="updateRainCheckRedemptionStatusWorkers" />
+    <Op class="dtv.pos.hardware.op.OpenCashDrawerOp" />
+    <WorkerOp workersBean="updateCashDrawerIdWorkers" />
+    <WorkerOp workersBean="persistRetailTransWorkers">
+      <Parameter name="Cancelable" value="false" />
+      <Parameter name="AfterCancelResetChain" value="RESET_AFTER_TRANS" />
+    </WorkerOp>
+    <WorkerOp workersBean="persistSystemTotalWorkers" />
+    <OpChainRoute chainKey="COUNTRYPACK.SAVE_FISCAL_SEQUENCE" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.FISCAL.AFTER_TRAN_SAVE" />
+    <Op class="dtv.pos.customer.view.ClearCustomerMessageViewOp" />
+    <WorkerOp workersBean="persistVoucherHistoryWorkers" />
+    <!-- Flash sales update sales -->
+    <WorkerOp workersBean="populateFlashSalesTablesWorkers" />
+    <WorkerOp workersBean="refreshSalesGoalStatusWorkers" />
+    <!-- Generate documents -->
+    <Op class="dtv.pos.hardware.op.BuildTenderFrankingsOp" />
+    <Op class="dtv.pos.hardware.op.FrankTendersOp" />
+    <OpChainRoute chainKey="COUNTRYPACK.EINVOICE.PREPARE_EMAIL_INVOICE" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.EMAIL_RECEIPTS" />
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.selfcheckout" />
+   <!--  <Op class="dtv.pos.hardware.op.PrintRcptsOp" breakpoint="true" />
+    <OpChainRoute chainKey="PRINT_DOCUMENTS" />
+    <OpChainRoute chainKey="PRINT_WARRANTIES" />
+    <WorkerOp workersBean="saveRcptsWorkers" />
+    <Op class="dtv.pos.hardware.op.WaitForRcptPrintOp" required="false" />
+    <Op class="dtv.pos.hardware.op.ReleaseFiscalExclusiveWorkstationUseOp" />
+    <OpChainRoute chainKey="PRINT_FISCAL_RECEIPTS.local" />
+    <OpChainRoute chainKey="LUXURY_RECEIPTS_PRINT" condition="oracle.retail.xstore.countrypack.common.luxuryreceipt.HasLuxuryReceipts" />
+     This operation intercepts Backup Response returned by DisplayChangeDueOp -->
+    <Op class="dtv.pos.framework.op.DoNothingOp" breakpoint="true" > 
+      <Parameter name="RESPONSE" value="COMPLETE" />
+    </Op>
+    <PromptOp class="mto.pos.hardware.op.MtoDisplayChangeDueOp" validationsBean="cashDrawerCloseRules" breakpoint="true" />
+    <!-- No need to run these notify ops if no tenders exist on transaction. Moved to new chain -->
+    <!-- This is specially important now that Networked Cashdrawers can be involved as well -->
+    <OpChainRoute chainKey="NOTIFY_TENDER_VALUE_IN_TILL" condition="dtv.pos.till.NotifyTenderValueCondition" />
+    <OpChainRoute chainKey="RESET_REGISTER" />
+    <PromptOp class="dtv.pos.tender.creditcard.PromptImprintCreditCardOp" />
+   <!--  <OpChainRoute chainKey="CAPTURE_RECEIPT_SIGNATURE" />  -->
+    <OpChainRoute chainKey="SALE_COMPLETE_FINISH.FISCAL.END" />
+    <WorkerOp workersBean="updateSAFQueueWorkers" />
+    <OpChainRoute chainKey="SALE_COMPLETE_MESSAGING" />
+    <OpChainRoute chainKey="RESET_AFTER_TRANS" chainType="START" />
+  </OpChain>
+  <!-- Bug#97763 Prompt is Incorrect when sale is completed END-->
+  <!-- US#89992 Tender Type Debit/Credit Start-->
+  <OpChain name="TENDER_EFTL_CREDIT_CARD" signal="TransactionModified" contextKey="SALE_TENDER_EMPTY_MENU_OPTION">
+    <Op class="dtv.pos.tender.CreateTenderLineItemOp">
+      <Parameter name="TenderStatus" value="Tender" />
+      <Parameter name="TenderCategory" value="CREDIT_CARD" />
+      <Parameter name="TenderId" value="CREDIT_CARD" />
+    </Op>
+    <PromptOp class="dtv.pos.tender.PromptCustAsscRequiredForTenderOp" />
+    <Op class="dtv.pos.tender.check.PromptIdentityVerificationOp" />
+	<PromptOp class="mto.pos.tender.MtoDisplayNNPOrdersWarningMsgOp" />
+    <OpChainRoute chainKey="TENDER_EFTL_PROMPT_TENDER_AMT" />
+     <Op class="dtv.pos.tender.AddTenderToSaleTranOp" />
+    <PromptOp class="mto.pos.tender.MtoIsCustomerPresentCheckOp" />
+    <WorkerOp workersBean="saveReasonCodeToTenderLineWorkers" />
+    <Op class="dtv.pos.tender.rounding.UpdateTransactionRoundedAmountOp" />
+    <OpChainRoute chainKey="CDSERV_INTEGRATION" />
+    <Op class="dtv.tenderauth.impl.eftlink.op.SaveCustomerPaymentCardOp" />
+    <Op class="dtv.pos.framework.op.PersistTranInProcessOp" />
+   <!-- <OpChainRoute chainKey="CAPTURE_SALE_TENDER_SIGNATURE" />  -->
+    <Op class="dtv.pos.tender.NotifyTrainingTenderAuthOp" />
+    <OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" />
+  </OpChain>
+  <OpChain name="CDSERV_INTEGRATION">
+    <Op class="mto.tenderauth.impl.cdserv.op.MtoInitiateCDServPipeRequestOp" longRunning="true"/>
+  </OpChain>
+  <!-- US#89992 Tender Type Debit/Credit End-->
+  <!--US#89134 User Certified Fund Start -->
+  <OpChain name="MTO_ADD_CERTIFIED_FUND_TENDER" signal="TransactionModified">
+    <Op class="dtv.pos.tender.voucher.GatherVoucherTenderInformationOp" />
+    <PromptOp class="mto.pos.tender.certifiedfund.MtoPromptCertifiedFundNumberOp">
+     <Parameter name="LineItemType" value="TENDER" />
+     </PromptOp>
+    <ValidationOp validationsBean="mtoCertifiedFundNumberRules" />
+    <Op class="dtv.pos.tender.voucher.CreateVoucherTenderLineItemOp" />
+    <PromptOp class="mto.pos.tender.certifiedfund.MtoPromptCertifiedFundTenderAmtOp" validationsBean="voucherTenderAmountRules" />
+    <PromptOp class="mto.pos.tender.overtender.MtoPromptOverTenderOp" />
+    <Op class="dtv.pos.tender.AddTenderToSaleTranOp" />
+    <Op class="dtv.pos.tender.rounding.UpdateTransactionRoundedAmountOp" />
+    <Op class="dtv.pos.framework.op.PersistTranInProcessOp" />
+    <OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" />
+  </OpChain>
+  <!--US#89134 User Certified Fund End-->
+  <!-- Bug#97373 Users not automatically logout Start -->
+  <OpChain name="PRE_SALE_TRANS_WITHOUT_CUSTOMER">
+    <WorkerOp workersBean="clearActiveCashDrawerWorkers" />
+    <OpChainRoute chainKey="PRE_TRANS_TILL_VALIDATION" />
+    <Op class="dtv.pos.register.PreSaleTransactionOp" />
+    <Op class="dtv.pos.register.itemmessages.DisplayInstructionsOp">
+      <Parameter name="FILENAME" value="_instructionalMsg" />
+    </Op>
+    <Op class="dtv.pos.register.giftreceipt.GiftReceiptClearSelectedItemsOp" />
+    <Op class="dtv.pos.framework.security.op.StartAutoLogoutTimerOp" />
+    <ValidationOp validationsBean="isNotInUpdateRequiredPeriodValidations"/>
+
+    <OpChainRoute chainKey="PRE_TRANS_COMMISSIONED_ASSOCIATES" condition="!dtv.pos.commission.CommissionByItem" />
+
+    <WorkerOp workersBean="registerWorkstationActiveWorkers"/>
+
+    <!-- AIRSIDE CHAIN -->
+    <OpChainRoute chainKey="AIRPORT_PRE_SALE" condition="dtv.pos.flight.AirsideEnabledCondition"/>
+
+    <Op class="dtv.pos.common.TransactionPropertyPromptOp">
+      <Parameter name="TransactionState" value="PRE_SALE" />
+      <Parameter name="PromptWithoutSaleLines" value="true" />
+    </Op>
+    <OpChainRoute chainKey="PRE_SALE.1" />  
+  </OpChain>
+  <!-- Bug#97373 Users not automatically logout End -->
+   <!--Start:Userstory #89121-Store close-Removed the closing comments while store open-->
+    <OpChain name="RETAIL_LOCATION_OPEN" contextKey="RETAIL_LOCATION_OPEN" signal="TransactionComplete">
+    <ValidationOp validationsBean="openRetailLocationRules" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_OPEN.order" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_OPEN.local.pre" />
+    <PromptOp class="dtv.pos.systemcycle.open.PromptToOpenOp" key="OPEN_RETAIL_LOCATION" />
+    <OpChainRoute chainKey="CHANGE_BUSINESS_DATE_OPEN" />
+    <PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+      <Parameter name="QuestionType" value="SYSTEM_OPEN" />
+    </PromptOp>
+    <!--<PromptOp class="dtv.pos.systemcycle.open.DisplayCloseMessageOp" />-->
+    <OpChainRoute chainKey="RETAIL_LOCATION_OPEN_ACTIVITY.local.pre" />
+    <Op class="dtv.pos.systemcycle.retaillocation.CreateOpenTransactionOp" />
+    <!--<OpChainRoute chainKey="PRINT_RECEIPTS" />-->
+    <Op class="dtv.pos.framework.appmanagement.SendIpcMessageOp">
+      <Parameter name="METHOD" value="OPEN_STORE" />
+    </Op>
+    <OpChainRoute chainKey="REPORT_RUN_OPEN_GROUP" />
+    <OpChainRoute chainKey="COUNTRYPACK.FISCAL_NUMBER_RESET_RETAIL_LOCATION_OPEN" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_OPEN_ACTIVITY.local" />
+    <Op class="dtv.pos.till.count.OpenStoreSafeOp" />
+    <Op class="dtv.pos.systemcycle.workstation.IsWorkStationOpenOp" />
+  </OpChain>
+  <!--End:Userstory #89121-Store close-Removed the closing comments while store open-->
+   <!--Start:Userstory #89120-Till Close-Suppress the cash deposit to storesafe prompt-->
+  <OpChain name="PROMPT_CLOSING_DEPOSIT">
+    <!--<Op class="dtv.pos.till.count.PromptClosingDepositAmtOp" contextKey="CLOSE_COUNT" />-->
+  </OpChain>
+  <!--End:Userstory #89120-Till Close-Suppress the cash deposit to storesafe prompt-->
+  
+   <!-- START 89135 Tender Type Prepaid -->
+    <OpChain name="MTO_ADD_PREPAID_TENDER" signal="TransactionModified" contextKey="SALE_TENDER_EMPTY_MENU_OPTION">
+     <Op class="dtv.pos.tender.CreateTenderLineItemOp">
+      <Parameter name="TenderStatus" value="Tender" />
+      <Parameter name="TenderId" value="PREPAID_PAYMENT" />
+    </Op>
+   <PromptOp class="mto.pos.tender.prepaid.cashsuggestion.MtoPrepaidCashSuggestionPromptTenderAmtOp" validationsBean="tenderAmountRules" />
+    <Op class="dtv.pos.tender.AddTenderToSaleTranOp" />
+    <Op class="dtv.pos.tender.rounding.UpdateTransactionRoundedAmountOp" />
+    <OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" />
+  </OpChain>
+  
+   <OpChain name="VOID_TENDER" signal="TransactionModified" contextKey="SALE_TENDER_EMPTY_MENU_OPTION">
+    <PromptOp class="dtv.pos.tender.modifytender.PromptTendersToVoidOp">
+      <Parameter name="disallowNonVoidableTenders" value="true" />
+    </PromptOp>
+    <OpChainRoute chainKey="GUEST_LOOKUP" />
+    <OpChainRoute chainKey="VOID_ROOM_CHARGE" />
+    <OpChainRoute chainKey="EFTLINK_VOID_TENDER" />
+    <OpChainRoute chainKey="CANCEL_TENDER_CHANGE_AUTH" condition="oracle.retail.xstore.countrypack.common.voucher.condition.HasChangeTenderAuthCondition" />
+    <WorkerOp workersBean="updateTenderVoidWorkers" />
+    <Op class="dtv.pos.framework.op.PersistTranInProcessOp" />
+    <Op class="mto.pos.tender.prepaid.MtoVoidPrepaidBalanceTenderLineItemOp"/>
+    <OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" />
+  </OpChain>
+  
+   <!-- END 89135 Tender Type Prepaid -->
+   
+  <!-- ***************************Financial Back Office Reports start************** -->  
+  <!-- US# 92814 Bank Deposit report  --> 
+   <OpChain name="BANK_DEPOSIT_REPORT_P">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="BANK_DEPOSIT_REPORT_P" />
+    </Op>
+    <Op class="dtv.pos.reporting.PromptReportParametersOp" breakpoint="true" /> 
+  </OpChain>
+  <!-- US# 92813 Store Summary report  -->  
+  <OpChain name="STORE_SUMMARY_REPORT_P">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="STORE_SUMMARY_REPORT_P" />
+    </Op>
+    <Op class="dtv.pos.reporting.PromptReportParametersOp" breakpoint="true" /> 
+  </OpChain>
+   <!-- US# 95643 Till Count Report  --> 
+  <OpChain name="TILL_COUNT_REPORT_P">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="TILL_COUNT_REPORT_P" />
+    </Op>
+    <Op class="dtv.pos.reporting.PromptReportParametersOp" breakpoint="true" /> 
+  </OpChain>
+  <!-- US# 92815 Till Summary Report  --> 
+  <!-- Bug#106547 Unable to print TSR due to session Id unknown -->  
+  <OpChain name="TILL_SUMMARY_REPORT_P">
+  <PromptOp class="mto.pos.report.tillclose.MtoTillSummaryReportDatePromptOp" breakpoint="true"  />
+  <PromptOp class="mto.pos.report.tillclose.MtoTillSummaryReportUserPromptOp" breakpoint="true"  /> 
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="TILL_SUMMARY_REPORT_P" />
+    </Op>
+    <Op class="mto.pos.report.tillclose.MtoTillSummaryReportParameterValidationOp" breakpoint="true" /> 
+  </OpChain> 
+  <!-- US# 92816 Reconcile Till count Report  --> 
+  <OpChain name="RECONCILE_TILL_COUNT_REPORT_P">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="RECONCILE_TILL_COUNT_REPORT_P" />
+    </Op>
+    <Op class="dtv.pos.reporting.PromptReportParametersOp" breakpoint="true" /> 
+  </OpChain>
+  <!-- US# 94731 Reconcile Till summary report  --> 
+  <OpChain name="RECONCILE_TILL_SUMMARY_REPORT_P">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="RECONCILE_TILL_SUMMARY_REPORT_P" />
+    </Op>
+    <Op class="dtv.pos.reporting.PromptReportParametersOp" breakpoint="true" /> 
+  </OpChain>
+   <!-- *************************** Financial Back Office Reports END ************************** -->
+   
+   <!-- *************************** Financial Paramterless Reports START ************************** -->
+    <!-- US# 92814 Bank Deposit report  --> 
+   <OpChain name="BANK_DEPOSIT_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="BANK_DEPOSIT_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.storeclose.MtoBankDepositParameterOp" /> 
+  </OpChain>
+  <!-- US# 92813 Store Summary report  -->  
+  <OpChain name="STORE_SUMMARY_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="STORE_SUMMARY_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.storeclose.MtoStoreSummaryParameterOp" />
+  </OpChain>
+   <!-- US# 95643 Till Count Report  --> 
+  <OpChain name="TILL_COUNT_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="TILL_COUNT_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.tillclose.MtoTillCountParameterOp" />
+  </OpChain>
+  <!-- US# 92815 Till Summary Report  -->   
+  <OpChain name="TILL_SUMMARY_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="TILL_SUMMARY_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.tillclose.MtoTillSummaryParameterOp" />
+  </OpChain>  
+  <!-- US# 92816 Reconcile Till count Report  --> 
+  <OpChain name="RECONCILE_TILL_COUNT_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="RECONCILE_TILL_COUNT_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.tillreconcile.MtoReconcileTillCountParameterOp" />
+  </OpChain>
+  <!-- US# 94731 Reconcile Till summary report  --> 
+  <OpChain name="RECONCILE_TILL_SUMMARY_REPORT">
+    <Op class="dtv.pos.reporting.LoadReportOp">
+      <Parameter name="reportName" value="RECONCILE_TILL_SUMMARY_REPORT" />
+    </Op>
+    <Op class="mto.pos.report.tillreconcile.MtoReconcileTillSummaryParameterOp" />
+  </OpChain> 
+   <!-- *************************** Financial Paramterless Reports END ************************** -->
+    <OpChain name="STOREBANK_CLOSING_COUNT_STORE_CLOSING"  contextKey="STOREBANK_CLOSING_COUNT">
+    <Op class="dtv.pos.till.count.GetStoreSafeSessionOp" longRunning="true" />
+    <PromptOp class="dtv.pos.till.count.PromptBankInstituteForDepositOp" />
+    <OpChainRoute chainKey="STOREBANK_COMPLETE_ENDCOUNT"/>
+    <WorkerOp workersBean="persistTransAndObjWorkers" />
+    <!--<OpChainRoute chainKey="PRINT_RECEIPTS" /> -->
+    <!-- This operation is to ensure that the receipts from store safe that may have just
+         occurred do not print again with the receipts for the cancelled transactions -->
+    <Op class="dtv.pos.till.ClearTillCountReceiptsOp" /> 
+  </OpChain>
+   <!-- *************************** Store Close Reports Flow END ************************** -->
+   <!-- US# 89120 Closing a Till End-->
+    <OpChain name="CLOSING_COUNT_LOGIC" signal="TransactionComplete" contextKey="CLOSE_COUNT">
+		<PromptOp class="dtv.pos.till.count.PromptAvailableSafeBagsOp" key="SAFE_BAGS_NOTIFY_UNDECLARED">
+		<Parameter name="AcceptedStatus" value="UNDECLARED" />
+		</PromptOp>
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_START.local" />
+		<Op class="dtv.pos.till.count.EndCountOpenCashDrawerOp" />
+		<Op class="dtv.pos.till.count.PromptTillCountOp" breakpoint="true" />
+		<Op class="dtv.pos.till.count.PromptClosingDepositAmountsOp">
+		<Parameter name="ChainKey" value="PROMPT_CLOSING_DEPOSIT" />
+		</Op>
+		<PromptOp class="dtv.pos.hardware.op.WaitForCashDrawerCloseOp" validationsBean="cashDrawerCloseRules" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.pre" />
+		<!-- Bug#104528 Bank Deposit totals not matching till totals -->
+		<!-- <Op class="dtv.pos.till.count.CreateTillEndCountObjectsOp" />  -->
+		<!--  US# 95643 Till Count Report -->
+		<!-- <Op class="mto.pos.till.count.MtoCreateTillEndCountObjectsOp" />  -->
+		<!-- Recount the closed Till flow -->
+		<Op class="mto.pos.till.reconcile.MtoCreateTillRecountObjectsOp"/>
+		<OpChainRoute chainKey="COUNTRYPACK.ASSIGN_AND_SAVE_FISCAL_SEQUENCE" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.local" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.post" />
+		<WorkerOp workersBean="persistTransAndObjWorkers" />
+		<Op class="dtv.pos.till.UpdateRemoveDrawerFromCurrentWkstnOp" />			
+		<!--<OpChainRoute chainKey="PRINT_RECEIPTS" />-->
+	</OpChain>
+	 <!--US#89136 StoredCredit Changes Start-->
+ <OpChain name="PRE_TENDERING.post">  
+  	<PromptOp class="mto.pos.tender.storedcredit.MtoPromptStoredCreditOp"/> 
+ </OpChain>
+  
+ <OpChain name="MTO_ADD_STORED_CREDIT_TENDER" signal="TransactionModified" contextKey="SALE_TENDER_EMPTY_MENU_OPTION">
+	<!--<PromptOp class="dtv.pos.tender.misc.PromptMiscTenderOp" />
+	<PromptOp class="dtv.pos.tender.PromptCustAsscRequiredForTenderOp" />
+	<Op class="dtv.pos.tender.check.PromptIdentityVerificationOp" />
+	<PromptOp class="dtv.pos.tender.misc.PromptMiscTenderNumberOp" validationsBean="serialNumberRules" /> 
+	<PromptOp class="dtv.pos.tender.PromptTenderAmtOp" validationsBean="tenderAmountRules" />
+	<PromptOp class="mto.pos.tender.storedcredit.MtoPromptStoredCreditValidationOp"/>  -->
+	<!-- <ValidationOp validationsBean="tenderAmountRules" /> -->
+	<Op class="dtv.pos.tender.CreateTenderLineItemOp">
+      <Parameter name="TenderStatus" value="Tender" />
+      <Parameter name="TenderId" value="STORED_CREDIT" />
+    </Op>
+    <Op class="mto.pos.tender.storedcredit.MtoAssignStoredCreditAmtOp" />
+	<Op class="dtv.pos.tender.AddTenderToSaleTranOp" />
+	<Op class="dtv.pos.tender.rounding.UpdateTransactionRoundedAmountOp" />
+	<OpChainRoute chainKey="CHECK_SALE_COMPLETE" chainType="START" /> 
+	</OpChain>
+
+  <!--US#89136 StoredCredit Changes End--> 
+  <!--US# Disabling Printing for Store Open -->
+  <OpChain name="WORKSTATION_OPEN_IMPL">
+    <!-- Prevents to reprint several "Register Closed" receipts by every suspended transaction canceled -->
+    <Op class="dtv.pos.till.ClearTillCountReceiptsOp" />
+    <WorkerOp workersBean="saveSystemTimeWorkers" />
+    <PromptOp class="dtv.pos.systemcycle.workstation.PromptRegisterOpenBusinessDate" key="CHOOSE_BUSINESS_DATE" />
+    <!-- Reinitialize to clear the current session in case this register is force closed from another register -->
+    <Op class="dtv.pos.till.ReinitializeSessionManagerOp" />
+    <OpChainRoute chainKey="COUNTRYPACK.FISCAL_NUMBER_RESET_WORKSTATION_OPEN" />
+    <OpChainRoute chainKey="WORKSTATION_OPEN_EXT.local" />
+    <OpChainRoute chainKey="WORKSTATION_OPEN.1" />
+    <OpChainRoute chainKey="WORKSTATION_OPEN.eftlink" />
+    <OpChainRoute>
+      <Choice chainKey="REGISTER_MODE_COUNT_TILL" condition="dtv.pos.till.rollingclose.RollingCloseCountAtRegisterOpenRunCondition" />
+      <Choice chainKey="REGISTER_MODE_NO_COUNT" condition="dtv.pos.till.rollingclose.RollingCloseNoCountAtRegisterOpenRunCondition" />
+    </OpChainRoute>
+    <OpChainRoute chainKey="WORKSTATION_OPEN_CREATE_TRANS" />
+    <!--<OpChainRoute chainKey="PRINT_RECEIPTS" />-->
+    <OpChainRoute chainKey="NOTIFY_OPEN_WORKSTATION" />
+    <OpChainRoute chainKey="EXT_WORKSTATION_OPEN_CHECK" />
+    <WorkerOp workersBean="workstationOpenWorkers" />
+    <OpChainRoute chainKey="WORKSTATION_OPEN_TAX_LOCATION" />
+  </OpChain>
+  
+	<!-- Bug 100069,100070,100071 Change Due flow START-->
+	<OpChain name="ROUTE_CHANGE">
+		<OpChainRoute>
+		<Choice chainKey="STORED_CREDIT_CHANGE_TENDER" condition="mto.pos.tender.change.MtoIsStoredCreditChangeTender" />
+		<Choice chainKey="LOCAL_CURRENCY_CHANGE_TENDER" condition="dtv.pos.tender.change.IsLocalCurrencyChangeTender" />
+		<Choice chainKey="OFFICE_CHECK_CHANGE_TENDER" condition="dtv.pos.tender.change.IsOfficeCheckChangeTender" />
+		<Choice chainKey="FOREIGN_CURRENCY_CHANGE_TENDER" condition="dtv.pos.tender.change.IsForeignCurrencyChangeTender" />
+		<Choice chainKey="RELOAD_VOUCHER_CHANGE_TENDER" condition="dtv.pos.tender.change.IsReloadableVoucherChangeTender" />
+		<Choice chainKey="ISSUE_VOUCHER_CHANGE_TENDER" condition="dtv.pos.tender.change.IsIssuedVoucherChangeTender" />
+		</OpChainRoute>
+	</OpChain>
+	<OpChain name="STORED_CREDIT_CHANGE_TENDER" signal="TransactionModified">
+		<Op class="dtv.pos.tender.CreateTenderLineItemOp">
+		<Parameter name="TenderStatus" value="Change" />
+		<Parameter name="TenderId" value="STORED_CREDIT" />
+		</Op>
+		<Op class="dtv.pos.tender.VoidTenderOnChainReverseOp">
+		<Parameter name="TenderStatus" value="Change" />
+		</Op>
+		<!-- <PromptOp class="dtv.pos.tender.PromptCustAsscRequiredForTenderOp" />  -->
+		<Op class="dtv.pos.tender.change.UpdateChangeTenderAmountOp" />
+		<OpChainRoute chainKey="FINISH_CHANGE_TENDER" />
+	</OpChain>
+
+
+	<OpChain name="CHECK_FOR_CHANGE" signal="TransactionModified">
+		<PromptOp class="mto.pos.tender.change.MtoPromptSelectChangeTenderOp" validationsBean="foreignChangeRules" breakpoint="true" />
+		<Op class="dtv.pos.tender.rounding.UpdateRoundingOnChangeOp" />
+		<OpChainRoute chainKey="ROUTE_CHANGE" condition="dtv.pos.tender.change.TransactionHasChangeDueCondition" />
+	</OpChain>
+  <OpChain name="BANK_DEPOSIT" signal="TransactionComplete" contextKey="BANK_DEPOSIT_COUNT">
+    <Op class="dtv.pos.till.count.GetStoreSafeSessionOp" />
+    <PromptOp class="dtv.pos.till.count.PromptBankInstituteForDepositOp" />
+    <PromptOp class="dtv.pos.till.count.PromptAvailableSafeBagsOp" validationsBean="safeBagForStoreSafeCountRules">
+      <Parameter name="AcceptedStatus" value="COUNTED" />
+    </PromptOp>
+    <Op class="mto.pos.till.count.MtoPromptBankDepositTillCountOp" breakpoint="true" />
+    <PromptOp class="dtv.pos.till.count.PromptConfirmDepositAmountsOp" />
+    <Op class="dtv.pos.till.count.CreateBankDepositCountObjectsOp" contextKey="ISSUE_TILL" longRunning="true" />
+    <OpChainRoute chainKey="COUNTRYPACK.ASSIGN_AND_SAVE_FISCAL_SEQUENCE" />
+    <OpChainRoute chainKey="BANK_DEPOSIT.local" />
+    <WorkerOp workersBean="persistTransAndObjWorkers" />
+    <!--<OpChainRoute chainKey="PRINT_RECEIPTS" /> -->
+    <PromptOp class="mto.pos.report.storeclose.MtoBankDepositPrintPromptOp" breakpoint ="true"/>
+  </OpChain>
+  <!-- Bug 100069,100070,100071 Change Due flow End-->
+   <!--Start:Bug# During Bank deposit with discrepancy -->
+   <OpChain name="STOREBANK_COMPLETE_ENDCOUNT">
+    <PromptOp class="dtv.pos.till.count.PromptAvailableSafeBagsOp" validationsBean="safeBagForStoreSafeCountRules">
+      <Parameter name="AcceptedStatus" value="COUNTED" />
+    </PromptOp>
+    <Op class="mto.pos.till.count.MtoPromptBankDepositTillCountOp" breakpoint="true" />
+    <Op class="dtv.pos.till.count.CreateBankDepositCountObjectsOp" contextKey="ISSUE_TILL" />
+    <OpChainRoute chainKey="COUNTRYPACK.ASSIGN_AND_SAVE_FISCAL_SEQUENCE" />
+  </OpChain>
+<!--End:Bug# During Bank deposit with discrepancy -->
+
+  <!--US#99543 CDSERV VOID Start-->
+  <OpChain name="EFTLINK_VOID_TENDER">
+    <!-- <PromptOp class="mto.pos.tender.MtoIsCustomerPresentCheckOp" />  --> 
+    <Op class="mto.tenderauth.impl.cdserv.op.MtoInitiateVoidCDServPipeRequestOp" longRunning="true"/>
+  </OpChain>
+<!--US#99543 CDSERV VOID END-->
+<!-- Bug#101806 Store Open from Status Bar Start -->
+  <OpChain name="MTO_RETAIL_LOCATION_OPEN_FROM_APP">
+    <Op class="dtv.pos.hardware.op.PlaySoundOp" />
+    <ValidationOp validationsBean="isNotInUpdateRequiredPeriodValidations"/>
+    <Op class="dtv.pos.framework.security.PromptLoginIfNeededOp">
+      <Parameter name="PasswordPromptKey" value="STORE_OPEN_USER_PWD" />
+      <Parameter name="UserIdPromptKey" value="STORE_OPEN_USER_ID" />
+      <Parameter name="PrivilegeType" value="STORE_OPEN_CLOSE" />
+    </Op>
+    <Op class="dtv.pos.framework.appmanagement.training.ValidateEmployeeRestrictedAccessOp" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_OPEN" chainType="START" />
+  </OpChain>
+<!-- Bug#101806 Store Open from Status Bar End -->
+  <!--  START User story 92929 Reconcile Till -->
+  <OpChain name="RECONCILE_TILL" signal="TransactionComplete" contextKey="RECONCILE_COUNT" rollbackLevel="40">
+	<PromptOp class="mto.pos.till.reconcile.MtoPromptReconcileTillOp" breakpoint="true" />
+	<OpChainRoute>  
+		<Choice chainKey="WORKSTATION_CLOSE_IMPL_RECONCILE_TILL" condition="mto.pos.till.reconcile.MtoReconcileRunCondition" />
+		<Choice chainKey="MTO_RECONCILED_RECOUNT" />
+	</OpChainRoute>   
+	</OpChain>
+	 <!--  END User story 92929 Reconcile Till -->
+	 
+	  <!--  START Recount Reconcile Till -->
+   <OpChain name="MTO_RECONCILED_RECOUNT">
+     <!--  <PromptOp class="mto.pos.till.reconcile.MtoRecountValidationPromptOp"/> -->
+		<Op class="mto.pos.till.reconcile.MtoPromptReconcileTillRecountOp" >    
+		  <Parameter name="AcceptedStatus" value="RECONCILED" />
+		</Op>
+		<PromptOp class="dtv.pos.till.count.PromptAvailableSafeBagsOp" key="SAFE_BAGS_NOTIFY_UNDECLARED">
+		<Parameter name="AcceptedStatus" value="UNDECLARED" />
+		</PromptOp>
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_START.local" />
+		<Op class="dtv.pos.till.count.EndCountOpenCashDrawerOp" />
+		<Op class="mto.pos.till.reconcile.MtoPromptTillRecountOp" breakpoint="true" /> 
+		<Op class="dtv.pos.till.count.PromptClosingDepositAmountsOp">
+			<Parameter name="ChainKey" value="PROMPT_CLOSING_DEPOSIT" />
+		</Op>
+		<PromptOp class="dtv.pos.hardware.op.WaitForCashDrawerCloseOp" validationsBean="cashDrawerCloseRules" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.pre" />
+	    <Op class="mto.pos.till.reconcile.MtoCreateTillEndCountObjectsforReconcileOp" /> 
+		<OpChainRoute chainKey="COUNTRYPACK.ASSIGN_AND_SAVE_FISCAL_SEQUENCE" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.local" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.post" />
+		<WorkerOp workersBean="persistTransAndObjWorkers" />
+		<Op class="dtv.pos.till.UpdateRemoveDrawerFromCurrentWkstnOp" />	
+	</OpChain>
+	  <!--  END Recount Reconcile Till -->
+	<!--START:Task 100057 Revisit flow for reconciling another till from current till-->
+	<OpChain name="WORKSTATION_CLOSE_IMPL_RECONCILE_TILL" contextKey="WORKSTATION_CLOSE" rollbackChainKey="ROLLBACK_WORKSTATION_CLOSE_TRANS">
+		<Op class="dtv.pos.register.itemmessages.DefaultIdleMsgOp" />
+		<ValidationOp validationsBean="mtocloseWorkstationRules" />
+		<PromptOp class="dtv.pos.systemcycle.close.PromptToCloseOp" key="CLOSE_WORKSTATION" />
+		<OpChainRoute chainKey="REGISTER_CLOSING_WITH_COUNT_RECONCILE" condition="dtv.pos.till.rollingclose.NonRollingCloseRunCondition"  />	
+		 <!-- US# 92816 Reconcile Till count Report  --> 
+		<PromptOp class="mto.pos.report.tillreconcile.MtoReconcileTillCountPrintPromptOp" breakpoint="true"/>	
+		<PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+			<Parameter name="QuestionType" value="WORKSTATION_CLOSE" />
+		</PromptOp>
+		<OpChainRoute chainKey="WORKSTATION_CLOSE.local.post" />
+		<OpChainRoute chainKey="WORKSTATION_CLOSE_CREATE_TRANS_RECONCILE" />	
+		<OpChainRoute chainKey="NOTIFY_CLOSE_WORKSTATION" />
+		<WorkerOp workersBean="registerCloserWorkers" />
+		<!-- US# 94731 Reconcile Till summary report  --> 
+		<PromptOp class="mto.pos.report.tillreconcile.MtoReconcileTillSummaryPrintPromptOp" breakpoint="true"/>
+		<PromptOp class="dtv.pos.systemcycle.workstation.PromptToReopenRegisterOp">
+		<Parameter name="ChainKey" value="WORKSTATION_OPEN_IMPL"/>
+		</PromptOp>
+	</OpChain>
+    
+	<OpChain name="REGISTER_CLOSING_WITH_COUNT_RECONCILE">	 
+		<Op class="mto.pos.till.reconcile.MtoCheckCurrentSessionStatusforReconcileOp" >  
+		  <Parameter name="AcceptedStatus" value="BEGINCOUNT" />
+		</Op>
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_RECONCILE" />
+		<OpChainRoute chainKey="CLOSING_COUNT_AT_REGISTER_CLOSE.post" />
+	</OpChain>
+	
+	<OpChain name="CLOSING_COUNT_LOGIC_RECONCILE" signal="TransactionComplete" contextKey="CLOSE_COUNT">
+		<PromptOp class="dtv.pos.till.count.PromptAvailableSafeBagsOp" key="SAFE_BAGS_NOTIFY_UNDECLARED">
+		<Parameter name="AcceptedStatus" value="UNDECLARED" />
+		</PromptOp>
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_START.local" />
+		<Op class="dtv.pos.till.count.EndCountOpenCashDrawerOp" />
+		<Op class="mto.pos.till.reconcile.MtoPromptTillCountOp" breakpoint="true" /> 
+		<Op class="dtv.pos.till.count.PromptClosingDepositAmountsOp">
+			<Parameter name="ChainKey" value="PROMPT_CLOSING_DEPOSIT" />
+		</Op>
+		<PromptOp class="dtv.pos.hardware.op.WaitForCashDrawerCloseOp" validationsBean="cashDrawerCloseRules" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.pre" />
+	    <Op class="mto.pos.till.reconcile.MtoCreateTillEndCountObjectsforReconcileOp" /> 
+		<OpChainRoute chainKey="COUNTRYPACK.ASSIGN_AND_SAVE_FISCAL_SEQUENCE" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.local" />
+		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.post" />
+		<WorkerOp workersBean="persistTransAndObjWorkers" />
+		<Op class="dtv.pos.till.UpdateRemoveDrawerFromCurrentWkstnOp" />			
+	</OpChain>
+	
+	<OpChain name="WORKSTATION_CLOSE_CREATE_TRANS_RECONCILE">
+		<OpChainRoute chainKey="WORKSTATION_CLOSE_CREATE_TRANS_AS_NEEDED" condition="dtv.pos.register.condition.CreateWSCloseTransactionRunCondition"/>
+		<Op class="mto.pos.systemcycle.workstation.MtoCloseWorkstationForReconcileOp" />
+	</OpChain>
+	 <!--END :Task 100057 Revisit flow for reconciling another till from current till-->
+	 
+	  <!--START:Task Displaying session Id while till open-->
+	<OpChain name="WORKSTATION_OPEN" contextKey="WORKSTATION_OPEN" signal="TransactionComplete">
+    <Op class="dtv.pos.systemcycle.access.SynchStateJournalOp" />
+    <ValidationOp validationsBean="openWorkstationRules">
+      <Parameter name="PassiveFailureMessage" value="false" />
+    </ValidationOp>
+    <PromptOp class="dtv.pos.systemcycle.open.PromptToOpenOp" key="OPEN_WORKSTATION" />
+    <OpChainRoute chainKey="WORKSTATION_OPEN_IMPL" />
+    <PromptOp class="mto.pos.systemcycle.open.MtoPromptToShowTillId" key="SHOW_TILLID" />
+  	</OpChain>
+  <!--END:Task Displaying session Id while till open-->
+  
+  
+  <OpChain name="RETAIL_LOCATION_QUICK_CLOSE" contextKey="RETAIL_LOCATION_CLOSE" signal="TransactionComplete">
+    <Op class="dtv.pos.register.itemmessages.DefaultIdleMsgOp" />
+    <ValidationOp validationsBean="closeRetailLocationRules" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.order.1" />
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateNotClockOutEmployeesOp" />
+    <PromptOp class="dtv.pos.systemcycle.close.PromptToCloseStoreOp" /> 
+    <PromptOp class="dtv.pos.payroll.op.PromptPayrollNotYetPostYesNoMsgOp" />
+    <Op class="mto.pos.systemcycle.close.MtoValidateWorkstationsClosedOp" />
+    <Op class="dtv.pos.systemcycle.close.ValidateCashdrawersClosedOp" />
+    <Op class="dtv.pos.systemcycle.close.ValidateFiscalPrintersClosedOp" />    
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateRollingCloseTillsReconciledOp" key="ROLLING_CLOSE_STORE_CLOSE_UNRECONCILED_TILLS" />
+    <PromptOp class="dtv.pos.systemcycle.close.ValidateRollingCloseAllDaysEndedOp" key="ROLLING_CLOSE_STORE_CLOSE_DAYS_NOT_ENDED" />
+    <PromptOp class="dtv.pos.offlinepos.PromptOfflineTransListAtCloseOp" />
+    <PromptOp class="dtv.pos.register.suspendresume.PromptCancelSuspendTransOp" />
+   <!-- <PromptOp class="dtv.pos.systemcycle.close.PromptCloseMessageOp" /> -->
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.1" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.pre" />
+    <!-- US#89121 Closing a Store Start-->
+    <!-- <PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+      <Parameter name="QuestionType" value="SYSTEM_CLOSE" />
+    </PromptOp> -->
+    <!-- US#89121 Closing a Store End -->
+    <OpChainRoute chainKey="STOREBANK_CLOSING_COUNT_STORE_CLOSING" condition="dtv.pos.systemcycle.close.CountStoreSafeAtClosingCondition" />
+    <!-- US# 92814 Bank Deposit report  -->
+	<PromptOp class="mto.pos.report.storeclose.MtoBankDepositPrintPromptOp" breakpoint="true"/>
+    <PromptOp class="dtv.pos.systemcycle.questions.PromptCycleQuestionsOp">
+      <Parameter name="QuestionType" value="SYSTEM_CLOSE_DEPOSIT_COMPLETE" />
+    </PromptOp>
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.2" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.ERECEIPT.2" />
+    <Op class="mto.pos.systemcycle.close.MtoDisplayFinalSystemCloseMsgOp" />    
+    <Op class="dtv.pos.common.op.StartPermanentBusyStateOp"/>
+    <Op class="dtv.pos.tender.paybylink.ProcessAdyenResultsOp" />
+    <Op class="dtv.pos.register.suspendresume.CancelAllSuspendTransOp" />
+    <Op class="dtv.pos.systemcycle.retaillocation.AutoCloseWorkstationOp" />
+    <Op class="dtv.pos.systemcycle.close.AutoClockOutOp" />
+    <Op class="dtv.pos.common.op.EndPermanentBusyStateOp"/>
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.order.2" />
+    <Op class="dtv.pos.payroll.op.WritePayrollLogOp" longRunning="true" />
+    <Op class="dtv.pos.systemcycle.close.ProcessPayrollOp" longRunning="true" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE_CREATE_TRANS" />
+	<!-- US# 92813 Store Summary report  --> 	
+    <PromptOp class="mto.pos.report.storeclose.MtoStoreSummaryPrintPromptOp" breakpoint="true"/>
+    <Op class="dtv.pos.framework.appmanagement.SendIpcMessageNotRollingCloseOp">
+      <Parameter name="METHOD" value="QUICK_CLOSE" />
+    </Op>
+    <OpChainRoute chainKey="REPORT_RUN_CLOSE_GROUP" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.2" />
+    <OpChainRoute chainKey="RETAIL_LOCATION_CLOSE.local.invoice" />
+    <Op class="dtv.pos.systemcycle.close.ExitAppOnSystemCloseOp" />
+    <OpChainRoute chainKey="RETURN_TO_LOGIN" chainType="START" />
+  </OpChain>
+   </OpChainSet>

@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuerySet xmlns="http://micros.com/xstore/config/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://micros.com/xstore/config/query ../../../../../../config-objects/schema/QueryConfig.xsd">
+ <Queries>
+   <!--  START User story 92929 Reconcile Till -->
+<Query name="ALL_TILL_STATUS" pmType="SESSIONS">
+    <QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+    <ResultClass>mto.xst.query.results.MtoAllTillStatusResult</ResultClass>
+    <ResultField name="OrganizationId" type="Long" />
+    <ResultField name="SessionId" type="Long" />     
+    <ResultField name="WkstnId" type="Long" />
+    <ResultField name="TillId" type="String" />
+    <ResultField name="Status" type="String" />
+    <ResultField name="BeginDatetimestamp" type="Date" />
+    <ResultField name="EndDatetimestamp" type="Date" />
+    <!-- Start Reconcile Till - UI Changes-100042 -->
+    <ResultField name="SystemAmount" type="BigDecimal" />
+    <!-- End Reconcile Till - UI Changes-100042 -->
+ <!--    <ResultField name="DeclaredAmount" type="BigDecimal" /> -->
+    <ResultField name="OverShort" type="BigDecimal" />
+    <ResultField name="flag" type="String"/>
+    <ResultField name="Employee" type="String" />
+    <ResultField name="Employee_Lastname" type="String" />
+    <SQL>
+      <Statement><![CDATA[
+SELECT
+      ORGANIZATION_ID, 	
+      session_id,	
+      wkstn_id,	
+      tndr_repository_id,	      	
+      Status,
+      begin_datetime,
+      end_datetime,	
+      SUM(IN_AMT ) - sum(OUT_AMT) AS Net,	
+      sum(OVERSHORT) AS Over_short,	
+      (Case when (SUM(OVERSHORT))= 0 then 'N' else 'Y' end) as flag,
+      Employee,	Employee_Lastname
+FROM	
+      ( SELECT DISTINCT SSN_DTL.ORGANIZATION_ID,	
+               SSN_DTL.BUSINESS_DATE,	
+               SSN_DTL.RTL_LOC_ID,	
+               SSN_DTL.WKSTN_ID,	
+               NET.TNDR_ID,	
+               SSN_DTL.SESSION_ID,	
+               SSN_DTL.Status,	
+               SSN_DTL.tndr_repository_id,	
+               SSN_DTL.Employee,	
+               SSN_DTL.Employee_Lastname,
+               SSN_DTL.typcode,	
+               begin_datetime,	
+               end_datetime,	
+               COALESCE(NET,0) AS IN_AMT ,	
+               COALESCE(count_ttl,0) AS in_count,	
+               COALESCE(OUT,0) AS OUT_AMT,	
+               COALESCE(count_out,0) AS out_count,	
+               COALESCE(NET,0) AS NET,	
+               COALESCE(OS.COUNTED,0) as counted,	
+               COALESCE(count_tt,0) as counted_count,	
+               COALESCE(OS.OVERSHORT,0) as overshort,	
+               COALESCE(DIFFERENCE_MEDIA_COUNT,0) as ovrsht_count	
+          FROM  	
+               ( SELECT T.organization_id,	
+                        T.RTL_LOC_ID,	
+                        T.BUSINESS_DATE,	
+                        T.SESSION_ID,	
+                        DFLT_WKSTN_ID AS WKSTN_ID,	
+                        tt.trans_seq,	
+                        T.tndr_repository_id,	
+                        (crm.first_name) as Employee,
+    					(crm.last_name) as Employee_Lastname,
+                        TR.typcode,	
+                        (case when t.statcode='BEGINCOUNT' then 'OPEN'  else t.statcode end) as Status,	
+                        t.begin_datetime,	
+                        t.end_datetime	
+                   FROM DTV.TSN_SESSION t,	
+                        DTV.tsn_tndr_repository TR,	
+                        DTV.crm_party crm,	
+                        DTV.trn_trans tt	
+                  WHERE t.organization_id = tr.organization_id (+)	
+                    AND t.rtl_loc_id=tr.rtl_loc_id (+)	
+                    AND /*UPPER*/ t.tndr_repository_id = tr.tndr_repository_id (+)	
+                    AND /*UPPER*/ t.statcode IN ('RECONCILED','BEGINCOUNT')	
+                    AND t.organization_id = crm.organization_id (+)	
+                    and t.create_user_id = crm.party_id (+)	
+                    and t.organization_id = tt.organization_id	
+                    and t.rtl_loc_id = tt.rtl_loc_id 	
+                    and t.session_id = tt.session_id	
+                    and t.business_date = tt.business_date) SSN_DTL,   	
+               ( SELECT A.ORGANIZATION_ID,	
+                        A.RTL_LOC_ID,	
+                        A.BUSINESS_DATE,	
+                        B.SESSION_ID,	
+                        A.TNDR_ID,	
+                        count(tndr_id) as count_ttl,	
+                        SUM(A.AMT) AS NET	
+                   FROM DTV.TTR_TNDR_LINEITM A	
+             INNER JOIN DTV.TRN_TRANS B	
+                     ON A.TRANS_SEQ = B.TRANS_SEQ	
+                     and a.wkstn_id = b.wkstn_id	
+             INNER JOIN DTV.TRL_RTRANS_LINEITM C	
+                     ON A.TRANS_SEQ = C.TRANS_SEQ	
+                    AND A.RTRANS_LINEITM_SEQ = C.RTRANS_LINEITM_SEQ	
+                    and a.wkstn_id = c.wkstn_id	      
+                  WHERE B.TRANS_TYPCODE = 'RETAIL_SALE'	
+                    AND B.TRANS_STATCODE = 'COMPLETE'	
+                    AND C.RTRANS_LINEITM_TYPCODE = 'TENDER'  
+                    AND A.TNDR_STATCODE = 'Tender'
+                    AND C.VOID_FLAG = 0	
+                    AND A.TNDR_ID IN ('CERTIFIED_FUND','CHECK')	
+               GROUP BY A.ORGANIZATION_ID, A.RTL_LOC_ID,
+               A.BUSINESS_DATE,B.SESSION_ID, A.TNDR_ID 
+			  UNION ALL
+				 SELECT A.ORGANIZATION_ID,	
+                        A.RTL_LOC_ID,	
+                        A.BUSINESS_DATE,	
+                        B.SESSION_ID,	
+                        A.TNDR_ID,	
+                        count(tndr_id) as count_ttl,	
+                        SUM(A.AMT) AS NET	
+                   FROM DTV.TTR_TNDR_LINEITM A	
+             INNER JOIN DTV.TRN_TRANS B	
+                     ON A.TRANS_SEQ = B.TRANS_SEQ	
+                     and a.wkstn_id = b.wkstn_id	
+             INNER JOIN DTV.TRL_RTRANS_LINEITM C	
+                     ON A.TRANS_SEQ = C.TRANS_SEQ	
+                    AND A.RTRANS_LINEITM_SEQ = C.RTRANS_LINEITM_SEQ	
+                    and a.wkstn_id = c.wkstn_id	      
+                  WHERE B.TRANS_TYPCODE = 'RETAIL_SALE'	
+                    AND B.TRANS_STATCODE = 'COMPLETE'	
+                    AND C.RTRANS_LINEITM_TYPCODE = 'TENDER'  
+                    AND C.VOID_FLAG = 0	
+                    AND A.TNDR_ID IN ('CAD_CURRENCY')	
+               GROUP BY A.ORGANIZATION_ID, A.RTL_LOC_ID,
+               A.BUSINESS_DATE,B.SESSION_ID, A.TNDR_ID ) NET,	
+               ( SELECT TT.ORGANIZATION_ID,	
+                        TT.RTL_LOC_ID,	
+                        TT.BUSINESS_DATE,	
+                        TT.SESSION_ID,	
+                        TTL.TNDR_ID,	
+                        SUM(TTL.AMT) AS OUT,	
+                        count(POST_VOID_FLAG) as count_out	
+                   FROM DTV.TTR_TNDR_LINEITM TTL 	
+             INNER JOIN DTV.TRN_TRANS TT	
+                     ON TTL.TRANS_SEQ = TT.TRANS_SEQ	
+                  WHERE POST_VOID_FLAG = 1	
+                    AND TRANS_STATCODE = 'COMPLETE'	
+                    AND TRANS_TYPCODE = 'RETAIL_SALE'
+                    AND TTL.TNDR_STATCODE = 'Tender' 
+                    AND TTL.TNDR_ID IN ('CERTIFIED_FUND','CHECK')	
+               GROUP BY TT.ORGANIZATION_ID,TT.RTL_LOC_ID,
+               TT.BUSINESS_DATE, TT.SESSION_ID, TTL.TNDR_ID
+            UNION ALL
+               SELECT TT.ORGANIZATION_ID,	
+                        TT.RTL_LOC_ID,	
+                        TT.BUSINESS_DATE,	
+                        TT.SESSION_ID,	
+                        TTL.TNDR_ID,	
+                        SUM(TTL.AMT) AS OUT,	
+                        count(POST_VOID_FLAG) as count_out	
+                   FROM DTV.TTR_TNDR_LINEITM TTL 	
+             INNER JOIN DTV.TRN_TRANS TT	
+                     ON TTL.TRANS_SEQ = TT.TRANS_SEQ	
+                  WHERE POST_VOID_FLAG = 1	
+                    AND TRANS_STATCODE = 'COMPLETE'	
+                    AND TRANS_TYPCODE = 'RETAIL_SALE'
+                    AND TTL.TNDR_ID IN ('CAD_CURRENCY')	                    
+               GROUP BY TT.ORGANIZATION_ID,TT.RTL_LOC_ID,
+               TT.BUSINESS_DATE, TT.SESSION_ID, TTL.TNDR_ID) OUT,	
+               ( SELECT  TTTC.ORGANIZATION_ID,	
+                        TTTC.RTL_LOC_ID,	
+                        DFLT_WKSTN_ID AS WKSTN_ID,	
+                        TTTC.BUSINESS_DATE,	
+                        TTCT.OUTBOUND_SESSION_ID as SESSIONID,	
+                        TTTC.TNDR_ID,	
+                        media_count as count_tt,	
+                        SUM(TTTC.AMT) AS COUNTED,	
+                        DIFFERENCE_MEDIA_COUNT,	
+                        SUM(TTTC.DIFFERENCE_AMT) OVERSHORT                       	
+                   FROM dtv.TSN_TNDR_TNDR_COUNT TTTC	
+             INNER JOIN dtv.TSN_TNDR_CONTROL_TRANS TTCT	
+                     ON TTTC.TRANS_SEQ = TTCT.TRANS_SEQ	
+                    AND TTCT.BUSINESS_DATE = TTTC.BUSINESS_DATE	
+            INNER JOIN DTV.tsn_tndr_repository TR
+                    ON TTCT.OUTBOUND_TNDR_REPOSITORY_ID = TR.TNDR_REPOSITORY_ID
+                  AND TTCT.RTL_LOC_ID = TR.RTL_LOC_ID                    
+                  WHERE TTTC.TNDR_ID IN ('CAD_CURRENCY','CERTIFIED_FUND','CHECK')	
+                   AND (TTCT.ORGANIZATION_ID, TTCT.RTL_LOC_ID,  TTCT.BUSINESS_DATE,OUTBOUND_SESSION_ID, TTCT.TRANS_SEQ, TTCT.CREATE_DATE) IN 
+                         ( SELECT ORGANIZATION_ID,
+                                  RTL_LOC_ID,
+                                  BUSINESS_DATE,
+                                  OUTBOUND_SESSION_ID,
+                                 TRANS_SEQ, CREATE_DATE from (SELECT TTCT1.ORGANIZATION_ID,
+                                  TTCT1.RTL_LOC_ID,
+                                  TTCT1.BUSINESS_DATE,
+                                  TTCT1.OUTBOUND_SESSION_ID,
+                                  TTCT1.TRANS_SEQ,TTCT1.CREATE_DATE,
+                                  ROW_NUMBER() OVER (PARTITION BY TTCT1.ORGANIZATION_ID,TTCT1.RTL_LOC_ID, TTCT1.BUSINESS_DATE,
+								  TTCT1.OUTBOUND_SESSION_ID  ORDER BY TTCT1.CREATE_DATE DESC) AS OS
+                             FROM DTV.TSN_TNDR_CONTROL_TRANS TTCT1
+                         ORDER BY CREATE_DATE DESC)
+                         WHERE OS = 1)                             
+               GROUP BY TTTC.ORGANIZATION_ID, tttc.rtl_loc_id,DFLT_WKSTN_ID, tttc.business_date, TTCT.OUTBOUND_SESSION_ID, tttc.tndr_id,media_count,DIFFERENCE_MEDIA_COUNT) OS	
+         WHERE SSN_DTL.ORGANIZATION_ID = OS.ORGANIZATION_ID (+)	
+           AND SSN_DTL.BUSINESS_DATE = OS.BUSINESS_DATE (+)	
+           AND SSN_DTL.RTL_LOC_ID = OS.RTL_LOC_ID (+)	
+           AND SSN_DTL.SESSION_ID = OS.SESSIONID (+)	
+           AND SSN_DTL.WKSTN_ID = OS.WKSTN_ID (+)	
+           AND SSN_DTL.ORGANIZATION_ID = OUT.ORGANIZATION_ID (+)	
+           AND SSN_DTL.BUSINESS_DATE = OUT.BUSINESS_DATE (+)	
+           AND SSN_DTL.RTL_LOC_ID = OUT.RTL_LOC_ID (+)	
+           AND SSN_DTL.SESSION_ID = OUT.SESSION_ID (+)	
+           AND SSN_DTL.ORGANIZATION_ID = NET.ORGANIZATION_ID (+)	
+           AND SSN_DTL.BUSINESS_DATE = NET.BUSINESS_DATE (+)	
+           AND SSN_DTL.RTL_LOC_ID = NET.RTL_LOC_ID (+)	
+           AND SSN_DTL.SESSION_ID = NET.SESSION_ID (+)	
+           AND NET.TNDR_ID = OS.TNDR_ID (+)	
+           AND NET.TNDR_ID = OUT.TNDR_ID (+)	
+           )	
+ WHERE ORGANIZATION_ID = ?	
+   AND RTL_LOC_ID = ?	
+   AND BUSINESS_DATE =?	
+   AND typcode NOT IN ('STOREBANK','BANK')	 
+      ]]></Statement>
+      <Parameter name="argOrganizationId" />
+      <Parameter name="argRetailLocationId" />
+       <Parameter name="argBusinessDate" />
+    </SQL>
+     <Suffix><![CDATA[GROUP BY  ORGANIZATION_ID,
+        SESSION_ID,
+        wkstn_id,
+        tndr_repository_id,
+        begin_datetime,
+        end_datetime,
+        Employee,Employee_Lastname,
+        Status
+ORDER BY SESSION_ID]]></Suffix>
+  </Query>
+    <!--  END User story 92929 Reconcile Till -->
+    
+    
+<!-- US# 92815 Till Summary Report Start -->  
+		<Query name="MTO_TSR_DATE_VALIDATION" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass>mto.xst.query.results.MtoTillSumaryValidationResult</ResultClass>
+			<ResultField name="status" type="Long" />   
+			<SQL>
+			<Statement><![CDATA[        
+			          SELECT DISTINCT 
+			       (CASE 
+			          	WHEN EXISTS (SELECT DISTINCT BUSINESS_DATE FROM TRN_TRANS WHERE TRANS_TYPCODE ='SYSTEM_OPEN' AND BUSINESS_DATE = ? ) THEN 1
+			            ELSE 0
+			            END )AS status 
+					FROM TRN_TRANS  
+					 ]]></Statement>
+			<Parameter name="argBusinessDate" />
+			</SQL>
+		</Query>
+
+		<Query name="MTO_TSR_SESSIONID_VALIDATION" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass>mto.xst.query.results.MtoTillSumaryValidationResult</ResultClass>
+			<ResultField name="status" type="Long" />   
+			<SQL>
+			<Statement><![CDATA[        
+					SELECT 
+					DISTINCT (
+					CASE 	WHEN EXISTS (SELECT DISTINCT SESSION_ID FROM TRN_TRANS WHERE  BUSINESS_DATE =? AND SESSION_ID= ?) THEN 1
+							ELSE 0
+				    END )AS status 
+				FROM TRN_TRANS     
+					]]></Statement>
+			<Parameter name="argBusinessDate" />
+			<Parameter name="sessionId" />
+			</SQL>
+		</Query>
+<!-- US# 92815 Till Summary Report End -->
+
+<!--90370 US Void Order START-->
+	<Query name="MTO_VOID_ORDER_VALIDATION" pmType="TRANSACTION">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass>mto.xst.query.results.MtoVoidOrderValidationResult</ResultClass>
+			<ResultField name="status" type="Long" />   
+			<SQL>
+			<Statement> <![CDATA[
+				SELECT 
+					DISTINCT 
+					(CASE 
+						WHEN EXISTS (
+								SELECT TRANS_SEQ FROM TRN_TRANS
+									WHERE TRANS_TYPCODE = 'RETAIL_SALE'
+										AND TRANS_STATCODE = 'COMPLETE'
+										AND POST_VOID_FLAG = 0
+										AND RTL_LOC_ID = ?
+										AND WKSTN_ID = ?
+										AND BUSINESS_DATE = ?
+										AND TRANS_SEQ = ?
+									) THEN 1
+						ELSE 0 
+					END ) AS status FROM TRN_TRANS
+				]]></Statement>
+			<Parameter name="argRetailLocationId" />
+			<Parameter name="argWorkstationId" />
+			<Parameter name="argBusinessDate" />
+			<Parameter name="argTransactionSeq" />
+			</SQL>
+		</Query>
+		<Query name="MTO_VOID_ORDER_TENDER_LIST" pmType="TRANSACTION">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass>mto.xst.query.results.MtoVoidOrdertTenderListResult</ResultClass>
+			<ResultField name="seq" type="Long" />
+			<ResultField name="status" type="String" />
+			<ResultField name="tender" type="String" />  
+			<ResultField name="amount" type="BigDecimal" /> 
+			<ResultField name="num" type="String" /> 
+			<SQL>
+			<Statement> <![CDATA[
+				SELECT 
+				DISTINCT  RTRANS_LINEITM_SEQ AS seq, TNDR_STATCODE AS status,  
+				TNDR_ID AS tender, 
+				AMT AS amount,                
+				(CASE 
+						WHEN TNDR_ID ='CHECK' THEN (SELECT CHECK_SEQ_NBR FROM TTR_CHECK_TNDR_LINEITM WHERE RTL_LOC_ID = TTR.RTL_LOC_ID AND WKSTN_ID = TTR.WKSTN_ID AND BUSINESS_DATE = TTR.BUSINESS_DATE AND TRANS_SEQ = TTR.TRANS_SEQ	AND RTRANS_LINEITM_SEQ=TTR.RTRANS_LINEITM_SEQ) 
+						WHEN TNDR_ID = 'CERTIFIED_FUND' THEN (SELECT TRACE_NUMBER FROM TTR_VOUCHER_TNDR_LINEITM WHERE RTL_LOC_ID = TTR.RTL_LOC_ID AND WKSTN_ID = TTR.WKSTN_ID AND BUSINESS_DATE = TTR.BUSINESS_DATE AND TRANS_SEQ = TTR.TRANS_SEQ	 AND VOUCHER_TYPCODE ='CERTIFIED_FUND' AND RTRANS_LINEITM_SEQ=TTR.RTRANS_LINEITM_SEQ)
+						WHEN TNDR_ID IN ('DEBIT_CARD','CREDIT_CARD','VISA','AMEX','MASTER_CARD') THEN (SELECT ACCT_NBR FROM TTR_CREDIT_DEBIT_TNDR_LINEITM WHERE RTL_LOC_ID = TTR.RTL_LOC_ID AND WKSTN_ID = TTR.WKSTN_ID AND BUSINESS_DATE = TTR.BUSINESS_DATE AND TRANS_SEQ = TTR.TRANS_SEQ AND RTRANS_LINEITM_SEQ=TTR.RTRANS_LINEITM_SEQ)
+						ELSE '0'
+				END) AS num 
+				FROM TTR_TNDR_LINEITM TTR
+				WHERE
+					TTR.RTL_LOC_ID = ?
+					AND TTR.WKSTN_ID = ?
+					AND TTR.BUSINESS_DATE = ?		
+					AND TTR.TRANS_SEQ = ?               
+                    AND TTR.RTRANS_LINEITM_SEQ IN  (SELECT RTRANS_LINEITM_SEQ FROM TRL_RTRANS_LINEITM WHERE  RTL_LOC_ID = TTR.RTL_LOC_ID  AND WKSTN_ID = TTR.WKSTN_ID AND BUSINESS_DATE = TTR.BUSINESS_DATE AND TRANS_SEQ = TTR.TRANS_SEQ AND RTRANS_LINEITM_TYPCODE ='TENDER' AND VOID_FLAG=0 )				
+				 ]]></Statement>				 
+			<Parameter name="argRetailLocationId" />
+			<Parameter name="argWorkstationId" />
+			<Parameter name="argBusinessDate" />
+			<Parameter name="argTransactionSeq" />
+			</SQL>
+			 <Suffix><![CDATA[order by ttr.rtrans_lineitm_seq]]></Suffix>
+		</Query> 
+<!--90370 US Void Order END-->	
+<!--Restricting cashier from opening another till START-->
+<Query name="MTO_TILL_OPEN_QUERY" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass dtype="String">dtv.data2.access.DefaultQueryResult</ResultClass>
+			<ResultField name="tillId" type="String" /> 
+			<SQL>
+			<Statement><![CDATA[        
+			          SELECT TNDR_REPOSITORY_ID FROM TSN_SESSION
+			           WHERE CREATE_USER_ID=?
+			           AND STATCODE='BEGINCOUNT'
+			      
+					 ]]></Statement>
+			<Parameter name="argLogedInEmployeeId" />
+			</SQL>
+		</Query>
+   <!--Restricting cashier from opening another till END-->
+    <!-- Bug#106547 Unable to print TSR due to session Id unknown -->
+		<Query name="MTO_TSR_DATE_VALIDATION" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>		
+			<ResultClass>mto.xst.query.results.MtoTillSumaryValidationResult</ResultClass>	
+			<ResultField name="status" type="Long" />   
+			<SQL>
+			<Statement><![CDATA[        
+			          select distinct 
+			          case 
+			          	when exists (select session_id from tsn_session where business_date = ? ) then 1 
+			          	else 0
+			          end 
+			          as status 
+			          from trn_trans
+					 ]]></Statement>
+			<Parameter name="argBusinessDate" />
+			</SQL>
+		</Query>		
+		<Query name="MTO_TSR_DATE_UPDATE" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>						   
+			<SQL>
+			<Statement><![CDATA[        
+					Update rpt_organizer_p set date_value = ? where report_name ='TSR_REPORT' 
+					]]></Statement>
+			<Parameter name="argBusinessDate" />			
+			</SQL>
+		</Query>	
+		<Query name="MTO_TSR_CASHIER_UPDATE" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>						   
+			<SQL>
+			<Statement><![CDATA[        
+					update rpt_organizer_p 
+					set 
+					string_value = (select party_id from crm_party where upper(First_name) = ? and upper(Last_name) = ?  ), 
+					Decimal_Value = to_number(substr(?, 5)) 
+					Where report_name ='TSR_REPORT'  
+					]]></Statement>
+			<Parameter name="argFirst" />
+			<Parameter name="argLast" />	
+			<Parameter name="argTill" />				
+			</SQL>
+		</Query>
+		<Query name="MTO_TSR_USER_LIST" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>
+			<ResultClass>mto.xst.query.results.MtoTillSumaryCashierResult</ResultClass>
+			<ResultField name="empFirst" type="String" /> 
+			<ResultField name="empLast" type="String" /> 
+			<ResultField name="Till" type="String" />   
+			<SQL>
+			<Statement><![CDATA[        
+					SELECT DISTINCT 
+						cp.first_name , 
+						cp.last_name , 
+						ts.tndr_repository_id 
+					FROM crm_party cp , tsn_session ts 
+					WHERE cp.organization_id = ts.organization_id 
+					AND ts.create_user_id = TO_CHAR(cp.party_id) 
+					AND business_date = (select date_value from rpt_organizer_p where report_name ='TSR_REPORT') 
+					AND ts.organization_id = ?
+					order by tndr_repository_id     
+					]]></Statement>
+			<Parameter name="argOrganizationId" />			
+			</SQL>
+		</Query>			
+			<Query name="MTO_TSR_SESSIONID" pmType="REPORTS">
+			<QueryHandler>dtv.data2.access.query.SqlQueryHandler</QueryHandler>			
+			<ResultField name="status" type="Long" />   
+			<SQL>
+			<Statement><![CDATA[        
+					SELECT 
+					ts.session_id 
+					FROM tsn_session ts, rpt_organizer_p rpt 
+					WHERE rpt.organization_id = ts.organization_id  
+					AND ts.business_date = date_value 
+					AND ts.create_user_id = to_number(string_value) 
+					and ts.tndr_repository_id = 'TILL'||to_char(decimal_value)
+					and ts.organization_id = ?
+					]]></Statement>
+			<Parameter name="argOrganizationId" />			
+			</SQL>
+		</Query>
+		  <!-- Bug#106547 Unable to print TSR due to session Id unknown -->
+		  <!--  Recount Reconciled Tills flow -->
+	 <Query name="MTO_RECOUNT_SESSION" pmType="SESSIONS">
+	    <QueryHandler>dtv.data2.access.query.DtxQueryHandler</QueryHandler>
+	    <ResultClass>dtv.xst.dao.tsn.SessionTenderPropertyId</ResultClass>
+	    <SQL>
+	      <WhereClause><![CDATA[        
+	          WHERE organization_id = ? 
+	          AND session_id = ?       
+	      ]]></WhereClause>
+	      <Parameter name="argOrganizationId" />
+	     <!--  <Parameter name="argPropertyCode" /> -->
+	      <Parameter name="argSessionId" />
+	      <Expression trigger="@argPropertyCode"><![CDATA[/*UPPER*/ property_code IN ?]]></Expression>
+	    </SQL>
+    </Query>
+   </Queries> 
+</QuerySet>

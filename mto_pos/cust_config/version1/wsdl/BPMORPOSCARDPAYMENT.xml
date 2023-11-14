@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="cardPaymentLog_IF" targetNamespace="http://cardPaymentLog_CC_Siebel/cardPaymentLog_IF" xmlns:bons1="http://Lib_Common" xmlns:bons2="http://cardPaymentLog_CC_Siebel" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://cardPaymentLog_CC_Siebel/cardPaymentLog_IF" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+    <xsd:schema targetNamespace="http://cardPaymentLog_CC_Siebel/cardPaymentLog_IF">
+            <xsd:import namespace="http://cardPaymentLog_CC_Siebel"/>
+            <xsd:import namespace="http://Lib_Common"/>
+      <xsd:element name="getCardPaymentlog">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="cardPaymentlogRequest" nillable="true" type="bons2:CardPaymentLogRequest"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCardPaymentlogResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="cardPaymentlogResponse" nillable="true" type="bons2:cardPaymentLogResponse"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCardPaymentlogFault1" nillable="true" type="bons1:CDM_FaultHandling"/>
+    </xsd:schema>
+        <xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://cardPaymentLog_CC_Siebel">
+      <xsd:complexType name="cardPaymentLogResponse">
+		<xsd:sequence>
+			<xsd:element minOccurs="1" name="transactionAmount">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="authorizationCode">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="6"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="accountNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="19"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="paymentMethod">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="merchantId">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="orderNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="trsanctionId">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="9"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionType">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionDate">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionTime">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="paymentType">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="trnFallbackInd">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="trnLpsCode">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="traceNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+      <xsd:complexType name="CardPaymentLogRequest">
+		<xsd:sequence>
+			<xsd:element minOccurs="1" name="transactionAmount">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="authorizationCode">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="6"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="accountNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="19"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="paymentMethod">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="merchantId">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="orderNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="12"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="trsanctionId">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="9"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionType">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+						<xsd:maxLength value="10"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionDate">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="transactionTime">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="1" name="paymentType">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="1"/>
+
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="trnFallbackInd">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="1"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="trnLpsCode">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="traceNumber">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"/>
+						<xsd:maxLength value="3"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="sourceTransactionId" type="xsd:string"/>
+		<xsd:attribute name="processorId" type="xsd:string"/>
+		<xsd:attribute name="userId" type="xsd:string"/>
+		<xsd:attribute name="sourceTransactionDateTime" type="xsd:dateTime">
+		</xsd:attribute>
+		<xsd:attribute name="sourceSystemName" type="xsd:string"/>
+	</xsd:complexType>
+    </xsd:schema>
+        <xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://Lib_Common">
+      <xsd:complexType name="CDM_FaultHandling">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="fault_code" type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="fault_string" type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="fault_description" type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="details" type="xsd:string">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+    </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="getCardPaymentlogRequestMsg">
+    <wsdl:part element="tns:getCardPaymentlog" name="getCardPaymentlogParameters"/>
+  </wsdl:message>
+    <wsdl:message name="getCardPaymentlogResponseMsg">
+    <wsdl:part element="tns:getCardPaymentlogResponse" name="getCardPaymentlogResult"/>
+  </wsdl:message>
+    <wsdl:message name="getCardPaymentlog_getCardPaymentlogFaultMsg">
+    <wsdl:part element="tns:getCardPaymentlogFault1" name="getCardPaymentlogFault"/>
+  </wsdl:message>
+    <wsdl:portType name="cardPaymentLog_IF">
+    <wsdl:operation name="getCardPaymentlog">
+      <wsdl:input message="tns:getCardPaymentlogRequestMsg" name="getCardPaymentlogRequest"/>
+      <wsdl:output message="tns:getCardPaymentlogResponseMsg" name="getCardPaymentlogResponse"/>
+      <wsdl:fault message="tns:getCardPaymentlog_getCardPaymentlogFaultMsg" name="getCardPaymentlogFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+    <wsdl:binding name="cardPaymentLog_IFExport1_cardPaymentLog_IFHttpBinding" type="tns:cardPaymentLog_IF">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCardPaymentlog">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="getCardPaymentlogRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCardPaymentlogResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="getCardPaymentlogFault">
+        <soap:fault name="getCardPaymentlogFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+    <wsdl:service name="cardPaymentLog_IFExport1_cardPaymentLog_IFHttpService">
+    <wsdl:port binding="tns:cardPaymentLog_IFExport1_cardPaymentLog_IFHttpBinding" name="cardPaymentLog_IFExport1_cardPaymentLog_IFHttpPort">
+      <soap:address location="http://ltcgigdcapmdw40.service.cihs.gov.on.ca:9080/cardPaymentLog_CC_ORPOSWeb/sca/cardPaymentLog_IFExport1"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

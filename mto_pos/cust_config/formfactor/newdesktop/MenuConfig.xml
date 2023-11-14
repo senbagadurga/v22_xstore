@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MenuConfig.xsd"
+  xmlns="http://micros.com/xstore/config/menu">
+  <MenuItem name="EMPTY" text="_menuEmpty" category="General" keywords="exclude" />
+
+  <!-- *****************************************************************************************
+       *****************************************************************************************
+       ADMIN
+       These menus contain items pertaining to general administrative tasks in both the Register
+       and the Back Office
+       *****************************************************************************************
+       ***************************************************************************************** -->
+  <MenuItem name="ADMIN::BACK_OFFICE_OPTIONS" text="_menuTopText" rootText="_menuTopTextRoot" displayType="LIST" category="Back Office" keywords="universal,back_office,inventory,back_office_only,report_customer,report_inventory,report_employee,report_till,report_system,report" >
+    <!-- Disabled Accoiate, Customer and Inventory buttons -->
+	<!-- <SubMenu ref="ASSOCIATE::OPTIONS" /> -->
+    <!-- <SubMenu ref="CUSTOMER::MANAGER_OPTIONS" /> -->
+    <!-- <SubMenu ref="EMPLOYEE::MANAGER_OPTIONS" /> -->
+    <SubMenu ref="TILL::OPTIONS" />
+    <SubMenu ref="ADMIN::REPORTS" />
+	<MenuOption ref="EMPLOYEE::MAINTAIN" />
+    <!-- <SubMenu ref="INVENTORY::OPTIONS" /> -->
+    <SubMenu ref="ADMIN::HARDWARE_MANAGEMENT" />
+  </MenuItem>
+  
+  <MenuItem name="ADMIN::HARDWARE_MANAGEMENT" actionRef="ADMIN::HARDWARE_MANAGEMENT" keywords="back_office">
+    <MenuOption ref="DATASOURCE::STATUS" />
+	<MenuOption ref="ADMIN::HARDWARE_DEVICE_EDIT" />
+    <MenuOptions ref="?HARDWARE_MANAGEMENT::STANDARD_OPTIONS?" /> 
+    <!--<MenuOption ref="ADMIN::DISPLAY_LAST_LOGGED_IN_USERS" />-->
+    <MenuOption ref="ADMIN::REINIT_HARDWARE" />
+    <MenuOption ref="ADMIN::RESTORE_HARDWARE_DEVICE" />
+  </MenuItem>
+
+  <MenuItem name="?HARDWARE_MANAGEMENT::STANDARD_OPTIONS?" keywords="exclude">
+    <!--<MenuOption ref="ADMIN::EFTLINK_ADMIN" />-->
+    <MenuOption ref="ADMIN::MANAGE_IP_CASH_DRAWER" />
+    <!-- <MenuOption ref="ADMIN::CHEETAH_CLIENT_DEVICE_ACCESS" /> -->
+    <!-- <MenuOption ref="ADMIN::CHEETAH_CLIENT_DEVICE_QUICK_QR_CONFIG" /> -->
+    <!-- <MenuOption ref="ADMIN::TEMPORARY_STORE_REQUESTS" /> -->
+    <SubMenu ref="COUNTRYPACK::FISCAL_PRINTER_MAIN_MENU" category="Back Office" keywords="back_office_only" text="_countrypack.fiscalPrinter.menutextFiscalPrinter" displayType="LIST" />
+    <MenuOption ref="COUNTRYPACK::AT::ADMIN::DEACTIVATE_REGISTER" />
+    <MenuOption ref="COUNTRYPACK::AT::ADMIN::RE_CONNECT" />
+    <SubMenu ref="COUNTRYPACK::BR::ADMIN::SAT" category="Back Office" keywords="back_office_only" text="_countrypack.br.sat.admin.menuText" displayType="LIST" />
+    <SubMenu ref="COUNTRYPACK::DE::ADMIN::TSE" category="Back Office" keywords="back_office_only" text="_countrypack.de.tse.admin.menuText" displayType="LIST" />
+  </MenuItem>
+
+  <MenuItem name="ADMIN::HELP" text="_menuHelp" category="" keywords="exclude" />
+
+  <MenuItem name="ADMIN::REPORTS" actionRef="ADMIN::REPORTS" keywords="report_customer,report_inventory,report_employee,report_till,report_system,report">
+    <MenuOption ref="ADMIN::VIEW_DASHBOARD" />
+    <!-- <SubMenu ref="REPORT::CUSTOMER_REPORTS" /> -->
+    <MenuOption ref="ADMIN::ELECTRONIC_JOURNAL" />
+    <SubMenu ref="REPORT::EMPLOYEE_REPORTS" />
+    <SubMenu ref="REPORTS::FISCAL_REPORTS" text="_menuTextFiscalReports" displayType="LIST" category="Reports" keywords="report" />
+    <!-- <SubMenu ref="INVENTORY::REPORTS.EXCEPTIONS" /> -->
+    <SubMenu ref="REPORT::OPERATIONS_REPORTS" />
+    <SubMenu ref="REPORT::SALES_REPORTS" />
+	<!-- US# 92816,95643,94731,92813,92815,92814 Financial Reports Menu -->
+    <SubMenu ref="REPORT::FINANCIAL_REPORTS" />
+  </MenuItem>
+  
+  <!-- Financial Reports start --> 
+  <MenuItem name="REPORT::FINANCIAL_REPORTS" actionRef="REPORT::FINANCIAL_REPORTS" displayType="LIST" category="Reports" keywords="report">   
+    <!-- US# 92814 Bank Deposit report  --> 
+	<MenuOption ref="TILL::REPORT.BANK_DEPOSIT_REPORT" />
+	<!-- US# 92813 Store Summary report  --> 
+	<MenuOption ref="TILL::REPORT.STORE_SUMMARY_REPORT" />
+	<!-- US# 95643 Till Count Report  --> 
+	<MenuOption ref="TILL::REPORT.TILL_COUNT_REPORT" />
+	<!-- US# 92815 Till Summary Report  --> 
+	<MenuOption ref="TILL::REPORT.TILL_SUMMARY_REPORT" />
+	<!-- US# 92816 Reconcile Till count Report  --> 
+	<!-- Task#103564 Disabling Till Reconcile Reports -->
+	<!--  <MenuOption ref="TILL::REPORT.RECONCILE_TILL_COUNT_REPORT" /> -->
+	<!-- US# 94731 Reconcile Till summary report  --> 	
+   <!-- <MenuOption ref="TILL::REPORT.RECONCILE_TILL_SUMMARY_REPORT" />	 -->
+   <MenuOption ref="TILL::REPORT.RECONCILE_TILL_COUNT_REPORT" />
+   <MenuOption ref="TILL::REPORT.RECONCILE_TILL_SUMMARY_REPORT" />
+	<!-- Financial Reports end --> 
+  </MenuItem>  
+  
+
+  <MenuItem name="REPORT::OPERATIONS_REPORTS" actionRef="REPORT::OPERATIONS_REPORTS" displayType="LIST" category="Reports" keywords="report">
+    <!-- <MenuOption ref="ADMIN::REPORT.PRICE_CHANGE" /> -->
+    <!-- <MenuOption ref="ADMIN::REPORT.VIEW_SAVED" /> -->
+    <!-- <MenuOption ref="ADMIN::REPORT.STORE_LOCATIONS" /> -->
+    <!-- <SubMenu ref="REPORT::TILL_REPORTS" /> -->
+	<MenuOption ref="TILL::REPORT.CASH_DRAWER" />
+  </MenuItem>
+  
+  <MenuItem name="REPORT::SALES_REPORTS" actionRef="REPORT::SALES_REPORTS" displayType="LIST" category="Reports" keywords="report">
+    <!-- <MenuOption ref="RETAIL::REPORT.AIRSIDE_SALES_TAX" /> -->
+    <MenuOption ref="RETAIL::REPORT.FLASH_SALES" /> 
+    <MenuOption ref="RETAIL::REPORT.JOURNAL_ROLL" />
+    <SubMenu ref="RETAIL::REPORTS" />
+	<MenuOption ref="ADMIN::REPORT.VIEW_SAVED" />
+  </MenuItem>
+  
+  <MenuItem name="REPORT::EMPLOYEE_REPORTS" actionRef="REPORT::EMPLOYEE_REPORTS" displayType="LIST" category="Reports" keywords="report,report_employee">
+    <MenuOption ref="EMPLOYEE::REPORT.EMPLOYEE_PRODUCTIVITY" />
+    <!-- <SubMenu ref="REPORT::EMPLOYEE_SCHEDULE_REPORTS" /> -->
+    <!-- <MenuOption ref="EMPLOYEE::REPORT.EMPLOYEE_TASKS" /> -->
+    <!-- <SubMenu ref="REPORT::TIME_AND_ATTENDANCE" /> -->
+  </MenuItem>
+
+  <MenuItem name="ADMIN::SYSTEM_CYCLE_OPTIONS" actionRef="ADMIN::SYSTEM_CYCLE_OPTIONS" displayType="LIST" category="Admin" keywords="back_office_only,report_till">
+    <MenuOption ref="ADMIN::OPEN_CASHDRAWER" />
+    <MenuOption ref="ADMIN::CLOSE_CASHDRAWER" />
+    <!-- <MenuOption ref="ADMIN::CHANGE_BUSINESS_DATE" /> -->
+    <!-- <MenuOption ref="ADMIN::CHECK_FOR_UPDATES" /> -->
+    <MenuOption ref="ADMIN::END_OF_DAY_PROCESS" />
+    <MenuOption ref="TILL::SET_FISCAL_PRINTER_STATUS_OPEN" />
+    <MenuOption ref="TILL::SET_FISCAL_PRINTER_STATUS_CLOSE" />    
+    <MenuOption ref="ADMIN::CLOSE_REGISTER.FORCE" />
+     <MenuOption ref="TILL::REPORT.PRINT_TILL_SUMMARY" />
+    <!-- <MenuOption ref="ADMIN::REFRESH_PROMOTIONS" /> -->
+    <MenuOption>
+      <Action ref="ADMIN::OPEN_REGISTER" />
+      <Action ref="ADMIN::CLOSE_REGISTER" />
+    </MenuOption>
+    
+    <MenuOption>
+      <Action ref="ADMIN::OPEN_STORE" />
+      <Action ref="ADMIN::CLOSE_STORE" />      
+    </MenuOption>
+     <!-- Quick Close Start -->
+    <MenuOption ref="ADMIN::QUICK_CLOSE_STORE" /> 
+    <!-- Quick Close End -->
+    <MenuOption ref="TILL::SET_TSE_STATUS_OPEN" />
+    <MenuOption ref="TILL::SET_TSE_STATUS_CLOSE" />    
+  </MenuItem>
+
+ 
+
+  <!-- *****************************************************************************************
+       *****************************************************************************************
+       LOGIN
+       These menus contain items allowing user access to Xstore "applications" (i.e. the Register
+       and Back Office)
+       *****************************************************************************************
+       ***************************************************************************************** -->
+  <MenuItem name="?LOGIN?" text="_menuLoginCommon" category="Login" keywords="universal,login,back_office,report_customer,report_inventory,report_employee,report_till,report_system,report">
+    <MenuOption ref="EMPLOYEE::CLOCK_IN_OUT" />
+
+    <MenuOption ref="EMPLOYEE::VIEW_SCHEDULE_AND_TIME_OPTIONS" />
+
+    <MenuOption ref="EMPLOYEE::CHANGE_PASSWORD" />
+
+    <SubMenu ref="ADMIN::REPRINT_OPTIONS"/>
+    <SubMenu ref="BALANCE_INQUIRY::REGISTER_OPTIONS" />
+    <MenuOption>
+      <Action ref="ADMIN::TRAINING_MODE_ENTER" />
+      <Action ref="ADMIN::TRAINING_MODE_EXIT" />
+    </MenuOption>
+    <MenuOption ref="ASSOCIATE_TASKS::MY_TASKS_LOGIN" />
+
+    <SubMenu text="_itemFind" keyStroke="F9" sticky="false">
+      <MenuOption ref="ADMIN::PRICE_INQUIRY" />
+      <MenuOption ref="ADMIN::SEARCH_FOR_ITEM" />
+    </SubMenu>
+
+    <MenuOption ref="ADMIN::REGISTER_OPTIONS" />
+    <MenuOption ref="RETAIL::REPORT.FLASH_SALES" />
+  </MenuItem>
+
+  <MenuItem name="EMPLOYEE::VIEW_SCHEDULE_AND_TIME_OPTIONS" text="_menutextTimeCardSchedule" category="Login" keywords="universal,login,back_office">
+    <MenuOption ref="EMPLOYEE::VIEW_TIMECARD" />
+    <MenuOption ref="EMPLOYEE::VIEW_SCHEDULE" />
+    <MenuOption ref="EMPLOYEE::VIEW_SCHEDULED" />
+  </MenuItem>
+
+  <MenuItem name="ADMIN::REPRINT_OPTIONS" text="_menutextRcptPrint">
+    <MenuOption ref="ADMIN::PRINT_REBATE_RECEIPT" />
+    <MenuOption ref="ADMIN::REPRINT_GIFT_RECEIPTS" />
+    <MenuOption ref="ADMIN::REPRINT_DOCUMENT" />
+    <MenuOption ref="ADMIN::REPRINT_LAST_RECEIPT" />
+  </MenuItem>
+  
+  <MenuItem name="BACK_OFFICE::REPRINT_OPTIONS" actionRef="BACK_OFFICE::REPRINT_OPTIONS" displayType="LIST" category="Back Office">
+    <MenuOption ref="BACK_OFFICE::PRINT_REBATE_RECEIPT" />
+    <MenuOption ref="BACK_OFFICE::REPRINT_GIFT_RECEIPTS" />
+    <MenuOption ref="BACK_OFFICE::REPRINT_DOCUMENT" />
+    <MenuOption ref="BACK_OFFICE::REPRINT_LAST_RECEIPT" />
+  </MenuItem>
+
+  <MenuItem name="LOGIN::REGISTER" text="_menuLoginRegister" displayType="BUTTON" category="Login" keywords="exclude">
+    <MenuOptions ref="?LOGIN?" />
+    <MenuOption>
+      <Action ref="LOGIN::BACK_OFFICE" />
+      <Action ref="LOGIN::BACK_OFFICE.FROM_OTHER.START" />
+    </MenuOption>
+  </MenuItem>
+
+  <!--<MenuItem name="LOGIN::BACK_OFFICE" text="_menuLoginBackOffice" displayType="BUTTON" category="Login" keywords="exclude">
+    <MenuOptions ref="?LOGIN?" />
+    <MenuOption>
+      <Action ref="LOGIN::REGISTER" />
+      <Action ref="LOGIN::REGISTER.FROM_OTHER.START" />
+    </MenuOption>
+  </MenuItem> -->
+
+  <MenuItem name="LOGIN::BACK_OFFICE" text="_menuLoginRegister" displayType="BUTTON" category="Login" keywords="exclude">
+    <MenuOption ref="LOGIN::MOBILE_START_SALE" />
+    <!-- <SubMenu ref="BALANCE_INQUIRY::REGISTER_OPTIONS" /> -->
+    <!-- <MenuOption ref="EMPLOYEE::CLOCK_IN_OUT" /> -->
+    <MenuOption ref="EMPLOYEE::CHANGE_PASSWORD" />
+    <!-- <MenuOption ref="LOGIN::CUSTOMER_CENTRIC_SALE" /> -->
+    <!-- <MenuOption ref="MENU::ENGAGEMENT_ACTIVITY" />  -->
+    <!-- <MenuOption ref="LOGIN::REPORT.FLASH_SALES" /> -->
+    <!-- <MenuOption ref="ADMIN::SEARCH_FOR_ITEM" /> -->
+    <!-- <MenuOption ref="ADMIN::PRICE_INQUIRY" /> -->
+    <!-- <MenuOption ref="LOGIN::ENGAGEMENT_ACTIVITY" /> -->
+    <!-- <SubMenu ref="ADMIN::REPRINT_OPTIONS"/> -->
+    <MenuOption>
+      <Action ref="ADMIN::TRAINING_MODE_ENTER" />
+      <Action ref="ADMIN::TRAINING_MODE_EXIT" />
+    </MenuOption>
+    <MenuOption ref="TOUCH::OPEN_STORE" />
+    <MenuOption ref="TOUCH::OPEN_REGISTER" />
+    <MenuOption ref="TOUCH::CLOCK_IN_OUT" />
+    <MenuOption ref="XSTOREM::ABOUT" />
+  </MenuItem>
+
+  <MenuItem name="SALE::TENDER_OPTIONS" text="_menuSaleTender" displayType="LIST" category="Tender" keywords="sale_tender" style="TILED_MENU">
+    <MenuOption ref="SALE::TENDER_CREDIT_CARD" />
+    <MenuOption ref="SALE::TENDER_CHECK" />
+    <MenuOption ref="SALE::TENDER_CERTIFIED_FUNDS" />
+    <MenuOption ref="SALE::TENDER_LOCAL_CURRENCY" />
+	<MenuOption ref="SALE::TENDER_PREPAID_PAYMENT" />
+	<!-- <MenuOption ref="SALE::TENDER_EWALLET" />
+    <MenuOption ref="SALE::TENDER_PAYMENT_BY_LINK" />
+    <MenuOption ref="SALE::TENDER_PAYMENT_BY_LINK_CNP" />
+    <MenuOption ref="SALE::TENDER_CUSTOMER_NOT_PRESENT_CREDIT_CARD" />
+    <MenuOption ref="SALE::TENDER_CUSTOMER_SAVED_PAYMENT_CARD" />
+    <MenuOption ref="SALE::TENDER_MANUAL_CREDIT" />
+    <MenuOption ref="SALE::TENDER_MANUAL_DEBIT" />
+    <MenuOption ref="SALE::TENDER_GIFT_CARD" />
+    <MenuOption ref="SALE::TENDER_GIFT_CERTIFICATE" />
+    <MenuOption ref="SALE::TENDER_MALL_CERTIFICATE" />
+    <MenuOption ref="SALE::TENDER_STORE_CREDIT" />    
+    <MenuOption ref="SALE::TENDER_STORE_CREDIT_CARD" />
+    <MenuOption ref="SALE::TENDER_TRAVELERS_CHECK" />
+    <MenuOption ref="SALE::TENDER_FOREIGN_CURRENCY" />
+    <MenuOption ref="SALE::TENDER_MISCELLANEOUS" />
+    <MenuOption ref="SALE::TENDER_HOUSE_ACCOUNT" />
+    <MenuOption ref="SALE::TENDER_COUPON" />
+    <MenuOption ref="SALE::TENDER_ROOM_CHARGE" /> -->
+    <MenuOption ref="SALE::VOID_TENDER" />
+     <MenuOption ref="SALE::CHANGE_TENDER_AMOUNT" />
+    <MenuOption ref="RETAIL::CHECK_SALE_COMPLETE" />
+  </MenuItem>
+ 
+  <MenuItem name="TILL::OPTIONS" actionRef="TILL::MENU.OPTIONS" displayType="LIST" category="Admin" keywords="back_office">
+    <!-- Disabled system cycle options and moved contents to Till options -->
+	<!-- <SubMenu ref="ADMIN::SYSTEM_CYCLE_OPTIONS" /> -->
+	<MenuOption>
+      <Action ref="ADMIN::OPEN_REGISTER" />
+      <Action ref="ADMIN::CLOSE_REGISTER" />
+    </MenuOption>
+	<MenuOption>
+      <Action ref="ADMIN::OPEN_STORE" />
+      <Action ref="ADMIN::CLOSE_STORE" />      
+    </MenuOption>
+      <!-- Quick Close Start-->
+    <MenuOption ref="ADMIN::QUICK_CLOSE_STORE" /> 
+     <!-- Quick Close End-->
+    <!--  START User story 92929 Reconcile Till -->
+	<MenuOption ref="TILL::RECONCILE_TILL" />
+    <!--  END User story 92929 Reconcile Till -->
+    <MenuOption ref="TILL::REPORT.PRINT_TILL_SUMMARY" />
+    <!-- Task# Remove Store Safe Audit and Cash Deposit Buttons in Back Office -->
+    <!-- <SubMenu ref="TILL::STORE_SAFE_MAINTENANCE" />  -->
+    <!-- <SubMenu ref="TILL::TILL_MAINTENANCE" /> -->		
+	<!-- Moved Store/Register open/close to till options -->   
+  </MenuItem>
+  
+  <!-- Bug#101803 Removed bank deposit option Start-->
+  <MenuItem name="TILL::STORE_SAFE_MAINTENANCE" actionRef="TILL::STORE_SAFE_MAINTENANCE" displayType="LIST" text="_storeSafeMaintenanceButtonMenuText" category="Admin" keywords="back_office" sticky="true">
+   <!-- <MenuOption ref="TILL::BANK_DEPOSIT" />
+    <MenuOption ref="TILL::OPEN_STORE_SAFE" />
+    <MenuOption ref="TILL::RECONCILE_STORE_SAFE" />
+    <MenuOption ref="SAFE_BAG::MAINTAIN_SAFE_BAGS" /> -->
+    <MenuOption ref="TILL::STORE_SAFE_AUDIT" />
+    <MenuOption ref="TILL::STORE_SAFE_CASH_DEPOSIT" />
+  </MenuItem>
+
+ <!-- Bug#101803 Removed bank deposit option End-->
+
+</MenuSet>

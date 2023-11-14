@@ -1,0 +1,59 @@
+<dataTemplate name="BankDeposit" xmlns="http://micros.com/xstore/config/report">
+  <labels>
+    <!-- Common Text -->	
+	<label name="COUNT" value="_rptCount"/>
+	<label name="AMOUNT" value="_rptAmount"/>				
+  </labels>
+  
+  <parameters>
+    <!-- System Parameters -->
+    <parameter name="organizationId" class="java.lang.Long" isForPrompting="false" include_in_output="false"/>
+    <parameter name="retailLocationId" class="java.lang.Long" isForPrompting="false" include_in_output="true"/>
+	<parameter name="reportTitle" class="java.lang.String" isForPrompting="false" include_in_output="true"/>
+    <parameter name="systemDate" class="dtv.pos.iframework.type.IDtvDate" isForPrompting="false" include_in_output="true" formatter="DateTimeLong"/>
+	<parameter name="systemTime" class="dtv.pos.iframework.type.IDtvDate" isForPrompting="false" include_in_output="true" formatter="DateTimeLong"/>
+    <!-- User Parameters -->
+    <parameter name="dtvStartDate" class="dtv.pos.iframework.type.IDtvDate" isForPrompting="true" include_in_output="true">
+      <parameterDescription><![CDATA[_rptRetailPeriod;Date]]></parameterDescription>
+      <defaultValueExpression><![CDATA[dtv.pos.framework.reporting.fill.RelativeDtvDate.TODAY]]></defaultValueExpression>
+    </parameter>    
+  </parameters>
+  <dataSource>
+    <queryReference name="Q_BANK_DEPOSIT" key="BANK_DEPOSIT_REPORT">
+      <Parameters>     
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>       
+        <Parameter>argBusinessDateStart</Parameter>       
+      </Parameters>
+      <ResultFields>
+        <ResultField>Store</ResultField>
+        <ResultField>BankName</ResultField>
+        <ResultField>BankACCT</ResultField>
+        <ResultField>BDate</ResultField>
+        <ResultField>Employee</ResultField>
+		<ResultField>Tender</ResultField>
+		<ResultField>Amount</ResultField>
+        <ResultField>TenderCount</ResultField>        
+      </ResultFields>
+    </queryReference>
+  </dataSource>
+  <dataStructure>
+    <group name="G_BANK_DEPOSIT_DETAILS" source="Q_BANK_DEPOSIT">
+    	<element name="EMP_NAME"      		value="Employee"/>
+    	<element name="BDATE"     	  		value="BDate"  formatter="DateMedium" />
+        <element name="BANK_NAME"     		value="BankName"/>
+        <element name="BANK_DEPOSIT_NUMBER"  value="BankACCT"/>
+    </group>
+	
+	<group name="G_BANK_DEPOSIT_CASH" source="Q_BANK_DEPOSIT">
+		<element name="COUNT"     value="TenderCount" />
+        <element name="AMOUNT"     value="Amount" />
+		<element name="TENDER"     value="Tender"  />
+    </group>
+		
+	<group name="G_BANK_DEPOSIT_TOTALS" source="Q_BANK_DEPOSIT">
+        <element name="AMOUNT"     value="Amount"  function="SUM" 	/>
+    </group>
+	
+  </dataStructure>
+</dataTemplate>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-init-method="init">
+
+  <!-- Spring beans that are singletons or framework beans can be defined in this file. Any realm-specific beans 
+    (validations, services, workers, etc) should be defined in their relevant Spring file that should be in the same 
+    directory as this file. -->
+
+  <context:annotation-config />
+
+  <beans profile="xstore">
+    <bean id="orderHelper" class="mto.pos.order.MtoOrderHelper" /> <!-- US# 92543 Siebel Sale Order Processing -->
+	 <bean id="orderUtil" class="dtv.pos.order.OrderUtil">
+      <property name="DownloadInterval" value="#{systemProperties['dtv.locate.order.downloadInterval']}" />
+      <property name="StatusRequestInterval" value="#{systemProperties['dtv.locate.order.statusRequestInterval']}" />
+      <property name="CreateReceivingDocumentForStandardPickups" value="true" />
+    </bean>
+  </beans>
+</beans>

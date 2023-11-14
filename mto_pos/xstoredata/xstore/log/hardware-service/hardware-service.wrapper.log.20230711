@@ -1,0 +1,31 @@
+STATUS | wrapper  | 2023/07/11 12:13:01 | --> Wrapper Started as Console
+STATUS | wrapper  | 2023/07/11 12:13:01 | Java Service Wrapper Professional Edition 64-bit 3.5.48
+STATUS | wrapper  | 2023/07/11 12:13:01 |   Copyright (C) 1999-2021 Tanuki Software, Ltd. All Rights Reserved.
+STATUS | wrapper  | 2023/07/11 12:13:01 |     http://wrapper.tanukisoftware.com
+STATUS | wrapper  | 2023/07/11 12:13:01 |   Licensed to Oracle America, Inc. for Xstore Hardware Service
+STATUS | wrapper  | 2023/07/11 12:13:01 | 
+STATUS | wrapper  | 2023/07/11 12:13:02 | Launching a JVM...
+INFO   | jvm 1    | 2023/07/11 12:13:03 | WrapperManager: Initializing...
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 2023-07-11 12:13:04,342 main WARN Unable to create configuration for log4j2-container.xml, ignoring
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 2023-07-11 12:13:04,355 main WARN Unable to create configuration for ../xstoredata/xstore/cust_config/log4j2-custom.xml, ignoring
+INFO   | jvm 1    | 2023/07/11 12:13:04 | java.io.FileNotFoundException: ..\xyz_pos\root\system.properties (The system cannot find the path specified)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/java.io.FileInputStream.open0(Native Method)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/java.io.FileInputStream.open(FileInputStream.java:219)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.getFileReader(SystemPropertiesLoader.java:79)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader$FileSystemPropertiesLocation.getReader(SystemPropertiesLoader.java:494)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.load(SystemPropertiesLoader.java:193)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.handleInclude(SystemPropertiesLoader.java:159)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.handleLine(SystemPropertiesLoader.java:173)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.load(SystemPropertiesLoader.java:208)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at dtv.util.config.SystemPropertiesLoader.loadSystemProperties(SystemPropertiesLoader.java:339)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at oracle.retail.xstore.hardware.service.HardwareServiceClient.main(HardwareServiceClient.java:42)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at oracle.retail.xstore.hardware.service.HardwareService.main(HardwareService.java:74)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at org.tanukisoftware.wrapper.WrapperSimpleApp.run(WrapperSimpleApp.java:349)
+INFO   | jvm 1    | 2023/07/11 12:13:04 | 	at java.base/java.lang.Thread.run(Thread.java:834)
+STATUS | wrapper  | 2023/07/11 12:58:53 | Anchor file deleted.  Shutting down.
+STATUS | wrapper  | 2023/07/11 12:58:55 | <-- Wrapper Stopped

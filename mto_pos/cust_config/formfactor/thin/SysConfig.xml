@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SysConfig xmlns="http://micros.com/xstore/config/settings">
+    <Setting name="Email---DefaultMailHost">${dtv.email.host}</Setting>
+    <Setting name="Email---DefaultMailPort">${dtv.email.port}</Setting>
+    <Setting name="Email---DefaultSender">${dtv.email.default.sender}</Setting>
+    <Setting name="Email---Receipt---From">${dtv.email.receipt.from}</Setting>
+    <Setting name="Email---SmtpDebug">${dtv.email.smtp.debug}</Setting>
+    <Setting name="Email---UseSmtpAuth">${dtv.email.smtp.auth}</Setting>
+    <Setting name="Location---OvertimeRuleType">WEEKLYOVER40</Setting>
+    <Setting name="SendSale---SendTaxType">DESTINATION</Setting>
+    <!-- US#89123 Login Start -->
+    <Setting name="CustomerRequiredOnLogin">false</Setting>
+    <Setting name="PromptForCustomerOnLogin">false</Setting>
+    <Setting name="CommissionedAssociates---PromptForCommissionedAssociates">false</Setting>
+    <!-- US#89123 Login End -->
+    <!-- US#89114 StoreOpen Start -->
+	<Setting name="OpenClose---AllowUserChangeBusinessDate">true</Setting>
+    <Setting name="OpenClose---RtlLocCycleFromPrimaryWSOnly">false</Setting>
+    <Setting name="OpenClose---AllowSameDayStoreReopen">false</Setting>
+    <Setting name="OpenClose---AllowUnscheduledBusinessDateOpen">false</Setting>
+    <Setting name="TillAccountability---StoreSafeDepositValidated">true</Setting>
+    <Setting name="LoginSecurity---ChallengeQuestionsEnabled">true</Setting>
+    <!-- US#89114 StoreOpen End -->
+    <!-- US# 89992 Tender Check flow-->
+    <Setting name="CheckTender---PromptForBirthday">false</Setting>
+    <!-- Bug#97373 Auto logout set for 20min Start-->
+     <Setting name="AutoLogout---WaitSeconds">1200</Setting>
+     <Setting name="AutoLogout---Enabled">true</Setting>
+    <!-- Bug#97373 Auto logout set for 20min End-->
+    <!--   US# 89999 NNP Orders Start-->
+    <Setting name="Order---NnpTransactionType">NNP</Setting>
+     <!--   US# 89999 NNP Orders End-->
+          <!-- US#89114 StoreOpen End -->
+     <!--START US# 92543 Siebel Sale Order Processing -->
+	<Setting name="Order---SiebelOrderServiceEndPointURL">https://siebel.dev2.web.rlso.cloud.mto.gov.on.ca:9011/siebel/app/eai_anon/enu?SWEExtSource=MTOWebService&amp;SWEEbxtCmd=Execute&amp;WSSOAP=1</Setting>
+	<Setting name="Order---SiebelServiceConnectTimeout">70000</Setting>
+	<Setting name="Order---SiebelServiceRequestTimeout">70000</Setting>
+	<Setting name="Order---SiebelServicePageSize">50</Setting>
+	<Setting name="Order---SiebelServiceOrderDetailPageSize">10</Setting>
+	<Setting name="Order---DefaultItemNotOnFile">1-P5FH</Setting>
+	<!--END US# 92543 Siebel Sale Order Processing -->
+</SysConfig>

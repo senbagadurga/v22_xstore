@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpChainSet xmlns="http://micros.com/xstore/config/opchain">
+
+  <!-- START: LOCK AND UNLOCK DEVICE -->
+  <!-- 107352	UAT - Till Suspend/Resume - different user login different message displayed vs. US. 
+  	Security message then displays zero instead of "this device is locked" -->
+  <OpChain name="LOCK_DEVICE">
+    <Op class="dtv.pos.framework.security.op.StopAutoLogoutTimerOp" />
+    <Op class="mto.pos.register.lock.MtoLockDeviceOp">
+      <Parameter name="LoginDescription" value="_unlockDeviceLogin" />
+    </Op>
+  </OpChain>
+  <!-- END: LOCK AND UNLOCK DEVICE -->
+</OpChainSet>

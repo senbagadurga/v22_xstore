@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FormSet xmlns="http://micros.com/xstore/config/form" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FormConfig.xsd">
+    
+      <!--START US# 92543 Siebel Sale Order Processing -->
+  <Form name="SIEBEL_ORDER_LIST" type="MULTI_PURPOSE_VIEW">
+    <Header viewAction="CANCEL_EXIT_TOUCH" editAction="ABORT_CHANGES_TOUCH">
+      <!--<Panel startX="0" width="100" startY="0" height="100" fieldLayoutRef="siebelOrderListLayoutHeader" verticalAlignment="Center" padding="0, 0, 0, 10"/>-->
+    </Header>
+    
+    <Page name="siebelOrderList" text="_siebelOrderListTitle" displayOrder="50">
+      <Panel startX="0" width="100" startY="0" height="100" fieldLayoutRef="siebelOrderListLayout" />
+      <ActionGroups view="SIEBEL_ORDER_LIST_VIEW_ACTIONS" edit="SIEBEL_ORDER_LIST_VIEW_ACTIONS"/>
+    </Page>
+       
+    <ActionGroup name="SIEBEL_ORDER_LIST_VIEW_ACTIONS">
+      <Action ref="CANCEL_BACK" />
+	  <Action chainKey="LOCK_DEVICE"  chainType="STACK" text="_tillSuspendMenuOption" />
+          <Action chainKey="PRE_SALE_TRANSACTION" text="_orderReloadMenuOption" />
+	  <Action dataKey="ORDER_PROCESS_FLOW" text="_processOrderMenuOption" relevance="ListItem" keyStroke="F4" />      
+    </ActionGroup>
+
+  </Form>
+    <!--END US# 92543 Siebel Sale Order Processing -->
+</FormSet>

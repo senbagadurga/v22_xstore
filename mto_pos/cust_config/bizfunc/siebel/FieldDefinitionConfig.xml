@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://micros.com/xstore/config/form/field" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FormFieldConfig.xsd">
+
+<!--START US# 92543 Siebel Sale Order Processing -->
+  <Field name="siebelOrderList" type="List" resource="orderListModel" >
+    <Parameter name="ColumnHeaderType" value="SIEBEL_ORDER_LIST" />
+    <Parameter name="CellType" value="SIEBEL_ORDER_LIST" />
+    <!-- Possible values [SINGLE_SELECTION, MULTIPLE_SELECTION, NO_SELECTION] -->
+    <Parameter name="ListSelectionMode" value="SINGLE_SELECTION" />
+  </Field>
+  
+  <Field name="mtoOrderSkuIdLabel" type="Label" text="_mtoSkuId" />
+  <!-- Using Alphanumeric values so remove dataFieldRef -->
+  <Field name="mtoOrderSkuId" type="Text" resource="itemId" />
+  <Field name="mtoOrderDescriptionLabel" type="Label" text="_mtoOrderDescription" />
+  <Field name="mtoOrderDescription" type="Text" resource="description" />
+  <Field name="mtoOrderPriceLabel" type="Label" text="_mtoOrderPrice" />
+  <Field name="mtoOrderPrice" type="Text" resource="price" formatterRef="Money"/>
+
+  <Field name="mtoOrderDepartmentLabel" type="Label" text="_mtoOrderDepartment" />
+  <Field name="mtoOrderDepartment" type="Text" resource="department" />
+   <Field name="mtoOrderQuantityLabel" type="Label" text="_mtoOrderQuantity" />
+  <Field name="mtoOrderQuantity" type="Text" resource="quantity" />
+  
+    <Field name="mtoOrderTaxableLabel" type="Label" text="_mtoOrderTaxable" />
+  <Field name="mtoOrderTaxable" type="Text" resource="taxable" />
+  <!--END US# 92543 Siebel Sale Order Processing -->
+  <!--US#90370 Void Orders START-->
+	  <Field name="mtoVoidOrderTransactionNumber" type="Label" text="_mtoVoidTransNum" />	  
+	  <Field name="mtoVoidOrderTransNum" type="Text" resource="transNum" />
+	  <Field name="mtoVoidOrderTransactionType" type="Label" text="_mtoVoidTransType" />
+	  <Field name="mtoVoidOrderTransType" type="Text" resource="transType" />
+	  <Field name="mtoVoidOrderTransAmount" type="Label" text="_mtoVoidTransAmount" />
+	  <Field name="mtoVoidOrderAmt" type="Text" resource="amount" formatterRef="Money"/>
+	  <Field name="mtoVoidOrderReascode" type="Label" text="_mtoVoidReascode" />
+	  <Field name="mtoVoidOrderReas" type="Text" resource="reascode" />
+  <!--US#90370 Void Orders END -->
+  </FieldSet>

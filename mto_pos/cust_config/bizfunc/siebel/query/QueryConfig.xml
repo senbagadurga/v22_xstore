@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuerySet xmlns="http://micros.com/xstore/config/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://micros.com/xstore/config/query ../../../../../../config-objects/schema/QueryConfig.xsd">
+ <Queries>
+
+ <!--START US# 92543 Siebel Sale Order Processing -->
+    <Query name="ALL_OFFLINE_REQUESTS" pmType="ITEM">
+    <QueryHandler>dtv.data2.access.query.DtxQueryHandler</QueryHandler>
+    <ResultClass>dtv.xst.dao.ttr.ITenderAuthLog</ResultClass>
+    <SQL>
+      <WhereClause><![CDATA[
+        WHERE t.rtl_loc_id = ?        
+      ]]></WhereClause>
+      <Parameter name="argRetailLocationId" />
+    </SQL>
+  </Query>
+   <!--END US# 92543 Siebel Sale Order Processing -->
+  </Queries>
+ </QuerySet>

@@ -1,0 +1,104 @@
+<dataTemplate name="StoreSummary" xmlns="http://micros.com/xstore/config/report">
+  <labels>
+    <!-- Common Text --> 	
+  </labels>
+  <parameters>
+    <!-- System Parameters -->
+    <parameter name="organizationId" class="java.lang.Long" isForPrompting="false" include_in_output="false"/>
+    <parameter name="retailLocationId" class="java.lang.Long" isForPrompting="false" include_in_output="true"/>
+    <parameter name="systemDate" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+	<parameter name="systemTime" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+    <parameter name="reportTitle" class="java.lang.String" isForPrompting="false" include_in_output="true"/>
+	<!-- USER PARAMETER --> 
+  </parameters>
+  <dataSource>
+    <queryReference name="Q_RECONCILE_TILL_SUMMARY_HEADER" key="RECONCILE_TILL_SUMMARY_REPORT_HEADER_DETAILS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>       
+        <Parameter>argBusinessDateStart</Parameter> 
+        <Parameter>sessionId</Parameter>        
+      </Parameters>
+      <ResultFields>
+       <ResultField>Trans</ResultField>
+       <ResultField>Store</ResultField>
+       <ResultField>Register</ResultField>
+       <ResultField>BDate</ResultField>
+       <ResultField>Employee</ResultField>
+       <ResultField>TillId</ResultField>
+       <ResultField>TillStatus</ResultField>
+      </ResultFields>
+    </queryReference>
+    <queryReference name="Q_RECONCILE_TILL_TENDER_SUMMARY" key="RECONCILE_TILL_SUMMARY_REPORT_TENDER_DETAILS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>       
+        <Parameter>argBusinessDateStart</Parameter>
+        <Parameter>sessionId</Parameter>         
+      </Parameters>
+      <ResultFields>
+       <ResultField>Tender</ResultField>
+        <ResultField>InAmount</ResultField>
+		 <ResultField>OutAmount</ResultField>
+        <ResultField>Net</ResultField>
+        <ResultField>Counted</ResultField>
+		<ResultField>Difference</ResultField>
+		<ResultField>ORDERBY</ResultField>
+      </ResultFields>
+    </queryReference>   
+	<queryReference name="Q_RECONCILE_TILL_POST_VOID_TRANSACTION" key="RECONCILE_TILL_SUMMARY_REPORT_POST_VOID_TRANSACTIONS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>       
+        <Parameter>argBusinessDateStart</Parameter>
+        <Parameter>sessionId</Parameter>           
+      </Parameters>
+      <ResultFields>
+        <ResultField>postvoidamount</ResultField>
+		<ResultField>postvoidcount</ResultField>
+      </ResultFields>
+    </queryReference> 
+	<queryReference name="Q_RECONCILE_TILL_CANCEL_TRANSACTION" key="RECONCILE_TILL_SUMMARY_REPORT_CANCEL_TRANSACTIONS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+        <Parameter>retailLocationId</Parameter>       
+        <Parameter>argBusinessDateStart</Parameter>
+        <Parameter>sessionId</Parameter>           
+      </Parameters>
+      <ResultFields>
+		<ResultField>cancelcount</ResultField>
+      </ResultFields>
+    </queryReference> 
+  </dataSource>
+  <dataStructure>
+    <group name="G_RECONCILE_HEADER_DETAILS" source="Q_RECONCILE_TILL_SUMMARY_HEADER">
+    	<element name="STORE_NO"     value="Store"/>
+        <element name="BUSINESS_DATE"     value="BDate" formatter="DateShort"/>
+		<element name="EMP_NAME"     	  value="Employee"/>
+		<element name="REGISTER"     	  value="Register"/>
+		<element name="TILL_ID"     	  value="TillId"/>
+    </group>
+    <group name="G_RECONCILE_TENDER_SUMMARY" source="Q_RECONCILE_TILL_TENDER_SUMMARY">
+        <element name="IN"          value="InAmount"       		/>  
+        <element name="OUT"   		value="OutAmount" 			/>
+        <element name="NET"         value="Net"     			/>
+		<element name="COUNTED"     value="Counted" 			/>
+        <element name="OVER_SHORT"  value="Difference" 			/>
+		<element name="TENDER"      value="Tender" />
+    </group>    
+	<group name="G_RECONCILE_TOTAL" source="Q_RECONCILE_TILL_TENDER_SUMMARY">
+        <element name="IN"          value="InAmount"       		function="SUM" />  
+        <element name="OUT"   		value="OutAmount" 			function="SUM" />
+        <element name="NET"         value="Net"     			function="SUM" />
+		<element name="COUNTED"     value="Counted" 			function="SUM" />
+        <element name="OVER_SHORT"  value="Difference" 			function="SUM" />
+    </group>	
+	<group name="G_RECONCILE_POST_VOID_TRANSACTION_AMOUNT" source="Q_RECONCILE_TILL_POST_VOID_TRANSACTION">
+        <element name="VOID_AMOUNT"     value="postvoidamount" 	/>
+		<element name="VOID_COUNT"     value="postvoidcount" 	/>
+    </group> 	
+	<group name="G_RECONCILE_CANCELLED_TRANSACTION_COUNT" source="Q_RECONCILE_TILL_CANCEL_TRANSACTION">
+		<element name="CANCEL_COUNT"     value="cancelcount" 	/>
+    </group> 
+  </dataStructure>
+</dataTemplate>

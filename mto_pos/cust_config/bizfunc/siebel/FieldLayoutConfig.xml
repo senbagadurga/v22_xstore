@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldLayoutSet xmlns="http://micros.com/xstore/config/form/fieldlayout" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FieldLayoutConfig.xsd">
+<!-- 
+  <FieldLayout name="siebelOrderListLayoutHeader" type="ListLayout">
+    <Row>
+      <Column start="0"  width="11"  fieldRef="orderNumberLabel" verticalAlignment="Center" horizontalAlignment="Right" fontRef="fullScreenFormHeaderLabel" accessibilityText="_orderNumberLbl"/>
+      <Column start="11"  width="12" fieldRef="orderNumber" verticalAlignment="Center" fontRef="whiteColorFont"/>
+      <Column start="23" width="8" fieldRef="createdLabel" verticalAlignment="Center" horizontalAlignment="Right" fontRef="fullScreenFormHeaderLabel" accessibilityText="_createdLbl"/>
+      <Column start="31" width="14" fieldRef="created" verticalAlignment="Center" fontRef="whiteColorFont"/>
+      <Column start="45" width="6"  fieldRef="accountNumber" verticalAlignment="Center" horizontalAlignment="Right" fontRef="fullScreenFormHeaderLabel" accessibilityText="_accountNumberLbl"/>
+      <Column start="51" width="14" fieldRef="accountNumber" verticalAlignment="Center" fontRef="whiteColorFont"/>
+      <Column start="65" width="6"  fieldRef="lastName" verticalAlignment="Center" horizontalAlignment="Right" fontRef="fullScreenFormHeaderLabel" accessibilityText="_lastNameLbl"/>
+      <Column start="71" width="14" fieldRef="lastName" verticalAlignment="Center" fontRef="whiteColorFont"/>
+      <Column start="85" width="6"  fieldRef="total" verticalAlignment="Center" horizontalAlignment="Right" fontRef="fullScreenFormHeaderLabel" accessibilityText="_totalLbl"/>
+      <Column start="91" width="14" fieldRef="total" verticalAlignment="Center" fontRef="whiteColorFont"/>
+     </Row>
+   </FieldLayout>-->
+   <!--START US# 92543 Siebel Sale Order Processing -->
+   <FieldLayout name="siebelOrderListLayout" type="ListLayout">
+    <Row fill="true">
+      <Column start="0" width="100" fieldRef="siebelOrderList" accessibilityText="_siebelOrderListLabel" />
+    </Row>
+  </FieldLayout>
+   <!-- -->
+   <FieldLayout name="mtoOrderItemLookupLayout" type="SimpleLayout">
+    <Row>
+      <Column fieldRef="mtoOrderSkuIdLabel" horizontalAlignment="Right" />
+      <Column fieldRef="mtoOrderSkuId" required="true"/>
+    </Row>
+    <Row fill="true">
+	  <Column fill="true"></Column>
+	</Row>
+	<Row fill="true">
+	  <Column fill="true"></Column>
+	</Row>
+	   <Row>
+      <Column fieldRef="mtoOrderDescriptionLabel" horizontalAlignment="Right" />
+      <Column fieldRef="mtoOrderDescription" required="true"/>
+    </Row>
+    <Row>
+      <Column fieldRef="mtoOrderPriceLabel" horizontalAlignment="Right"  />
+      <Column fieldRef="mtoOrderPrice" required="true"/>
+    </Row>
+      <Row>
+      <Column fieldRef="mtoOrderDepartmentLabel" horizontalAlignment="Right" />
+      <Column fieldRef="mtoOrderDepartment" />
+    </Row>
+    <Row>
+      <Column fieldRef="mtoOrderQuantityLabel" horizontalAlignment="Right" />
+      <Column fieldRef="mtoOrderQuantity" required="true"/>
+    </Row>
+    <Row>
+      <Column fieldRef="mtoOrderTaxableLabel" horizontalAlignment="Right" />
+      <Column fieldRef="mtoOrderTaxable" />
+    </Row>
+    <!--END US# 92543 Siebel Sale Order Processing -->
+  </FieldLayout>
+  <!--US#90370 Void Orders START-->
+   <FieldLayout name="mtoVoidOrderLookupLayout" type="SimpleLayout">
+    <Row>
+      <Column fieldRef="mtoVoidOrderTransactionNumber" horizontalAlignment="Right" />
+      <Column fieldRef="mtoVoidOrderTransNum" required="true"/>
+    </Row>
+    <Row fill="true">
+	  <Column fill="true"></Column>
+	</Row>
+	<Row fill="true">
+	  <Column fill="true"></Column>
+	</Row>
+	   <Row>
+      <Column fieldRef="mtoVoidOrderTransactionType" horizontalAlignment="Right" />
+      <Column fieldRef="mtoVoidOrderTransType" required="true"/>
+    </Row>
+    <Row>
+      <Column fieldRef="mtoVoidOrderTransAmount" horizontalAlignment="Right"  />
+      <Column fieldRef="mtoVoidOrderAmt" required="true"/>
+    </Row>
+      <Row>
+      <Column fieldRef="mtoVoidOrderReascode" horizontalAlignment="Right" />
+      <Column fieldRef="mtoVoidOrderReas" />
+    </Row>
+  </FieldLayout>
+   <!--US#90370 Void Orders END-->
+</FieldLayoutSet>

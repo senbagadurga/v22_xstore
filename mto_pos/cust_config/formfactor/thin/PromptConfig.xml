@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PromptSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PromptConfig.xsd" xmlns="http://micros.com/xstore/config/prompt">
+
+  <!-- US#89123 Login Start -->
+  <Prompt name="RESTRICT_LOGIN_UNASSIGNED_CASHIER" type="NotifyCancel" title="_tillAccountability" message="_noTillAssignedToCashier" />
+  <!-- US#89123 Login End -->
+  <!-- US#89114 Store Open Start -->
+  <Prompt name="VALIDATE_BDATE_NOT_SYSTEM_DATE_PAST" type="NotifyCancel" title="_systemCycleBDateValidateTitle" message="_systemBDateIsPast" />
+  <Prompt name="VALIDATE_BDATE_NOT_SYSTEM_DATE_FUTURE" type="NotifyCancel" title="_systemCycleBDateValidateTitle" message="_systemBDateIsFuture" />
+  <!-- US#89114 Store Open End -->
+  <!-- US#89133 Tender Type Cheque Start  -->
+    <Prompt name="ENTER_CHECK_NUMBER" type="Text" title="_checktender" message="_promptmsg41">
+    <DataField ref="Numeric">
+      <Parameter name="maximumIntegerDigits">
+        <param_value dtype="Integer">20</param_value>
+      </Parameter>
+    </DataField>
+    <IconGroup icon="_imagePromptSerial" />
+  </Prompt>
+  <!-- US#89133 Tender Type Cheque End  -->
+  <!-- Bug#97763 Prompt is Incorrect when sale is completed START -->
+   <Prompt name="SALE_COMPLETE_CHECK" type="Notify" title="_salecompletetitle" message="_promptmsg40" />
+   <!-- Bug#97763 Prompt is Incorrect when sale is completed End -->
+   <!-- US#89134 Certified Fund Start-->
+   <Prompt name="MTO_ENTER_CERTIFIED_FUND_NUMBER" type="Text" title="_mtoCertifiedFund" message="_mtoCertifiedFundMsg">
+	   <DataField ref="Numeric">
+	    <Parameter name="maximumIntegerDigits">
+	    <param_value dtype="Integer">20</param_value>
+	    </Parameter>
+	    </DataField>
+	    <IconGroup icon="_imagePromptSaleItem" />
+	</Prompt>
+	<Prompt name="ENTER_VOUCHER_AMOUNT" type="Text" title="_mtoCFAmountTile" message="_mtoCertifiedFundMsg_amt">
+	    <DataField ref="Money" />
+	    <IconGroup icon="_imagePromptCurrency" />
+	</Prompt>
+<!-- US#89134 Certified Fund End-->
+<!-- US#89136 User StoredCredit Start-->
+  <Prompt name="MTO_STORED_CREDIT" type="NotifyYesNo" title="_mtoStoredcredit" message="_promptmsgforstoredcredit">
+	<ActionDisplayType dtype="String">POPUP</ActionDisplayType>
+    <Action ref="NO_ESCAPE" />
+    <Action ref="YES_ENTER" />
+  </Prompt> 
+<!--US#89136 User StoredCredit End -->
+ <!-- START US#89135 Tender Type Prepaid -->
+ <Prompt name="ENTER_PREPAID_TENDER_AMOUNT" type="Text" title="_tender" message="_mtoPrepaidPromptMsg" >
+    <DataField ref="Money" />
+    <IconGroup icon="_imagePromptTender" />
+    <Action dataKey="CANCEL" text="_back" keyStroke="Escape" />
+    <Action ref="ACCEPT_ENTRY" />
+  </Prompt>
+   <!-- END US#89135 Tender Type Prepaid -->
+  <!--  START User story 92929 Reconcile Till -->
+ <Prompt name="RECONCILE_TILL_REGISTER_STATUS" type="List" title="_reconcileTillTitle" message="_reconcileTillList">
+ <ListViewHeaderType dtype="String">REGISTER_MODE_TILL_TO_RECONCILE_STATUS</ListViewHeaderType>
+ <ListViewRuleSet dtype="String">REGISTER_MODE_TILL_TO_RECONCILE_DETAIL_STATUS</ListViewRuleSet> 
+ </Prompt>
+ <!--  END User story 92929 Reconcile Till -->
+ <!-- US# 92814 Bank Deposit report  --> 
+  <Prompt name="BANK_DEPOSIT_PROMPT" type="NotifyYesNo" title="_systemCycleMenuOption" message="_promptBankDepositReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+  <!-- US# 92813 Store Summary report  --> 
+  <Prompt name="STORE_SUMMARY_PROMPT" type="Notify" title="_systemCycleMenuOption" message="_promptStoreSummaryReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+  <!-- Store close prompt --> 
+  <Prompt name="DISPLAY_STORE_CLOSE_COMPLETE_MESSAGE" type="Notify" title="_systemCycleMenuOption" message="_systemCycleNotifyCloseCompleteMsg" />
+<!-- US# 95643 Till Count Report  -->
+  <Prompt name="TILL_COUNT_PROMPT" type="NotifyYesNo" title="_systemCyclePromptToCloseTitleWkstn" message="_promptTillCountReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+ <!-- US# 92815 Till Summary Report  -->  
+  <Prompt name="TILL_SUMMARY_PROMPT" type="Notify" title="_systemCyclePromptToCloseTitleWkstn" message="_promptTillSummaryReportmessage">
+    <Action ref="YES" text="_printReport"  />
+    <Action ref="NO" text="_proceed" />      
+  </Prompt>
+    	<Prompt name="MTO_TSR_INVALID_DATE_PROMPT" type="Notify" title="_tsrReportError" message="_rptTsInvalidBusinessDatePromptMessage" >
+		<Action ref="CANCEL_BACK" />
+	</Prompt> 
+	<Prompt name="MTO_TSR_INVALID_SESSIONID_PROMPT" type="Notify" title="_tsrReportError" message="_rptTsInvalidSessionIdPromptMessage" >
+		<Action ref="CANCEL_BACK" />
+	</Prompt>
+  <!-- Bug# Over Tender Start -->
+  <Prompt name="VALIDATE_OVER_TENDER" type="NotifyOkCancel" title="_promptTitleOverTendering" message="_promptMessageOverTendering">
+		<ActionDisplayType dtype="String">POPUP</ActionDisplayType>
+		<Action ref="CANCEL_BACK" />
+		<Action ref="ACCEPT_ENTRY" primary="true" />
+		<IconGroup icon="_imagePromptSerial" />
+  </Prompt>
+  <!-- Bug# Over Tender End -->
+  <!-- US#89121 Force Close Start-->
+  <Prompt name="WORKSTATIONS_STATUS_LIST_NOACTION" type="NotifyYesNo" title="_storeclosetitle" message="_storeclosemessagewhentillisopen">
+    <Action ref="YES" />	
+    <Action ref="NO" />
+  </Prompt>
+  <!-- US#89121 Force Close End-->
+  <!-- Bug# Change Due Start -->
+	<Prompt name="CHANGE_DUE_NON_CASH_TENDER" type="Notify" title="_promptOverTenderTitle" message="_promptOverTenderStoredCreditMessage" />
+  <!-- Bug# Change Due End -->
+ </PromptSet>

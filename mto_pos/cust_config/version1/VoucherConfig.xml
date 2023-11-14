@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- POS-18697: Activate Gift Card -->
+<Vouchers dtype="Root" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="VoucherConfig.xsd">
+
+   <!--US#89134 User Certified Fund Start -->
+  <!-- ******************************************************************** -->
+  <!-- **** CERTIFIED_FUND voucher category ***************************** -->
+  <!-- ******************************************************************** -->
+  <VoucherCategory name="CERTIFIED_FUND">
+    <Description dtype="Translatable">_mtoCertifiedFund</Description>
+  </VoucherCategory>
+  <!-- ******************************************************************** -->
+  <!-- **** CERTIFIED_FUND voucher type ********************************* -->
+  <!-- ******************************************************************** -->
+  <Voucher name="CERTIFIED_FUND">
+    <VoucherCategory dtype="String">CERTIFIED_FUND</VoucherCategory>
+    <Description dtype="Translatable">_mtoCertifiedFund</Description>
+    <AllowIssueAndRedeemInSameTransaction dtype="Boolean">false</AllowIssueAndRedeemInSameTransaction>
+    <AutoGenerateSerial dtype="Boolean">true</AutoGenerateSerial>
+    <NumberOfDaysToExpire dtype="Integer">0</NumberOfDaysToExpire>
+    <Activity name="REDEEMED">
+      <TenderId dtype="String">CERTIFIED_FUND</TenderId>
+      <MultipleAllowed dtype="Boolean">true</MultipleAllowed>
+      <RequireInputEvent dtype="Boolean">true</RequireInputEvent>
+      <!-- If needed un-comment below line -->
+      <!-- <RequireOverrideIfNotFound dtype="Boolean">true</RequireOverrideIfNotFound> -->
+    </Activity>
+    </Voucher>
+   <!--US#89134 User Certified Fund End -->
+</Vouchers>

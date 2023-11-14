@@ -1,0 +1,144 @@
+<dataTemplate name="TillSummary" xmlns="http://micros.com/xstore/config/report">
+  <labels>
+    <!-- Common Text --> 
+	<!--Template specific-->
+  </labels>
+  <parameters>
+    <!-- System Parameters -->
+    <parameter name="systemDate" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+	<parameter name="systemTime" class="dtv.pos.iframework.type.IDtvDate" include_in_output="true" formatter="DateTimeShort"/>
+    <parameter name="reportTitle" class="java.lang.String" isForPrompting="false" include_in_output="true"/>
+	<parameter name="retailLocationId" class="java.lang.Long" isForPrompting="false" include_in_output="true"/>
+	<parameter name="organizationId" class="java.lang.Long" isForPrompting="false" include_in_output="false"/>
+	
+  </parameters>
+  <dataSource>
+    <queryReference name="Q_TILL_SUMMARY_HEADER" key="TILL_SUMMARY_HEADER">
+      <Parameters>
+      	<Parameter>organizationId</Parameter>
+      	<Parameter>retailLocationId</Parameter>      	
+		<Parameter>sessionId</Parameter>     
+      </Parameters>
+      <ResultFields>
+       <ResultField>Trans</ResultField>
+       <ResultField>Store</ResultField>
+       <ResultField>Register</ResultField>
+       <ResultField>BDate</ResultField>
+       <ResultField>Employee</ResultField>
+       <ResultField>TillId</ResultField>
+       <ResultField>TillStatus</ResultField>       
+      </ResultFields>
+    </queryReference>
+	<queryReference name="Q_TILL_SUMMARY_TENDER_DETAILS" key="TILL_SUMMARY_TENDER_DETAILS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>        
+		<Parameter>retailLocationId</Parameter> 
+		<Parameter>sessionId</Parameter>    
+      </Parameters>
+      <ResultFields>
+	   <ResultField>Tender</ResultField>
+       <ResultField>InAmount</ResultField>
+	   <ResultField>OutAmount</ResultField>
+	   <ResultField>NetAmount</ResultField>
+	   <ResultField>CountedAmount</ResultField>
+	   <ResultField>DifferenceAmount</ResultField>
+	   <ResultField>InCount</ResultField>
+	   <ResultField>OutCount</ResultField>
+	   <ResultField>NetCount</ResultField>
+	   <ResultField>CountedCount</ResultField>
+	   <ResultField>DifferenceCount</ResultField>
+	   <ResultField>TenderOrder</ResultField>
+      </ResultFields>
+    </queryReference>
+    <queryReference name="Q_TILL_SUMMARY_CHEQUE_DETAILS" key="TILL_SUMMARY_CHEQUE_DETAILS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+		<Parameter>retailLocationId</Parameter> 
+		<Parameter>sessionId</Parameter>    
+      </Parameters>
+      <ResultFields>
+	   <ResultField>ChequeTender</ResultField>
+       <ResultField>ChequeNumber</ResultField>
+	   <ResultField>ChequeAmount</ResultField>
+      </ResultFields>
+    </queryReference>
+    <queryReference name="Q_TILL_SUMMARY_CERTIFIED_FUND_DETAILS" key="TILL_SUMMARY_CERTIFIED_FUND_DETAILS">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+		<Parameter>retailLocationId</Parameter> 
+		<Parameter>sessionId</Parameter>    
+      </Parameters>
+      <ResultFields>
+	   <ResultField>CertifiedFundTender</ResultField>
+       <ResultField>CertifiedFundNumber</ResultField>
+	   <ResultField>CertifiedFundAmount</ResultField>
+      </ResultFields>
+    </queryReference>
+    <queryReference name="Q_TILL_SUMMARY_POST_VOID_TRANSACTION" key="TILL_SUMMARY_POST_VOID_TRANSACTION">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+		<Parameter>retailLocationId</Parameter> 
+		<Parameter>sessionId</Parameter>
+      </Parameters>
+      <ResultFields>
+       <ResultField>PostVoidAmount</ResultField>
+        <ResultField>PostVoidCount</ResultField>
+      </ResultFields>
+    </queryReference>   
+
+	<queryReference name="Q_TILL_SUMMARY_CANCELLED_TRANSACTION" key="TILL_SUMMARY_CANCELLED_TRANSACTION">
+      <Parameters>
+        <Parameter>organizationId</Parameter>
+		<Parameter>retailLocationId</Parameter> 
+		<Parameter>sessionId</Parameter>
+      </Parameters>
+      <ResultFields>
+		<ResultField>CancelCount</ResultField>
+      </ResultFields>
+    </queryReference> 
+  </dataSource>
+  <dataStructure>
+    <group name="G_TILL_SUMMARY_HEADER" source="Q_TILL_SUMMARY_HEADER">
+		<element name="STORE" 			value="Store"/>
+		<element name="REGISTER" 		value="Register"/>
+		<element name="EMPLOYEE"     	  value="Employee"/>
+        <element name="BUSINESS_DATE"     value="BDate" formatter="DateShort"/>
+		<element name="TILL_ID"    		 value="TillId"/>		
+		<element name="TILL_STATUS"      value="TillStatus"/>
+		
+    </group>
+    <group name="G_TILL_SUMMARY_TENDER_DETAILS" source="Q_TILL_SUMMARY_TENDER_DETAILS">
+        <element name="IN"         		 value="InAmount"       		/>  
+        <element name="OUT"   			 value="OutAmount" 				/>
+        <element name="NET"         	 value="NetAmount"     			/>
+		<element name="COUNTED"     	 value="CountedAmount" 			/>
+        <element name="OVER_SHORT"  	 value="DifferenceAmount" 		/>
+		<element name="TENDER"      	 value="Tender" />
+		<element name="INCOUNT"          value="InCount"       		/>  
+        <element name="OUTCOUNT"   		 value="OutCount" 			/>
+        <element name="NETCOUNT"         value="NetCount"     		/>
+		<element name="COUNTEDCOUNT"     value="CountedCount" 		/>
+        <element name="OVER_SHORTCOUNT"  value="DifferenceCount" 	/>
+    </group>    
+	<group name="G_TILL_SUMMARY_CHEQUE_DETAILS" source="Q_TILL_SUMMARY_CHEQUE_DETAILS">
+		<element name="CHEQUETENDER"          	value="ChequeTender"/>
+        <element name="CHEQUE_NUMBER"           value="ChequeNumber"/>  
+        <element name="CHEQUE_AMOUNT"   		value="ChequeAmount" 		/>
+    </group>
+	
+	<group name="G_TILL_SUMMARY_CERTIFIED_FUND_DETAILS" source="Q_TILL_SUMMARY_CERTIFIED_FUND_DETAILS">
+		<element name="CERTIFIEDFUNDTENDER"          	value="CertifiedFundTender"/>
+        <element name="CERTIFIED_FUND_NUMBER"           value="CertifiedFundNumber"/>  
+        <element name="CERTIFIED_FUND_AMOUNT"   		value="CertifiedFundAmount" 		/>
+    </group>
+	
+	<group name="G_TILL_SUMMARY_POST_VOID_TRANSACTION_AMOUNT" source="Q_TILL_SUMMARY_POST_VOID_TRANSACTION">
+        <element name="VOID_AMOUNT"     value="PostVoidAmount" />
+		<element name="VOID_COUNT"     value="PostVoidCount" 	/>
+    </group> 
+	
+	<group name="G_TILL_SUMMARY_CANCELLED_TRANSACTION_COUNT" source="Q_TILL_SUMMARY_CANCELLED_TRANSACTION">
+		<element name="CANCEL_COUNT"     value="CancelCount" 	/>
+    </group> 
+  </dataStructure>
+</dataTemplate>

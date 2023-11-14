@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ReportDefinitions xmlns="http://micros.com/xstore/config/report"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../../../../../config-objects/schema/ReportDefinitions.xsd">
+  
+  <!-- US# 94731 reconcile till Count Report  --> 
+  <ReportDefinition name="RECONCILE_TILL_COUNT_REPORT"
+    title="_rptReconcileTillCountReportTitle"
+    dataTemplate="version1/report/reconcile/reconcileCount.xdt"
+    layoutTemplate="version1/report/reconcile/reconcileCount.rtf"
+  />
+  <ReportDefinition name="RECONCILE_TILL_COUNT_REPORT_P"
+    title="_rptReconcileTillCountReportTitle"
+    dataTemplate="version1/report/reconcile/reconcileCountP.xdt"
+    layoutTemplate="version1/report/reconcile/reconcileCount.rtf"
+  />
+  
+  <!-- US# 92816 reconcile till Summary Report  -->  
+  <ReportDefinition name="RECONCILE_TILL_SUMMARY_REPORT"
+    title="_rptReconcileTillSummaryReportTitle"
+    dataTemplate="version1/report/reconcile/reconcileSummary.xdt"
+    layoutTemplate="version1/report/reconcile/reconcileSummary.rtf"
+  />
+   <ReportDefinition name="RECONCILE_TILL_SUMMARY_REPORT_P"
+    title="_rptReconcileTillSummaryReportTitle"
+    dataTemplate="version1/report/reconcile/reconcileSummaryP.xdt"
+    layoutTemplate="version1/report/reconcile/reconcileSummary.rtf"
+  />
+
+</ReportDefinitions>

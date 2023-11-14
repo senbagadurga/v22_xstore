@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MenuConfig.xsd"
+  xmlns="http://micros.com/xstore/config/menu">
+  <MenuItem name="XSTOREM::XSTOREM_MENU" text="_menuXstoremMainMenu" displayType="LIST" category="Login" style="TILED_MENU">
+    <MenuOption ref="MOBILE::START_SALE" />
+    <!-- US#89125 Menu Options for Users in BackOffice Start -->
+   <!--  <MenuOption ref="ADMIN::ENGAGEMENT_ACTIVITY" />  -->
+    <MenuOptions ref="ADMIN::BACK_OFFICE_OPTIONS" />
+   <!-- <MenuOption ref="ADMIN::MOBILE_GUIDE" />  -->
+   <!-- US#89125 Menu Options for Users in BackOffice End -->
+  </MenuItem>
+</MenuSet>

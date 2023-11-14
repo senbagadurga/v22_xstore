@@ -1,0 +1,3 @@
+<Header application_date="2023-04-15" target_org_node="COUNTRY:CAD" deployment_name="MTO_CA_ITEM_MERCH.mnt" download_time="IMMEDIATE" apply_immediately="true" />
+INSERT|MERCH_HIER|100||ORDER|MTO|0|1|*|*||
+INSERT|MERCH_HIER|1001|100|TRAN_TYPE|TYPE|0|1|*|*||

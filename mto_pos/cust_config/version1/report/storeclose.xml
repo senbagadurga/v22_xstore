@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ReportDefinitions xmlns="http://micros.com/xstore/config/report"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../../../../../config-objects/schema/ReportDefinitions.xsd">
+  
+   <!-- US# 92814 Bank Deposit report  --> 
+  <ReportDefinition name="BANK_DEPOSIT_REPORT"
+    title="_rptBankDepositReportTitle"
+    dataTemplate="version1/report/storeclose/bankDeposit.xdt"
+    layoutTemplate="version1/report/storeclose/bankDeposit.rtf"
+  />
+  <ReportDefinition name="BANK_DEPOSIT_REPORT_P"
+    title="_rptBankDepositReportTitle"
+    dataTemplate="version1/report/storeclose/bankDepositP.xdt"
+    layoutTemplate="version1/report/storeclose/bankDeposit.rtf"
+  />
+	<!-- US# 92813 Store Summary report  -->  
+  <ReportDefinition name="STORE_SUMMARY_REPORT"
+    title="_rptStoreSummaryReportTitle"
+    dataTemplate="version1/report/storeclose/storeSummary.xdt"
+    layoutTemplate="version1/report/storeclose/storeSummary.rtf"
+  />
+  
+  <ReportDefinition name="STORE_SUMMARY_REPORT_P"
+    title="_rptStoreSummaryReportTitle"
+    dataTemplate="version1/report/storeclose/storeSummaryP.xdt"
+    layoutTemplate="version1/report/storeclose/storeSummary.rtf"
+  />
+  
+</ReportDefinitions>

@@ -1,0 +1,80 @@
+2023-07-11 17:26:46,556  INFO [startup] Replication datasource is: Replication
+2023-07-11 17:27:16,612  INFO [Replication Processor] Event Queue Size: 0
+2023-07-11 17:27:16,631  INFO [Replication Processor] Publishing 35 records to the event queue (StorePrimary->Xcenter).
+2023-07-11 17:27:16,646  INFO [Replication Processor] Publishing 2 records to the event queue (EventLogReplication).
+2023-07-11 17:27:16,649  INFO [Replication Processor] Event Queue Size: 36
+2023-07-11 17:27:16,651  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -6373800981688752089804-1716026065597084725
+2023-07-11 17:27:16,656  INFO [Replication Processor] Event Queue Size: 35
+2023-07-11 17:27:16,657  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752089943-1716026065597084724
+2023-07-11 17:27:16,659  INFO [Replication Processor] Event Queue Size: 34
+2023-07-11 17:27:16,660  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752089966-1716026065597084723
+2023-07-11 17:27:16,662  INFO [Replication Processor] Event Queue Size: 33
+2023-07-11 17:27:16,663  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752093840-1716026065597084722
+2023-07-11 17:27:16,666  INFO [Replication Processor] Event Queue Size: 32
+2023-07-11 17:27:16,666  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -6373800981688752100177-1716026065597084721
+2023-07-11 17:27:16,669  INFO [Replication Processor] Event Queue Size: 31
+2023-07-11 17:27:16,669  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752100230-1716026065597084720
+2023-07-11 17:27:16,672  INFO [Replication Processor] Event Queue Size: 30
+2023-07-11 17:27:16,672  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752100241-1716026065597084719
+2023-07-11 17:27:16,675  INFO [Replication Processor] Event Queue Size: 29
+2023-07-11 17:27:16,675  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752112520-1716026065597084718
+2023-07-11 17:27:16,678  INFO [Replication Processor] Event Queue Size: 28
+2023-07-11 17:27:16,678  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -6373800981688752116335-1716026065597084717
+2023-07-11 17:27:16,680  INFO [Replication Processor] Event Queue Size: 27
+2023-07-11 17:27:16,680  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752116406-1716026065597084716
+2023-07-11 17:27:16,684  INFO [Replication Processor] Event Queue Size: 26
+2023-07-11 17:27:16,684  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752116419-1716026065597084715
+2023-07-11 17:27:16,686  INFO [Replication Processor] Event Queue Size: 25
+2023-07-11 17:27:16,687  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752150255-1716026065597084703
+2023-07-11 17:27:16,689  INFO [Replication Processor] Event Queue Size: 24
+2023-07-11 17:27:16,689  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -6373800981688752154833-1716026065597084702
+2023-07-11 17:27:16,691  INFO [Replication Processor] Event Queue Size: 23
+2023-07-11 17:27:16,692  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752154881-1716026065597084701
+2023-07-11 17:27:16,694  INFO [Replication Processor] Event Queue Size: 22
+2023-07-11 17:27:16,695  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752154893-1716026065597084700
+2023-07-11 17:27:16,697  INFO [Replication Processor] Event Queue Size: 21
+2023-07-11 17:27:16,697  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688752181653-1716026065597084699
+2023-07-11 17:27:16,700  INFO [Replication Processor] Event Queue Size: 20
+2023-07-11 17:27:16,700  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -63738009816889838208532102627830213088942
+2023-07-11 17:27:16,703  INFO [Replication Processor] Event Queue Size: 19
+2023-07-11 17:27:16,703  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838210122102627830213088943
+2023-07-11 17:27:16,706  INFO [Replication Processor] Event Queue Size: 18
+2023-07-11 17:27:16,706  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838210372102627830213088944
+2023-07-11 17:27:16,708  INFO [Replication Processor] Event Queue Size: 17
+2023-07-11 17:27:16,709  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838241002102627830213088945
+2023-07-11 17:27:16,711  INFO [Replication Processor] Event Queue Size: 16
+2023-07-11 17:27:16,711  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -63738009816889838430892102627830213088946
+2023-07-11 17:27:16,714  INFO [Replication Processor] Event Queue Size: 15
+2023-07-11 17:27:16,714  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838431702102627830213088947
+2023-07-11 17:27:16,717  INFO [Replication Processor] Event Queue Size: 14
+2023-07-11 17:27:16,717  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838431882102627830213088948
+2023-07-11 17:27:16,719  INFO [Replication Processor] Event Queue Size: 13
+2023-07-11 17:27:16,719  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -15258971916889838530512102627830213088949
+2023-07-11 17:27:16,722  INFO [Replication Processor] Event Queue Size: 12
+2023-07-11 17:27:16,722  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -6373800981688988443372987305141446585604
+2023-07-11 17:27:16,725  INFO [Replication Processor] Event Queue Size: 11
+2023-07-11 17:27:16,725  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688988443601987305141446585632
+2023-07-11 17:27:16,728  INFO [Replication Processor] Event Queue Size: 10
+2023-07-11 17:27:16,728  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688988443627987305141446585633
+2023-07-11 17:27:16,730  INFO [Replication Processor] Event Queue Size: 9
+2023-07-11 17:27:16,731  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -1525897191688988455499987305141446585634
+2023-07-11 17:27:16,733  INFO [Replication Processor] Event Queue Size: 8
+2023-07-11 17:27:16,734  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689004105460-366262704468725677
+2023-07-11 17:27:16,736  INFO [Replication Processor] Event Queue Size: 7
+2023-07-11 17:27:16,736  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689004158272-3777539142754858646
+2023-07-11 17:27:16,739  INFO [Replication Processor] Event Queue Size: 6
+2023-07-11 17:27:16,739  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689005245893-6465531878922835458
+2023-07-11 17:27:16,742  INFO [Replication Processor] Event Queue Size: 5
+2023-07-11 17:27:16,742  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689055527481754036383006065297
+2023-07-11 17:27:16,745  INFO [Replication Processor] Event Queue Size: 4
+2023-07-11 17:27:16,745  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689055597741-4689760587248523947
+2023-07-11 17:27:16,747  INFO [Replication Processor] Event Queue Size: 3
+2023-07-11 17:27:16,748  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -294317631689055836649811267575576113562
+2023-07-11 17:27:16,750  INFO [Replication Processor] Event Queue Size: 2
+2023-07-11 17:27:16,750  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -2943176316890568964748990347867961298295
+2023-07-11 17:27:16,753  INFO [Replication Processor] Event Queue Size: 1
+2023-07-11 17:27:16,753  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -29079121916890766273518531800056891938727
+2023-07-11 17:27:16,754  INFO [Replication Processor] Dispatch failed - Removing transaction from the queue because it expired. -29079121916890766273518531800056891938727
+2023-07-11 17:27:16,758  INFO [Replication Processor] Event Queue Size: 0
+2023-07-11 17:27:16,759  INFO [Replication Processor] Data not replicated because datasource: Xcenter is disabled. Replication trans id: -29079121916890766297228531800056891938729
+2023-07-11 17:27:16,759  INFO [Replication Processor] Dispatch failed - Removing transaction from the queue because it expired. -29079121916890766297228531800056891938729
