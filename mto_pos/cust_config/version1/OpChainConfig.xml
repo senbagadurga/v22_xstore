@@ -653,6 +653,8 @@
 		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.local" />
 		<OpChainRoute chainKey="CLOSING_COUNT_LOGIC_ENDCOUNT.post" />
 		<WorkerOp workersBean="persistTransAndObjWorkers" />
+		<PromptOp class="mto.pos.report.tillreconcile.MtoReconcileTillCountPrintPromptOp" breakpoint="true"/>
+		<PromptOp class="mto.pos.report.tillreconcile.MtoReconcileTillSummaryPrintPromptOp" breakpoint="true"/>
 		<Op class="dtv.pos.till.UpdateRemoveDrawerFromCurrentWkstnOp" />	
 	</OpChain>
 	  <!--  END Recount Reconcile Till -->

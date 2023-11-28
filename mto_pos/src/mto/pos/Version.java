@@ -14,8 +14,8 @@ import dtv.util.DateUtils;
 public class Version extends dtv.pos.Version {
 
   private static final String CUSTOMER_VERSION = "4.0.0";
-  private static final String PATCH_VERSION = "8.0";
-  private static final String BUILD_DATE = "2023-11-09T19:15:55+0000";
+  private static final String PATCH_VERSION = "9.0";
+  private static final String BUILD_DATE = "2023-11-21T01:58:24+0000";
 
   /** {@inheritDoc} */
   @Override

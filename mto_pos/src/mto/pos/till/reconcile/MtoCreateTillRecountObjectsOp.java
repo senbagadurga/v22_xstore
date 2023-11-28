@@ -43,7 +43,9 @@ public class MtoCreateTillRecountObjectsOp extends AbstractCreateTillCountObject
     public IOpResponse handleOpExec(IXstEvent argEvent) {
        IOpResponse response = super.handleOpExec(argEvent);
  
- 
+  ISession MtoCurrentEndCountSession = (ISession) this.getScopedValue(ValueKeys.CURRENT_SESSION);
+			setScopedValue(MtoValueKeys.ENDCOUNT_SESSION_ID,MtoCurrentEndCountSession.getSessionId());	
+	      
        ITenderControlTransaction transaction = (ITenderControlTransaction)this._transactionScope.getTransaction(TransactionType.TENDER_CONTROL);
        ISession storeSafeSession = this._tillHelper.getStoreSafeSession((long)this._stationState.getRetailLocationId());
        ISession outboundSession = (ISession)this.getScopedValue(ValueKeys.CURRENT_SESSION);

@@ -42,18 +42,24 @@ public class MtoPromptTillRecountOp extends PromptTillCountOp {
 				List<ISessionTenderProperty> sessionTenderProperty =getAllRecountSession(id);
 				for (ISessionTenderProperty prop : sessionTenderProperty)		{
 					if(prop.getTenderId().equalsIgnoreCase("CAD_CURRENCY")&& sessionTender.getTenderId().equalsIgnoreCase("CAD_CURRENCY")) {
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT"))  sessionTender.setMediaAmount(prop.getDecimalValue());
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT"))sessionTender.setMediaCount(prop.getDecimalValue().intValue());
+						
+						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT")) {
+							sessionTender.setMediaAmount(prop.getDecimalValue()); }
+							if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT")) {
+							sessionTender.setMediaCount(prop.getDecimalValue().intValue());}
 					}
 					else if(prop.getTenderId().equalsIgnoreCase("CERTIFIED_FUND")&& sessionTender.getTenderId().equalsIgnoreCase("CERTIFIED_FUND")) {
 				
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT"))sessionTender.setMediaAmount(prop.getDecimalValue());
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT"))sessionTender.setMediaCount(prop.getDecimalValue().intValue());
+						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT")) {
+							sessionTender.setMediaAmount(prop.getDecimalValue()); }
+							if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT")) {
+							sessionTender.setMediaCount(prop.getDecimalValue().intValue());}
 					}
 					else if(prop.getTenderId().equalsIgnoreCase("CHECK")&& sessionTender.getTenderId().equalsIgnoreCase("CHECK")) {
-						
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT"))sessionTender.setMediaAmount(prop.getDecimalValue());
-						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT"))sessionTender.setMediaCount(prop.getDecimalValue().intValue());
+						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_AMOUNT")) {
+						sessionTender.setMediaAmount(prop.getDecimalValue()); }
+						if (prop.getPropertyCode().equalsIgnoreCase("MEDIA_COUNT")) {
+						sessionTender.setMediaCount(prop.getDecimalValue().intValue());}
 					}
 				}
 				

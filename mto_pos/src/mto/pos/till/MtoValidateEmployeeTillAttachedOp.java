@@ -9,6 +9,7 @@ import dtv.pos.iframework.op.IOpResponse;
 import dtv.pos.iframework.op.IOpState;
 import dtv.pos.till.SessionManager;
 import dtv.xst.dao.hrs.IEmployee;
+import mto.pos.order.MtoConstants;
 
 /**
  * Restricting Unassigned cashier logging into Till
@@ -30,11 +31,10 @@ public class MtoValidateEmployeeTillAttachedOp extends Operation{
 			String sessionCreateEmployeeId = _sessionManager.getSession().getCreateUserId();
 			IEmployee loggedInEmployee= ((IEmployee)_stationState.getSystemUser());
 			if(sessionCreateEmployeeId != null && loggedInEmployee != null) {			
-			if (sessionCreateEmployeeId.equals(String.valueOf(loggedInEmployee.getPartyId()))
-					|| loggedInEmployee.getEmployeeRoleCode().equals("Manager")
-				||  loggedInEmployee.getEmployeeRoleCode().equals("Admin")) {
-
-				HELPER.completeResponse();
+				if (sessionCreateEmployeeId.equals(String.valueOf(loggedInEmployee.getPartyId()))
+						|| loggedInEmployee.getPrimaryGroupId().equals(MtoConstants.ROLE_MANAGER)
+					||  loggedInEmployee.getPrimaryGroupId().equals(MtoConstants.ROLE_ADMIN)) {
+					HELPER.completeResponse();
 			}
 			else {
 				//IFormattable promptArg = this._formattables.getLiteral(sessionWkstn.getWorkstationId());

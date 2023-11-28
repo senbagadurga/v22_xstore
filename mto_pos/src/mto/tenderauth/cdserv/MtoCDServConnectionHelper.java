@@ -169,7 +169,7 @@ public  class MtoCDServConnectionHelper
 		    }
 		    _logger.debug("Writing into Pipe File"); 
 		     pipe.write(outgoing.toString().getBytes());
-		    for(int i=0 ; i<360 ; i++)
+		    for(int i=0 ; i<375 ; i++)
 		    {
 		    	if (pipe.length() != 0L) 
 		        	  break;

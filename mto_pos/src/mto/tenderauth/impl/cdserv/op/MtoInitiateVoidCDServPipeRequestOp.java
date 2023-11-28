@@ -104,19 +104,19 @@ public class MtoInitiateVoidCDServPipeRequestOp extends Operation{
 			}
 			catch(MtoCDServMessageException me) {
 				LOG.error("Exception caught while calling the CDServ Pipe Request", me);
-				this.setOpState(ERROR_MESSAGE_PROMPT);
+				this.setOpState(POST_ERROR_PROMPT);
 				return (IOpResponse)this.HELPER.getPromptResponse("CDSERV_ERROR_DISPLAY");
 			}
 			catch(TimeoutException te) {
 				LOG.error("Timeout Exception caught while calling the CDServ Pipe Request", te);
-				this.setOpState(ERROR_TIMEOUT_MESSAGE_PROMPT);
+				this.setOpState(POST_ERROR_PROMPT);
 				return (IOpResponse)this.HELPER.getPromptResponse("CDSERV_TIMEOUT_ERROR_DISPLAY");
 				
 			}
 			catch(Exception e)
 			{
 				LOG.error("Exception caught while calling the CDServ Pipe Request", e);
-				this.setOpState(ERROR_MESSAGE_PROMPT);
+				this.setOpState(POST_ERROR_PROMPT);
 				 return (IOpResponse)this.HELPER.getPromptResponse("CDSERV_ERROR_DISPLAY");	
 				
 			}

@@ -15,5 +15,8 @@ public class MtoConstants {
 	 public static final String QUERYTYPE_SORT_ORDER="ASC";
 	 public static final String QUERYTYPE_SORT_SEQUENCE="1";
 	 public static final String UPDATE_VIEW_MODE="All";
+	 public static final String ROLE_MANAGER = "MANAGER";
+	 public static final String ROLE_ADMIN = "KEYHOLDER";
+	 public static final String ROLE_CASHIER = "CASHIER";
 	 
 }

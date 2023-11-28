@@ -214,6 +214,9 @@ public class MtoCheckSaleCompleteOp extends CheckSaleCompleteOp {
 						if (tender.getTenderId().equalsIgnoreCase("PREPAID_PAYMENT") && !iterator.hasNext()) {
 							data.setTransactionAmount(transTotal.subtract(tot));
 						}
+						else if(tender.getTenderId().equalsIgnoreCase("STORED_CREDIT")&&  !iterator.hasNext()){
+							data.setTransactionAmount(transTotal);
+						}
 						data.setPaymentMethod(tender.getTenderDescription());
 					}
 					logger_.error("MtoCheckSaleCompleteOp.preparePaymentDetails() step3:");

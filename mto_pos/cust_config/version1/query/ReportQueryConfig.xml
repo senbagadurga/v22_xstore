@@ -78,7 +78,7 @@
        COUNTED AS Counted,
        (CASE
         WHEN TNDR_ID IN ( 'VISA', 'MASTER_CARD','AMEX','DEBIT_CARD','STORED_CREDIT','PREPAID_PAYMENT') THEN (COUNTED - (IN_AMT - OUT_AMT))
-        WHEN TNDR_ID IN ( 'CAD_CURRENCY','CHECK','CERTIFIED_FUND' ) THEN OVERSHORT
+        WHEN TNDR_ID IN ( 'CAD_CURRENCY','CHECK','CERTIFIED_FUND' ) THEN (COUNTED - (IN_AMT - OUT_AMT))
         END ) AS Difference,
        in_count,
        out_count,
@@ -260,7 +260,7 @@
             AND NET.BUSINESS_DATE = OS.BUSINESS_DATE (+)
             AND NET.RTL_LOC_ID = OS.RTL_LOC_ID (+)
             AND NET.SESSION_ID = OS.SESSIONID (+)
-            AND NET.WKSTN_ID = OS.WKSTN_ID 
+            AND NET.WKSTN_ID = OS.WKSTN_ID (+)
             AND NET.TNDR_ID = OUT.TNDR_ID (+)
             AND NET.BUSINESS_DATE = OUT.BUSINESS_DATE (+)
             AND NET.RTL_LOC_ID = OUT.RTL_LOC_ID (+)
@@ -305,6 +305,7 @@
 					    AND trl.wkstn_id = ttl.wkstn_id
 					    AND trn.trans_seq = tctl.trans_seq
 					    AND tctl.rtl_loc_id = trn.rtl_loc_id
+						AND tctl.business_date = trn.business_date
 					    AND trn.organization_id = ?
 					    AND trn.rtl_loc_id =  ?
 					    AND session_id = ?
@@ -342,6 +343,7 @@
 						    AND trl.wkstn_id = ttl.wkstn_id
 						    AND trn.trans_seq = tvtl.trans_seq
 						    AND tvtl.rtl_loc_id = trn.rtl_loc_id
+							AND tvtl.business_date = trn.business_date
 						    AND trn.organization_id = ?
 						    AND trn.rtl_loc_id = ?
 						    AND session_id = ?
@@ -540,7 +542,7 @@
 					    (IN_AMT-OUT_AMT ) AS Net,    
 					    COUNTED AS Counted, 
 					    (CASE
-					        WHEN TNDR_ID IN ( 'VISA', 'MASTER_CARD','AMEX','DEBIT_CARD','STORED_CREDIT','PREPAID_PAYMENT') THEN (COUNTED - IN_AMT-OUT_AMT)
+					        WHEN TNDR_ID IN ( 'VISA', 'MASTER_CARD','AMEX','DEBIT_CARD','STORED_CREDIT','PREPAID_PAYMENT') THEN (COUNTED - (IN_AMT-OUT_AMT))
 					        WHEN TNDR_ID IN ( 'CAD_CURRENCY','CHECK','CERTIFIED_FUND' ) THEN OVERSHORT 
 					        END ) AS Difference,
 					    ( CASE     
@@ -566,35 +568,35 @@
 					            COALESCE(OS.COUNTED,0) AS COUNTED,
 					            COALESCE(OS.OVERSHORT,0) AS OVERSHORT
 					        FROM    
-					       (     SELECT    
+					       (   SELECT    
 					                ORGANIZATION_ID,    
 					                RTL_LOC_ID,     
 					                BUSINESS_DATE,     
 					                TNDR_ID ,     
 					                SUM(COUNTED) AS COUNTED,     
 					                SUM(OVERSHORT) OVERSHORT  FROM ( 
-                        SELECT TTTC.ORGANIZATION_ID,
-                         TTTC.RTL_LOC_ID,
-                         DFLT_WKSTN_ID AS WKSTN_ID,
-                         TTTC.BUSINESS_DATE,
-                         TTCT.OUTBOUND_SESSION_ID as SESSIONID,
-                         TTTC.TNDR_ID,
-                         media_count as count_tt,
-                         SUM(TTTC.AMT) AS COUNTED,
-                         DIFFERENCE_MEDIA_COUNT,
-                         SUM(TTTC.DIFFERENCE_AMT) OVERSHORT
-                    FROM dtv.TSN_TNDR_TNDR_COUNT TTTC
-              INNER JOIN dtv.TSN_TNDR_CONTROL_TRANS TTCT
-                      ON TTTC.TRANS_SEQ = TTCT.TRANS_SEQ
-                     AND TTCT.BUSINESS_DATE = TTTC.BUSINESS_DATE
-              INNER JOIN DTV.tsn_tndr_repository TR
-                      ON TTCT.OUTBOUND_TNDR_REPOSITORY_ID = TR.TNDR_REPOSITORY_ID
-                     AND TTCT.RTL_LOC_ID = TR.RTL_LOC_ID           
-                   WHERE TTTC.TNDR_ID IN ('CAD_CURRENCY','CERTIFIED_FUND','CHECK')
-                   AND TTCT.OUTBOUND_SESSION_ID IS NOT NULL
-                   AND TTCT.OUTBOUND_SESSION_ID !=0
-                    AND (TTCT.ORGANIZATION_ID, TTCT.RTL_LOC_ID,  TTCT.BUSINESS_DATE,OUTBOUND_SESSION_ID, TTCT.TRANS_SEQ, TTCT.CREATE_DATE) IN 
-                         ( SELECT ORGANIZATION_ID,
+                        SELECT  TTTC.ORGANIZATION_ID,	
+			                        TTTC.RTL_LOC_ID,	
+			                        DFLT_WKSTN_ID AS WKSTN_ID,	
+			                        TTTC.BUSINESS_DATE,	
+			                        TTCT.OUTBOUND_SESSION_ID as SESSIONID,	
+			                        TTTC.TNDR_ID,	
+			                        (CASE 
+			                        WHEN TTTC.TNDR_ID IN ('CAD_CURRENCY','CERTIFIED_FUND','CHECK') THEN SUM(TTTC.AMT) 
+			                        WHEN TTTC.TNDR_ID IN ('STORED_CREDIT','DEBIT_CARD','PREPAID_PAYMENT','VISA','AMEX','MASTER_CARD') THEN SUM(0)
+			                        END ) AS COUNTED,	
+			                        SUM(TTTC.DIFFERENCE_AMT) OVERSHORT                       	
+			                   FROM dtv.TSN_TNDR_TNDR_COUNT TTTC	
+			             INNER JOIN dtv.TSN_TNDR_CONTROL_TRANS TTCT	
+			                     ON TTTC.TRANS_SEQ = TTCT.TRANS_SEQ	
+			                    AND TTCT.BUSINESS_DATE = TTTC.BUSINESS_DATE	
+			            INNER JOIN DTV.tsn_tndr_repository TR
+			                    ON TTCT.OUTBOUND_TNDR_REPOSITORY_ID = TR.TNDR_REPOSITORY_ID
+			                  AND TTCT.RTL_LOC_ID = TR.RTL_LOC_ID                    
+			                  WHERE TTTC.TNDR_ID IN ('STORED_CREDIT','CAD_CURRENCY','DEBIT_CARD','CERTIFIED_FUND','CHECK','PREPAID_PAYMENT','VISA','AMEX','MASTER_CARD')
+			                    AND TTCT.TYPCODE = 'ENDCOUNT'	
+			                   AND (TTCT.ORGANIZATION_ID, TTCT.RTL_LOC_ID,  TTCT.BUSINESS_DATE,OUTBOUND_SESSION_ID, TTCT.TRANS_SEQ, TTCT.CREATE_DATE) IN 
+								( SELECT ORGANIZATION_ID,
                                   RTL_LOC_ID,
                                   BUSINESS_DATE,
                                   OUTBOUND_SESSION_ID,
@@ -605,28 +607,12 @@
                                   TTCT1.TRANS_SEQ,TTCT1.CREATE_DATE,
                                   ROW_NUMBER() OVER (PARTITION BY TTCT1.ORGANIZATION_ID,TTCT1.RTL_LOC_ID, TTCT1.BUSINESS_DATE,
 								  TTCT1.OUTBOUND_SESSION_ID  ORDER BY TTCT1.CREATE_DATE DESC) AS OS
-                             FROM DTV.TSN_TNDR_CONTROL_TRANS TTCT1
-                         ORDER BY CREATE_DATE DESC)
-                         WHERE OS = 1)                             
-               GROUP BY TTTC.ORGANIZATION_ID, tttc.rtl_loc_id,DFLT_WKSTN_ID, 
-               tttc.business_date, TTCT.OUTBOUND_SESSION_ID, tttc.tndr_id,media_count,DIFFERENCE_MEDIA_COUNT)
-               GROUP BY ORGANIZATION_ID, RTL_LOC_ID, BUSINESS_DATE, TNDR_ID
-					           UNION ALL
-					             SELECT    
-					                TTTC.ORGANIZATION_ID,
-					                TTTC.RTL_LOC_ID,
-					                TTTC.BUSINESS_DATE, 
-					                TTTC.TNDR_ID ,     
-					                0 AS COUNTED,     
-					                0 AS OVERSHORT                     
-					            FROM DTV.TSN_TNDR_TNDR_COUNT TTTC     
-					                INNER JOIN DTV.TSN_TNDR_CONTROL_TRANS TTCT     
-					                    ON TTTC.TRANS_SEQ = TTCT.TRANS_SEQ     
-					                        AND TTCT.BUSINESS_DATE = TTTC.BUSINESS_DATE    
-					            WHERE         
-					                TTTC.TNDR_ID IN ('STORED_CREDIT','DEBIT_CARD','PREPAID_PAYMENT','VISA','AMEX','MASTER_CARD')    
-					                AND TYPCODE = 'ENDCOUNT'    
-					            GROUP BY TTTC.ORGANIZATION_ID, tttc.rtl_loc_id, tttc.business_date, tttc.tndr_id) os,    
+								FROM DTV.TSN_TNDR_CONTROL_TRANS TTCT1
+								 ORDER BY CREATE_DATE DESC)
+								 WHERE OS = 1)                                   
+			               GROUP BY TTTC.ORGANIZATION_ID, tttc.rtl_loc_id,DFLT_WKSTN_ID, tttc.business_date, TTCT.OUTBOUND_SESSION_ID, 
+                           tttc.tndr_id, MEDIA_COUNT,DIFFERENCE_MEDIA_COUNT)
+                           GROUP BY ORGANIZATION_ID,RTL_LOC_ID,BUSINESS_DATE, TNDR_ID) os,    
 					                (    SELECT     
 					                        A.ORGANIZATION_ID,    
 					                        A.RTL_LOC_ID,     
@@ -802,6 +788,7 @@
 					AND TTCT.TYPCODE ='ENDCOUNT'
 					AND TTTC.TNDR_ID IN ('CAD_CURRENCY','CHECK','CERTIFIED_FUND')					
 					AND TRN.SESSION_ID = ?
+					
 				]]></Statement>
 				<Parameter name="organizationId" />
 				<Parameter name="retailLocationId" />				
@@ -927,7 +914,7 @@
 					(select crm.first_name||' '||crm.last_name from crm_party crm  where tt.organization_id = crm.organization_id and tt.create_user_id = crm.party_id) as Employee,
 					session_id as TillId,
 					 ( CASE
-						 WHEN (select 1 from tsn_tndr_control_trans where organization_id = tt.organization_id and rtl_loc_id = tt.rtl_loc_id  and outbound_session_id=tt.session_id and typcode = 'ENDCOUNT' ) = 1 then 'CLOSED'
+						 WHEN (select max(1) from tsn_tndr_control_trans where organization_id = tt.organization_id and rtl_loc_id = tt.rtl_loc_id  and outbound_session_id=tt.session_id and typcode = 'ENDCOUNT' ) = 1 then 'CLOSED'
 						 ELSE 'OPEN'
 			          END
 			         )
@@ -977,7 +964,7 @@
 			       (IN_AMT - OUT_AMT) AS Net,
 			       COUNTED AS Counted,
 			       (CASE
-			        WHEN TNDR_ID IN ( 'VISA', 'MASTER_CARD','AMEX','DEBIT_CARD','STORED_CREDIT','PREPAID_PAYMENT') THEN (COUNTED - IN_AMT - OUT_AMT)
+			        WHEN TNDR_ID IN ( 'VISA', 'MASTER_CARD','AMEX','DEBIT_CARD','STORED_CREDIT','PREPAID_PAYMENT') THEN (COUNTED - (IN_AMT - OUT_AMT))
 			        WHEN TNDR_ID IN ( 'CAD_CURRENCY','CHECK','CERTIFIED_FUND' ) THEN OVERSHORT 
 			        END ) AS Difference,
 			       ( CASE
@@ -1238,20 +1225,20 @@
 				  and ttct.outbound_session_id = ?
 				  AND TTTC.TNDR_ID IN ('CAD_CURRENCY','CHECK','CERTIFIED_FUND')
 				  AND (TTCT.ORGANIZATION_ID, TTCT.RTL_LOC_ID,  TTCT.BUSINESS_DATE,OUTBOUND_SESSION_ID, TTCT.TRANS_SEQ, TTCT.CREATE_DATE) IN 
-                      (SELECT TTCT1.ORGANIZATION_ID,
-                            TTCT1.RTL_LOC_ID,
-                            TTCT1.BUSINESS_DATE,
-                            OUTBOUND_SESSION_ID,
-                            MAX(TTCT1.TRANS_SEQ),
-                            MAX(TTCT1.CREATE_DATE)
+                         ( SELECT ORGANIZATION_ID,
+                                  RTL_LOC_ID,
+                                  BUSINESS_DATE,
+                                  OUTBOUND_SESSION_ID,
+                                 TRANS_SEQ, CREATE_DATE from (SELECT TTCT1.ORGANIZATION_ID,
+                                  TTCT1.RTL_LOC_ID,
+                                  TTCT1.BUSINESS_DATE,
+                                  TTCT1.OUTBOUND_SESSION_ID,
+                                  TTCT1.TRANS_SEQ,TTCT1.CREATE_DATE,
+                                  ROW_NUMBER() OVER (PARTITION BY TTCT1.ORGANIZATION_ID,TTCT1.RTL_LOC_ID, TTCT1.BUSINESS_DATE,
+								  TTCT1.OUTBOUND_SESSION_ID  ORDER BY TTCT1.CREATE_DATE DESC) AS OS
                              FROM DTV.TSN_TNDR_CONTROL_TRANS TTCT1
-                            WHERE TTCT1.ORGANIZATION_ID = TTCT.ORGANIZATION_ID
-                              AND TTCT1.RTL_LOC_ID = TTCT.RTL_LOC_ID
-                              AND TTCT1.BUSINESS_DATE = TTCT.BUSINESS_DATE
-                              AND TTCT1.OUTBOUND_SESSION_ID = TTCT.OUTBOUND_SESSION_ID
-                         GROUP BY TTCT1.ORGANIZATION_ID, TTCT1.RTL_LOC_ID,  TTCT1.BUSINESS_DATE, OUTBOUND_SESSION_ID)
-                    GROUP BY ttct.rtl_loc_id, to_number(substr((lpad(ttct.outbound_session_id,12,0)),4,3)),ttct.outbound_session_id,ttct.business_date,
-					(crm.first_name||''||crm.last_name)
+                         ORDER BY CREATE_DATE DESC)
+                         WHERE OS = 1)
 				]]></Statement>
 				<Parameter name="organizationId" />
 				<Parameter name="retailLocationId" />				

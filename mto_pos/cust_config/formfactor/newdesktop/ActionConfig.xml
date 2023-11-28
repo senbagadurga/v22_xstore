@@ -33,6 +33,9 @@
       <Parameter name="state" value="OPEN" />
     </VisibilityRule>
     <VisibilityRule class="dtv.pos.systemcycle.access.ClosingVisibilityRule" />
+    <VisibilityRule class="dtv.pos.framework.action.access.CurrentUserAccCheck">
+	<Parameter name="privilege" value="STORE_OPEN_CLOSE" />
+	</VisibilityRule>
   </Action>
   <!-- Quick Close End -->
 

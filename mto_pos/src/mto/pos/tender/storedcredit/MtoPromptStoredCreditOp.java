@@ -2,12 +2,14 @@ package mto.pos.tender.storedcredit;
 
 
 import java.math.BigDecimal;
+import java.util.Currency;
 
 import javax.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dtv.i18n.FormatterFactory;
 import dtv.i18n.IFormattable;
 import dtv.pos.common.OpChainKey;
 import dtv.pos.framework.action.type.XstDataActionKey;
@@ -17,6 +19,8 @@ import dtv.pos.framework.scope.TransactionScope;
 import dtv.pos.iframework.action.IXstAction;
 import dtv.pos.iframework.event.IXstEvent;
 import dtv.pos.iframework.op.IOpResponse;
+import dtv.pos.tender.TenderHelper;
+import dtv.util.Money;
 import mto.pos.common.MtoValueKeys;
 import mto.pos.order.MtoOrderList;
 
@@ -32,6 +36,13 @@ public class MtoPromptStoredCreditOp extends AbstractPromptOp {
 
 	@Inject
 	protected TransactionScope _transactionScope;
+	
+	@Inject
+	public TenderHelper _tenderHelper;
+	
+	@Inject
+    private FormatterFactory _formatterFactory;
+	
 	  @Override 
 	  public boolean isOperationApplicable() 
 	  { 
@@ -74,9 +85,9 @@ public class MtoPromptStoredCreditOp extends AbstractPromptOp {
 	@Override
 	protected IFormattable[] getPromptArgs(final IXstEvent argEvent) {
 		MtoOrderList selectedOrder = _transactionScope.getValue(MtoValueKeys.SELECTED_SIEBEL_ORDER);
-		  BigDecimal storedCreditBalance = selectedOrder.getMtoAccountSCBalance();
-		  String storedCreditBalance1 = storedCreditBalance.toString();
-		  return new IFormattable[]{this._formattables.getSimpleFormattable(storedCreditBalance1)};
+		 BigDecimal storedCreditBalance = selectedOrder.getMtoAccountSCBalance();
+		  Money money = new Money(storedCreditBalance, Currency.getInstance(this._tenderHelper.getLocalCurrency().getCurrencyId()));
+			return money != null ? new IFormattable[]{this._formattables.getSimpleFormattable(money, this._formatterFactory.getMoneyFormatter())} : super.getPromptArgs(argEvent);
 	}
 
 	
