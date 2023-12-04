@@ -54,9 +54,9 @@ build.db.folder = /u01/releases/22.0.0.0.20230127185818/dbmake
 # Xenvironment customer build
 #build.xenvcust.folder = ../../workspace/V22/mto_xenvironment/dist
 # Xstore customer build
-build.cust.folder = /u01/workspace/V22/mto_pos/dist
+build.cust.folder = ../../workspace/V22/mto_pos/dist
 # Xcenter war extracted
-build.xcwar.folder = /u01/releases/22.0.0.0.20230127185818/xcenter
+build.xcwar.folder = ../../../releases/22.0.0.0.20230127185818/xcenter
 # Xadmin ear extracted
 build.xadmin.folder = /u01/releases/22.0.0.0.20230127185818/xadmin
 # Xadmin DB zip extracted
@@ -67,7 +67,7 @@ build.services.folder = /u01/releases/22.0.0.0.20230127185818/xservices-install
 build.services.war.folder = /u01/releases/22.0.0.0.20230127185818/xservices
 # Xenvironment zip extracted
 build.xenvironment.folder = /u01/releases/22.0.0.0.20230127185818/xenvironment
-build.xenvironment.data.folder = /u01/workspace/V22/xstoredata/environment
+build.xenvironment.data.folder = ../../workspace/V22/xstoredata/environment
 # Hardware Service zip extracted
 build.hardware-service.folder = /u01/releases/22.0.0.0.20230127185818/hwserv
 # DirectoryInput Xstore Electron Build Folder
@@ -116,17 +116,17 @@ donot.maintain.receiptLogo = false
 upgrade.removeConfiguratorPatches = false
 
 is.xadmin.custom = 
-xadmin.custom.dir = /u01/workspace/V22/mto_xcenter-admin/target/overlay
-xadmin.custom.dbscript.dir = /u01/workspace/V22/mto_xcenter-admin/database
+xadmin.custom.dir = ../../workspace/V22/mto_xcenter-admin/target/overlay
+xadmin.custom.dbscript.dir = ../../workspace/V22/mto_xcenter-admin/database
 
 is.xcenter.custom = 
-xcenter.custom.dir = /u01/workspace/V22/mto_xcenter/target/overlay
-xcenter.custom.dbscript.dir = /u01/workspace/V22/mto_xcenter/database
+xcenter.custom.dir = ../../workspace/V22/mto_xcenter/target/overlay
+xcenter.custom.dbscript.dir = ../../workspace/V22/mto_xcenter/database
 
-xservices.overlay.dir = /u01/workspace/V22/mto_xservices/target/overlay
-xservices.install.overlay.dir = /u01/workspace/V22/mto_xservices/src/main/xservices-install
+xservices.overlay.dir = ../../workspace/V22/mto_xservices/target/overlay
+xservices.install.overlay.dir = ../../workspace/V22/mto_xservices/src/main/xservices-install
 
-hardware.service.overlay.dir = /u01/workspace/V22/mto_hardware-service/target/dist
+hardware.service.overlay.dir = ../../workspace/V22/mto_hardware-service/target/dist
 
 # Include libraries for Bixolon
 bixolon = false
