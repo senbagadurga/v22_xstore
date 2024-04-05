@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<XunitConfig>
+    <Parameter name="XunitDelay" value="1000"/>
+    <TestSuite name="SUSPENDED-TRANS">
+        <RunTest description="Run test case TEST_CASE.1" testName="TEST_CASE.1"/>
+    </TestSuite>
+    <TestCase applicationKey="REGISTER" name="TEST_CASE.1">
+        <TestStep action="ACCEPT" data="100" description="Enter 100 (PromptUserIdOp)"/>
+        <TestStep action="ACCEPT" data="1" description="Enter 1 (PromptPasswordOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptCommAssocListOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="CONTINUE" description="CONTINUE (CustomerSearchOp)">
+            <Form name="CUSTOMER_SEARCH"/>
+        </TestStep>
+        <TestStep action="ACCEPT" data="6000" description="Enter 6000 (PromptItemScanOp)"/>
+        <TestStep action="SUSPEND_TRANSACTION" description="SUSPEND_TRANSACTION (PromptItemScanOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptCommAssocListOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="CONTINUE" description="CONTINUE (CustomerSearchOp)">
+            <Form name="CUSTOMER_SEARCH"/>
+        </TestStep>
+    </TestCase>
+</XunitConfig>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<XunitConfig>
+    <Parameter name="XunitDelay" value="1000"/>
+    <TestSuite name="RETURN-NON-MERCH">
+        <RunTest description="Run test case for RETURN-NON-MERCH" testName="RETURN-NON-MERCH"/>
+    </TestSuite>
+    <TestCase applicationKey="REGISTER" name="RETURN-NON-MERCH">
+        <TestStep action="ACCEPT" data="100" description="Enter 100 (PromptUserIdOp)"/>
+        <TestStep action="ACCEPT" data="1" description="Enter 1 (PromptPasswordOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptCommAssocListOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (CustomerSearchOp)">
+            <Form name="CUSTOMER_SEARCH">
+                <Field name="customerId" value="C01010001000015"/>
+            </Form>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (CustomerSearchOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="NO" description="NO (PromptApplyTransTaxExemptionOp)"/>
+        <TestStep action="NEW_RETURN" description="NEW_RETURN (PromptItemScanOp)"/>
+        <TestStep action="NO" description="NO (PromptReturnWithReceiptOp)"/>
+        <TestStep action="RETURN_NON_PHYSICAL_START" description="RETURN_NON_PHYSICAL_START (ForceMenuSelectionOp)"/>
+        <TestStep action="SELECT" description="SELECT (PromptReturnNonPhysicalItemOp)">
+            <ListSelect index="2"/>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptReturnReasonCodeOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptReturnReasonCodeOp)"/>
+        <TestStep action="PRE_TENDERING" description="PRE_TENDERING (PromptReturnItemScanOp)"/>
+        <TestStep action="REFUND_LOCAL_CURRENCY" description="REFUND_LOCAL_CURRENCY (PromptTenderMenuOp)"/>
+        <TestStep action="ACCEPT" data="20.00" description="Enter 20.00 (PromptTenderAmtOp)"/>
+        <TestStep action="PRINT_ONLY" description="PRINT_ONLY (CheckSaleCompleteOp)"/>
+    </TestCase>
+</XunitConfig>

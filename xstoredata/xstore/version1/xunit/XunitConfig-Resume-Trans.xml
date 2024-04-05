@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<XunitConfig>
+    <Parameter name="XunitDelay" value="1000"/>
+    <TestSuite name="RESUME_TRANS">
+        <RunTest description="Run test case TEST_CASE.1" testName="TEST_CASE.1"/>
+    </TestSuite>
+    <TestCase applicationKey="REGISTER" name="TEST_CASE.1">
+        <TestStep action="ACCEPT" data="100" description="Enter 100 (PromptUserIdOp)"/>
+        <TestStep action="ACCEPT" data="1" description="Enter 1 (PromptPasswordOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptCommAssocListOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="CONTINUE" description="CONTINUE (CustomerSearchOp)">
+            <Form name="CUSTOMER_SEARCH"/>
+        </TestStep>
+        <TestStep action="RESUME_TRANSACTION" description="RESUME_TRANSACTION (PromptItemScanOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptSuspendedTransOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="PRE_TENDERING" description="PRE_TENDERING (PromptItemScanOp)"/>
+        <TestStep action="TENDER_LOCAL_CURRENCY" description="TENDER_LOCAL_CURRENCY (PromptTenderMenuOp)"/>
+        <TestStep action="ACCEPT" data="68.84" description="Enter 68.84 (CashSuggestionPromptTenderAmtOp)"/>
+        <TestStep action="PRINT_ONLY" description="PRINT_ONLY (CheckSaleCompleteOp)"/>
+    </TestCase>
+</XunitConfig>

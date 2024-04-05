@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<XunitConfig>
+    <Parameter name="XunitDelay" value="1000"/>
+    <TestSuite name="ADD-CUST">
+        <RunTest description="Run test case ADD-CUST" testName="ADD-CUST"/>
+    </TestSuite>
+    <TestCase applicationKey="REGISTER" name="ADD-CUST">
+        <TestStep action="ACCEPT" data="100" description="Enter 100 (PromptUserIdOp)"/>
+        <TestStep action="ACCEPT" data="1" description="Enter 1 (PromptPasswordOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptCommAssocListOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (CustomerSearchOp)">
+            <Form name="CUSTOMER_SEARCH">
+                <Field name="lastName" value="XYZ"/>
+            </Form>
+        </TestStep>
+        <TestStep action="NEW" description="NEW (CustomerSearchOp)">
+            <ListSelect index="1"/>
+        </TestStep>
+        <TestStep action="ACCEPT" description="ACCEPT (CreateCustomerFromSearchOp)">
+            <Form name="CUSTOMER_MAINTENANCE">
+                <Field name="firstName" value="PQR"/>
+                <Field name="lastName" value="PQR"/>
+                <Field name="gender" value="M"/>
+                <Field name="preferredLocale" value="en"/>
+                <Field name="telephone1" value="1239874357"/>
+                <Field name="telephone3" value="1239874357"/>
+                <Field name="address1" value="PQR"/>
+                <Field name="city" value="Solon"/>
+                <Field name="postalCode" value="44139"/>
+                <Field name="state" value="OH"/>
+                <Field name="customerAddressModel" value="dtv.pos.customer.model.AddressListModel@1ed5d342"/>
+                <Field name="percentComplete" value="63"/>
+                <Field name="percentCompleteDescription" value="Profile 63% Complete"/>
+            </Form>
+        </TestStep>
+        <TestStep action="CONTINUE" description="CONTINUE (CreateCustomerFromSearchOp)">
+            <Form name="CUSTOMER_MAINTENANCE">
+                <Field name="percentComplete" value="63"/>
+                <Field name="percentCompleteDescription" value="Profile 63% Complete"/>
+            </Form>
+        </TestStep>
+        <TestStep action="SALE_NON_PHYSICAL_START" description="SALE_NON_PHYSICAL_START (ForceMenuSelectionOp)"/>
+        <TestStep action="ACCEPT" description="ACCEPT (PromptSaleNonPhysicalItemOp)">
+            <ListSelect index="2"/>
+        </TestStep>
+        <TestStep action="PRE_TENDERING" description="PRE_TENDERING (PromptItemScanOp)"/>
+        <TestStep action="TENDER_LOCAL_CURRENCY" description="TENDER_LOCAL_CURRENCY (PromptTenderMenuOp)"/>
+        <TestStep action="ACCEPT" data="20.00" description="Enter 20.00 (CashSuggestionPromptTenderAmtOp)"/>
+        <TestStep action="PRINT_ONLY" description="PRINT_ONLY (CheckSaleCompleteOp)"/>
+    </TestCase>
+</XunitConfig>
